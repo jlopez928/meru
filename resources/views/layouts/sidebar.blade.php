@@ -20,7 +20,7 @@
 
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar nav-child-indent flex-column" data-widget="treeview" role="menu">
-                @foreach ($menulte as $key => $item)
+                @foreach ($menu as $key => $item)
                     @if ($item['padre'] != 0)
                         @break
                     @endif

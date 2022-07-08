@@ -30,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
         View::composer(['home'] , function ($view) {
             $view->with([
                     'app'       => 'Merú',
-                    'menulte'   => Menu::menus('meru')
+                    'menu'   => Menu::menus('meru')
             ]);
         });
     }
