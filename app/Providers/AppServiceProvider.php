@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Menu;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,5 +26,12 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+        // View::composer (app, Menu) - Siasm
+        View::composer(['home'] , function ($view) {
+            $view->with([
+                    'app'       => 'Merú',
+                    'menulte'   => Menu::menus('meru')
+            ]);
+        });
     }
 }
