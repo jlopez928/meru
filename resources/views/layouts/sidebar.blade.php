@@ -9,7 +9,7 @@
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             @if (Auth::check())
                 <div class="image">
-                 {{--  <img src="{{ config('app.foto_link').Auth::user()->persona->Empleado->nro_personal }}" class="img-circle elevation-2 text-white" alt="IMG">  --}}
+                 <img src="{{ asset('img/avatar.png') }}" class="img-circle elevation-2 text-white" alt="IMG">
 
                 </div>
                 <div class="info text-white">

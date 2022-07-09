@@ -88,7 +88,7 @@
             <div class="float-right d-none d-sm-inline">
                 {{ ucfirst(\Carbon\Carbon::now()->locale(config('app.locale'))->isoFormat('dddd, DD \d\e MMMM \d\e YYYY')) }}
             </div>
-            <strong>Gcia. Tecnolog&iacute;a de Informaci&oacute;n y Comunicaci&oacute;n</strong>
+            <strong>Agua para el Progreso</strong>
         </footer>
     </div>
 
