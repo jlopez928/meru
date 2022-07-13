@@ -1,8 +1,8 @@
 @section('sidebar')
 
     <div  class="brand-link logo-switch">
-        {{--  <img src="{{ asset('img/lg_Venalum_blanco.png') }}" alt="logo sm" class="brand-image-xl logo-xs">
-          <img src="{{ asset('img/Lg_Ven_Logo_'.$app.'1.png') }}" alt="logo lg" class="brand-image-xs logo-xl">  --}}
+        {{--  <img src="{{ asset('img/lg_HB_blanco.png') }}" alt="logo sm" class="brand-image-xl logo-xs">
+          <img src="{{ asset('img/Lg_HB_Logo_'.$app.'1.png') }}" alt="logo lg" class="brand-image-xs logo-xl">  --}}
     </div>
     <div class="sidebar">
         <!-- Sidebar user -->
@@ -19,7 +19,7 @@
         </div>
 
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar nav-child-indent flex-column" data-widget="treeview" role="menu">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                 @foreach ($menu as $key => $item)
                     @if ($item['padre'] != 0)
                         @break
