@@ -6,17 +6,16 @@ use Illuminate\View\Component;
 
 class Datatable extends Component
 {
-    protected $list;
 
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($list)
+    public function __construct(
+        public $list
+    )
     {
-        //
-        $this->list = $list;
     }
 
     /**
