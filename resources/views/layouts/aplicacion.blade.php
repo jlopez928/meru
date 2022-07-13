@@ -34,11 +34,68 @@
 
     <!-- LiveWire 2.10 -->
     @livewireStyles
+    <!-- Manejo de colores de la plantilla para el sidebar y la aplicación-->
+<!--
+    <style>
+        /* Color del header */
+        .main-header {
+            background-color: rgb(29, 126, 206) !important;
+        }
 
+        /* Color del sidebar */
+        .main-sidebar {
+            background-color: rgb(29, 126, 206) !important;
+        }
+
+        /* Color de borde navbar */
+        .navbar-dark {
+            border-color: #e0e0e0 !important;
+        }
+
+        /* Color borde inferior brand */
+        .brand-link {
+            border-bottom: 1px solid #e0e0e0 !important;
+        }
+
+        /* Color borde inferior panel usuario */
+        .user-panel {
+            border-bottom: 1px solid #e0e0e0 !important;
+        }
+
+        /* Color y pading de los items del sidebar */
+        .nav-sidebar .nav-item .nav-link {
+            color: #fff !important;
+            padding: 0.3rem 1rem !important;
+        }
+
+        /* Posición ícono de flecha en sidebar */
+        .nav-sidebar .nav-link >.right, .nav-sidebar .nav-link > p > .right {
+            top: 0.3rem !important;
+        }
+
+        /* Color y color de fondo de los items del sidebar on hover*/
+        .nav-sidebar .nav-item .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.5) !important;
+            color: #000 !important;
+        }
+
+        /* Color y color de fonde de los items del sidebar on focus*/
+        .nav-sidebar .nav-item .nav-link:focus {
+            background-color: rgba(255, 255, 255, 1) !important;
+            color: #000 !important;
+        }
+
+        /* Color y color de fonde de los items abiertos del sidebar */
+        .nav-sidebar .nav-item.menu-open >.nav-link {
+            background-color: rgba(255, 255, 255, 0.5) !important;
+            color: #000 !important;
+        }
+
+    </style>    -->
 </head>
 
 <body
-    class="hold-transition sidebar-mini sidebar-collapse"
+    class="hold-transition sidebar-mini layout-fixed"
 >
     <div class="wrapper">
 
@@ -54,7 +111,7 @@
             <!-- Center navbar title -->
             <ul class="nav navbar-nav mx-auto">
                 <li class="nav-item text-white">
-                    <h2>{{ config('app.name') }}<h2>
+                    <h4>{{ config('app.name') }}<h4>
                 </li>
             </ul>
 
