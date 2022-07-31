@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Proveedores\Proceso\ProveedorController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Proveedores\Configuracion\RamoController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Proveedores\Proceso\RamoProveedorController;
+use App\Http\Controllers\Administrativo\Meru_Administrativo\Proveedores\Reporte\ReporteProveedorController;
 
 /*-------------------------------------------------------------------------*/
 /*                     Rutas del Modulo Proveedores                        */
@@ -50,4 +51,14 @@ Route::controller(RamoProveedorController::class)
 		Route::get('ramosdeproveedores', 'index')->name('index');
 		Route::get('ramosdeproveedores/{proveedor}', 'show')->name('show');
 		Route::get('ramosdeproveedores/{proveedor}/edit', 'edit')->name('edit');
+	});
+
+// Reportes
+Route::controller(ReporteProveedorController::class)
+	->middleware(['auth'])
+	->prefix('proveedores/reportes')
+	->name('proveedores.reporte.')
+	->group(function () {
+
+		Route::get('proveedoressuspendidos', 'proveedoressuspendidos')->name('proveedoressuspendidos');
 	});
