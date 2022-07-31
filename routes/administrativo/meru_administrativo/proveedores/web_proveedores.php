@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Proveedores\Proceso\ProveedorController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Proveedores\Configuracion\RamoController;
+use App\Http\Controllers\Administrativo\Meru_Administrativo\Proveedores\Proceso\RamoProveedorController;
 
 /*-------------------------------------------------------------------------*/
 /*                     Rutas del Modulo Proveedores                        */
@@ -37,4 +38,16 @@ Route::controller(RamoController::class)
 		Route::get('ramos/{ramo}/edit', 'edit')->name('edit');
 		Route::put('ramos/{ramo}', 'update')->name('update');
 		Route::get('print_ramos', 'print_ramos')->name('print_ramos');
+	});
+
+// Ramos de Proveedores
+Route::controller(RamoProveedorController::class)
+	->middleware(['auth'])
+	->prefix('proveedores/procesos')
+	->name('proveedores.proceso.ramo_proveedor.')
+	->group(function () {
+
+		Route::get('ramosdeproveedores', 'index')->name('index');
+		Route::get('ramosdeproveedores/{proveedor}', 'show')->name('show');
+		Route::get('ramosdeproveedores/{proveedor}/edit', 'edit')->name('edit');
 	});
