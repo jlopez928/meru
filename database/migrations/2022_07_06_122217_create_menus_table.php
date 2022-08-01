@@ -15,17 +15,15 @@ return new class extends Migration
     {
         Schema::create('menus', function (Blueprint $table) {
             $table->id();
-
             $table->string('nombre', 150);
             $table->integer('padre');
             $table->integer('orden');
             $table->boolean('activo');
-            $table->string('modulo', 30);
-            $table->string('url_destino', 200);
+            $table->string('modulo', 50);
+            $table->string('url_destino', 200)->nullable();
             $table->string('id_aplicacion', 20);
             $table->string('icono', 50);
             $table->string('descripcion', 200)->nullable();
-
             $table->timestamps();
         });
     }

@@ -5,6 +5,7 @@ use App\Http\Controllers\Administrativo\Meru_Administrativo\Proveedores\Proceso\
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Proveedores\Configuracion\RamoController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Proveedores\Proceso\RamoProveedorController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Proveedores\Reporte\ReporteProveedorController;
+use App\Http\Controllers\Administrativo\Meru_Administrativo\Proveedores\Reportes\ProveedorMunicipioController;
 
 /*-------------------------------------------------------------------------*/
 /*                     Rutas del Modulo Proveedores                        */
@@ -61,4 +62,19 @@ Route::controller(ReporteProveedorController::class)
 	->group(function () {
 
 		Route::get('proveedoressuspendidos', 'proveedoressuspendidos')->name('proveedoressuspendidos');
+	});
+  
+Route::middleware(['auth'])
+	->prefix('proveedores')
+	->as('proveedores.')
+	->group(function () {
+		Route::name('reportes.')
+			->group(function () {
+                Route::resource('proveedormunicipio',  ProveedorMunicipioController ::class)->except('destroy');
+                Route::controller(ProveedorMunicipioController::class)
+                        ->as('proveedormunicipio.')
+                        ->group(function() {
+                            Route::get('print_proveedormunicipio', [ProveedorMunicipioController::class, 'print_proveedormunicipio'])->name('print_proveedormunicipio');
+                        });
+		});
 	});

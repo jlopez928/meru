@@ -162,7 +162,7 @@ trait ReportFpdf
     		}
     	}
     }
-	
+
     /****************************************************************
      * Pinta la Cabecera de las Columnas del Listado PDF
      * @version 	1.0
@@ -193,7 +193,7 @@ trait ReportFpdf
     	$pdf->SetWidths($data['ancho_columnas']);
     	$pdf->Row($data['nombre_columnas'],4,1);
     }
-	
+
     /****************************************************************
      * Pinta Los registros de un Listado PDF
      * @version 	1.0
@@ -223,7 +223,7 @@ trait ReportFpdf
     		$pdf->SetWidths($data['ancho_columnas']);
     		$pdf->Row($campos,4,1);
     	}
-		
+
     	/****************************************************************
     	 * Pinta la Cabecera de las Columnas del Listado PDF
     	 * @version 	1.0
@@ -382,4 +382,5 @@ trait ReportFpdf
     					}
     				}
     			}
+
 }
