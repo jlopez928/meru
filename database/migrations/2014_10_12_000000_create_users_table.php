@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('cedula');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('status',1)->default('1')->comment('1,0');
             $table->rememberToken();
             $table->timestamps();
         });

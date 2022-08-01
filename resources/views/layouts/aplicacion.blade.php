@@ -35,7 +35,7 @@
     <!-- LiveWire 2.10 -->
     @livewireStyles
     <!-- Manejo de colores de la plantilla para el sidebar y la aplicación-->
-<!--
+
     <style>
         /* Color del header */
         .main-header {
@@ -91,7 +91,7 @@
             color: #000 !important;
         }
 
-    </style>    -->
+    </style>
 </head>
 
 <body

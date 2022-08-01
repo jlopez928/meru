@@ -1,4 +1,4 @@
-<table id="{{ $id }}" {{ $attributes->merge(['class' => 'table table-bordered table-striped table-hover text-nowrap']) }}>
+<table id="{{ $id }}" {{ $attributes->merge(['class' => 'table table-bordered table-striped table-hover']) }}>
     <thead>
         @if (!is_null($mainHeader))
                 {{ $mainHeader }}
@@ -16,7 +16,7 @@
                         @endif
                     </th>
                 @else
-                    <th class="{{ $header['classes'] }}">
+                    <th class="{{ $header['classes'] }}" width="{{ $header['width'] }}">
                         {{ $header['name'] }}
                     </th>
                 @endif
