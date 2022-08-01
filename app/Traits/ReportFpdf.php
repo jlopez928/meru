@@ -32,9 +32,9 @@ trait ReportFpdf
     				$pdf->MultiCell(30,5,utf8_decode('Código: '.$data['cod_normalizacion']),0,'L',0);
     			}
     			$pdf->setxy(15,23);
-    			$pdf->Cell(20,5,utf8_decode($data['gerencia']),0,0,'L');
+    			$pdf->Cell(20,5,utf8_decode($data['gerencia']),0,0,'C');
     			$pdf->setxy(15,26);
-    			$pdf->Cell(20,5,utf8_decode($data['division']),0,0,'L');
+    			$pdf->Cell(20,5,utf8_decode($data['division']),0,0,'C');
     			$pdf->SetFont('Arial','B',9);
     			$pdf->setxy(15,20);
     			$pdf->MultiCell(260,5,utf8_decode($data['titulo']),0,'C',0);
@@ -56,9 +56,9 @@ trait ReportFpdf
     				$pdf->MultiCell(30,5,utf8_decode('Código: '.$data['cod_normalizacion']),0,'C',0);
     			}
     			$pdf->setxy(15,23);
-    			$pdf->Cell(20,5,utf8_decode($data['gerencia']),0,0,'L');
+    			$pdf->Cell(20,5,utf8_decode($data['gerencia']),0,0,'C');
     			$pdf->setxy(15,25);
-    			$pdf->Cell(20,5,utf8_decode($data['division']),0,0,'L');
+    			$pdf->Cell(20,5,utf8_decode($data['division']),0,0,'C');
     			$pdf->SetFont('Arial','B',9);
     			$pdf->setxy(15,20);
     			$pdf->MultiCell(200,5,utf8_decode($data['titulo']),0,'C',0);
@@ -82,9 +82,9 @@ trait ReportFpdf
     					$pdf->MultiCell(30,5,utf8_decode('Código: '.$data['cod_normalizacion']),0,'L',0);
     				}
     				$pdf->setxy(15,23);
-    				$pdf->Cell(20,5,utf8_decode($data['gerencia']),0,0,'L');
+    				$pdf->Cell(20,5,utf8_decode($data['gerencia']),0,0,'C');
     				$pdf->setxy(15,25);
-    				$pdf->Cell(20,5,utf8_decode($data['division']),0,0,'L');
+    				$pdf->Cell(20,5,utf8_decode($data['division']),0,0,'C');
     				$pdf->SetFont('Arial','B',9);
     				$pdf->setxy(15,20);
     				$pdf->MultiCell(330,5,utf8_decode($data['titulo']),0,'C',0);
@@ -104,9 +104,9 @@ trait ReportFpdf
     					$pdf->MultiCell(30,5,utf8_decode('Código: '.$data['cod_normalizacion']),0,'C',0);
     				}
     				$pdf->setxy(15,23);
-    				$pdf->Cell(20,5,utf8_decode($data['gerencia']),0,0,'L');
+    				$pdf->Cell(20,5,utf8_decode($data['gerencia']),0,0,'C');
     				$pdf->setxy(15,25);
-    				$pdf->Cell(20,5,utf8_decode($data['division']),0,0,'L');
+    				$pdf->Cell(20,5,utf8_decode($data['division']),0,0,'C');
     				$pdf->SetFont('Arial','B',9);
     				$pdf->setxy(15,20);
     				$pdf->MultiCell(200,5,utf8_decode($data['titulo']),0,'C',0);
@@ -128,9 +128,9 @@ trait ReportFpdf
     					$pdf->MultiCell(30,5,utf8_decode('Código: '.$data['cod_normalizacion']),0,'L',0);
     				}
     				$pdf->setxy(15,23);
-    				$pdf->Cell(20,5,utf8_decode($data['gerencia']),0,0,'L');
+    				$pdf->Cell(20,5,utf8_decode($data['gerencia']),0,0,'C');
     				$pdf->setxy(15,25);
-    				$pdf->Cell(20,5,utf8_decode($data['division']),0,0,'L');
+    				$pdf->Cell(20,5,utf8_decode($data['division']),0,0,'C');
     				$pdf->SetFont('Arial','B',9);
     				$pdf->setxy(15,20);
     				$pdf->MultiCell(330,5,utf8_decode($data['titulo']),0,'C',0);
@@ -150,9 +150,9 @@ trait ReportFpdf
     					$pdf->MultiCell(30,5,utf8_decode('Código: '.$data['cod_normalizacion']),0,'C',0);
     				}
     				$pdf->setxy(15,23);
-    				$pdf->Cell(20,5,utf8_decode($data['gerencia']),0,0,'L');
+    				$pdf->Cell(20,5,utf8_decode($data['gerencia']),0,0,'C');
     				$pdf->setxy(15,25);
-    				$pdf->Cell(20,5,utf8_decode($data['division']),0,0,'L');
+    				$pdf->Cell(20,5,utf8_decode($data['division']),0,0,'C');
     				$pdf->SetFont('Arial','B',9);
     				$pdf->setxy(15,20);
     				$pdf->MultiCell(200,5,utf8_decode($data['titulo']),0,'C',0);
@@ -162,6 +162,7 @@ trait ReportFpdf
     		}
     	}
     }
+
     /****************************************************************
      * Pinta la Cabecera de las Columnas del Listado PDF
      * @version 	1.0
@@ -182,19 +183,17 @@ trait ReportFpdf
     	}
     	$pdf->SetFont('Arial','B',$tamano);
     	$pdf->SetTextColor(10);
-        // comentar juan
     	if ($data['orientacion']=='H'){
     		$pdf->SetXY(16, $y+5);
     	}else{
     		$pdf->SetXY(11, $y+5);
     	}
-        
-        //$pdf->SetXY(5, $y+5); // Juan
     	$pdf->SetFillColor(219,219,219);
     	$pdf->SetAligns(array('C','C','C','C','C','C','C','C','C','C','C','C','C','C','C'));
     	$pdf->SetWidths($data['ancho_columnas']);
     	$pdf->Row($data['nombre_columnas'],4,1);
     }
+
     /****************************************************************
      * Pinta Los registros de un Listado PDF
      * @version 	1.0
@@ -214,19 +213,17 @@ trait ReportFpdf
     		}
     		$pdf->SetFont('Arial','',$data['tamano']);
     		$pdf->SetTextColor(10);
-            //comentar juan
     		if ($data['orientacion']=='H'){
     			$pdf->SetXY(16, $y1);
     		}else{
     			$pdf->SetXY(11, $y1);
     		}
-//            $pdf->SetXY(5, $y1); // Juan
-
     		$pdf->SetFillColor(255,255,255);
     		$pdf->SetAligns($data['alineacion_columnas']);
     		$pdf->SetWidths($data['ancho_columnas']);
     		$pdf->Row($campos,4,1);
     	}
+
     	/****************************************************************
     	 * Pinta la Cabecera de las Columnas del Listado PDF
     	 * @version 	1.0

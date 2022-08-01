@@ -78,19 +78,6 @@ return [
             'sslmode' => 'prefer',
         ],
 
-        'pgsql_meru_old' => [
-            'driver' => 'pgsql',
-            'host' => env('DB_HOST', 'localhost'),
-            'port' => env('DB_PORT', '5434'),
-            'database' => 'meru',
-            'username' => 'postgres',
-            'password' => 'postgres',
-            'charset' => 'utf8',
-            'prefix' => '',
-            'schema' => 'public',
-            'sslmode' => 'prefer',
-        ],
-
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_URL'),
