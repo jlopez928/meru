@@ -29,7 +29,7 @@ class RamoController extends Controller
     {
         try {
 
-            DB::connection('pgsql_proveedores')->transaction(function() use($request){
+            DB::connection('pgsql')->transaction(function() use($request){
 
                 Ramo::create($request->validated() + [
                     'cod_ram' => Ramo::max('id') + 1,

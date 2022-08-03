@@ -24,7 +24,7 @@ class RamoRequest extends FormRequest
     public function rules()
     {
         return [
-            'des_ram'   => 'required|unique:'.'pgsql_proveedores.pro_ramos,des_ram,'.$this->cod_ram.',cod_ram',
+            'des_ram'   => 'required|unique:'.'pgsql.pro_ramos,des_ram,'.$this->cod_ram.',cod_ram',
             'sta_reg'   => 'required',
         ];
     }
