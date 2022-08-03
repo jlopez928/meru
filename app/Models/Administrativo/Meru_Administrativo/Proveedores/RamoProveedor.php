@@ -9,8 +9,6 @@ class RamoProveedor extends Model
 {
     use HasFactory;
 
-    protected $connection = 'pgsql_proveedores';
-
     protected $table = 'pro_ramosproveedores';
 
     protected $keyType = 'string';

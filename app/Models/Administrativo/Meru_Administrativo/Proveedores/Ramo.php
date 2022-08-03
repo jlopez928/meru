@@ -11,8 +11,6 @@ class Ramo extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $connection = 'pgsql_proveedores';
-
     protected $table = 'pro_ramos';
 
     protected $fillable =   [
