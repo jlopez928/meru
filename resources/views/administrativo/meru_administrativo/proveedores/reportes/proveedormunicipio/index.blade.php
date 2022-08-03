@@ -20,17 +20,17 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                    <x-form method="get" action="{{ route('proveedores.reportes.proveedormunicipio.print_proveedormunicipio') }}">
+                    <x-form method="get" target="_blank" action="{{ route('proveedores.reportes.proveedormunicipio.print_proveedormunicipio') }}">
                         <x-card>
-                            <x-slot name="header">
+                            <x-slot:header>
                                 <h3 class="card-title text-bold">Proveedores por Municipio</h3>
                             </x-slot>
-                            <x-slot name="body">
+                            <x-slot:body>
                                 <livewire:administrativo.meru-administrativo.proveedores.reportes.proveedor-municipio-index-componet />
                             </x-slot>
-                            <x-slot name="footer">
-                                <x-button type="submit" href="{{ route('proveedores.reportes.proveedormunicipio.print_proveedormunicipio')}}" target="_blank" class="btn btn-sm btn-primary text-bold float-right" title="Generar PDF"><i class="fas fa-download"> Generar PDF</i></i></x-button>
-                           </x-slot>
+                            <x-slot:footer>
+                                <button type="submit" class="btn btn-sm btn-primary text-bold float-right" title="Generar PDF"><i class="fas fa-download"> Generar PDF</i></button>
+                            </x-slot>
                         </x-card>
                     </x-form>
             </div>

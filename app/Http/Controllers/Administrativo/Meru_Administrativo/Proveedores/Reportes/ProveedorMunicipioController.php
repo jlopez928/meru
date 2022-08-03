@@ -23,7 +23,7 @@ class ProveedorMunicipioController extends Controller
         $data['gerencia']                   = '';
         $data['division']                   = '';
         $data['titulo']                     = 'PROVEEDORES DE BIENES Y SERVICIOS';
-        $data['subtitulo']                  = 'UBICACION '.$request->estado;
+        $data['subtitulo']                  = '';
         $data['alineacion_columnas']		= array('C','L','C'); //C centrado R derecha L izquierda
         $data['ancho_columnas']		    	= array('20','90','40','100');//Ancho de Columnas
         $data['nombre_columnas']		   	= array(utf8_decode('Rif'),utf8_decode('Nombe'),utf8_decode('Telefono'),utf8_decode('Direccion'));
@@ -38,9 +38,11 @@ class ProveedorMunicipioController extends Controller
         $data['cod_reporte']			    = '';
         $data['registros']                  = Proveedor::query()
                                                     ->where('cod_edo', 'like', '%'.$request->estado.'%')
-                                                    ->orWhere('cod_mun', 'like', '%'.ucfirst($request->municipio).'%')
-                                                    ->orwhere('tip_emp', 'like', '%'.ucfirst($request->tip_emp).'%')
-                                                    ->orwhere('objetivo', 'like', '%'.ucfirst($request->objetivo).'%')
+                                                    ->where(function($query) use($request){
+                                                        $query->orWhere('cod_mun', 'like', '%'.$request->municipio.'%')
+                                                        ->orwhere('tip_emp', 'like', '%'.$request->tip_emp.'%')
+                                                        ->orwhere('objetivo', 'like', '%'.$request->objetivo.'%');
+                                                    })
                                                     ->orderby('nom_prov')->get();
         $pdf = new Fpdf;
 
