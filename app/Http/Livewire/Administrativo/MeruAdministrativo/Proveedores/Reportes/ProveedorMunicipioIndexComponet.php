@@ -9,28 +9,19 @@ class ProveedorMunicipioIndexComponet extends Component
 {
 
 
-    public $estados = [], $municipios = [], $parroquias = [];
-	public $estado, $municipio, $parroquia;
+    public $estados = [], $municipios = [];
+	public $estado, $municipio;
 
 	public function mount()
 	{
 		$this->estados = UbicacionGeografica::getEstados();
 		$this->municipios = collect();
-		$this->parroquias = collect();
 	}
 
 	public function updatedEstado($value)
 	{
 		$this->municipios = UbicacionGeografica::getMunicipios($value);
 		$this->municipio  = null;
-		$this->parroquias = collect();
-		$this->parroquia  = null;
-	}
-
-	public function updatedMunicipio($value)
-	{
-		$this->parroquias = UbicacionGeografica::getParroquias($this->estado, $value);
-		$this->parroquia  = null;
 	}
 
 	public function render()
