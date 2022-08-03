@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Administrativo\Meru_Administrativo\Proveedores\Reportes;
-use App\Models\Administrativo\Meru_Administrativo\Proveedores\Proveedores;
+use App\Models\Administrativo\Meru_Administrativo\Proveedores\Proveedor;
 use App\Http\Controllers\Controller;
 use Codedge\Fpdf\Fpdf\Fpdf;
 use App\Traits\ReportFpdf;
@@ -17,7 +17,6 @@ class ProveedorMunicipioController extends Controller
 
     public function print_proveedormunicipio(Request $request)
     {
-
         $data['tipo_hoja']                  = 'C'; // C carta
         $data['orientacion']                = 'H'; // V Vertical
         $data['cod_normalizacion']          = '';
@@ -37,7 +36,7 @@ class ProveedorMunicipioController extends Controller
         $data['revision']			        = '';
         $data['usuario']			        = auth()->user()->name;
         $data['cod_reporte']			    = '';
-        $data['registros']                  = Proveedores::query()
+        $data['registros']                  = Proveedor::query()
                                                     ->where('cod_edo', 'like', '%'.$request->estado.'%')
                                                     ->orWhere('cod_mun', 'like', '%'.ucfirst($request->municipio).'%')
                                                     ->orwhere('tip_emp', 'like', '%'.ucfirst($request->tip_emp).'%')
