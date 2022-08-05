@@ -25,10 +25,7 @@ class DescuentoController extends Controller
     public function create()
     {
         $descuento= new Descuento();
-        $count = Descuento::get()->max('id') +1;
-        $descuento->id = $count;
-        $descuento->fecha = Carbon::now();
-
+        $descuento->fecha = Carbon::now()->format('Y-m-d');
         return view('administrativo.meru_administrativo.configuracion.configuracion.descuento.create', compact('descuento'));
     }
 
@@ -43,9 +40,9 @@ class DescuentoController extends Controller
              return redirect()->back()->withInput();
          }
     }
-      public function show(Descuento $descuento)
-    {
-        return view('administrativo.meru_administrativo.configuracion.configuracion.descuento.show',compact('descuento'));
+    public function show(Descuento $descuento)
+    {   $descuento->fecha = Carbon::parse($descuento->fecha)->format('Y-m-d');
+         return view('administrativo.meru_administrativo.configuracion.configuracion.descuento.show',compact('descuento'));
 
     }
 
@@ -54,6 +51,7 @@ class DescuentoController extends Controller
         $tipo_monto =  TipoMonto::query()->get();
         $retencion =  Retencion::query()->get();
         $residencia =  Residencia::query()->get();
+        $descuento->fecha = Carbon::parse($descuento->fecha)->format('Y-m-d');
         return view('administrativo.meru_administrativo.configuracion.configuracion.descuento.edit', compact('descuento','tipo_monto','retencion','residencia'));
 
     }

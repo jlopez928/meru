@@ -5,16 +5,21 @@
             <x-table-headers class="py-2" :sortby="$sort" :order="$direction" :headers="$headers">
                 @foreach ($ramos as $ramo)
                     <tr>
-                        <td align="center">{{ $ramo->cod_ram }}</td>
+
+                        <td align="center" >
+                            <a href="{{ route('proveedores.configuracion.ramo.show', $ramo->cod_ram ) }}" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Mostrar">
+                                {{ $ramo->cod_ram }}
+                            </a>
+                        </td>
                         <td align="left">{{ $ramo->des_ram }}</td>
                         <td align="center">{{ $ramo->sta_reg->name }}</td>
                         <td align="center">
                             <div x-data>
-                                <a href="{{ route('proveedores.configuracion.ramo.edit', $ramo) }}" type="button" class="btn btn-primary btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Editar">
+                                <a href="{{ route('proveedores.configuracion.ramo.edit', $ramo) }}" type="button" class="btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Editar">
                                     <span class="fas fa-edit" aria-hidden="true"></span>
                                 </a>
                                 @if ($ramo->ramoproveedores_count === 0)
-                                    <a x-on:click="confirm('Seguro que desea eliminar este Registro?') ? @this.deleteRamo({{ $ramo->cod_ram }}) : false" type="button" class="btn btn-danger btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Eliminar">
+                                    <a x-on:click="confirm('Seguro que desea eliminar este Registro?') ? @this.deleteRamo({{ $ramo->cod_ram }}) : false" type="button" class="btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Eliminar">
                                         <i class="fa fa-trash" aria-hidden="true"></i>
                                     </a>
                                 @endif

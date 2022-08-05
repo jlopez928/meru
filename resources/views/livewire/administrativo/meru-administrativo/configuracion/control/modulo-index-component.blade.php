@@ -8,7 +8,7 @@
                             <a href="{{ route('configuracion.control.modulo.show', $moduloItem->id) }}">
                             {{ $moduloItem->id}}
                         </td>
-                        <x-td  >{{ $moduloItem->name}}</x-td>
+                        <x-td  >{{ $moduloItem->nombre}}</x-td>
                         <td class="text-center" style="vertical-align: middle;">
 							<span class="text-bold {{ $moduloItem->status == '1' ? 'text-success' : 'text-danger' }}">
 								{{ $moduloItem->status == '1' ? 'Activo' : 'Inactivo'}}

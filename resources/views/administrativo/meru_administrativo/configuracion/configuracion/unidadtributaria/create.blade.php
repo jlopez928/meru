@@ -7,8 +7,8 @@
         <div class="row mb-2">
             <div class="col-sm-12">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item text-bold"><a href="{{ route('configuracion.configuracion.unidadtributaria.index') }}">Pagina Principal</a></li>
-                    <li class="breadcrumb-item active text-bold">Registar Unidad Tributaria</li>
+                    <li class="breadcrumb-item text-bold"><a href="{{ route('configuracion.configuracion.unidadtributaria.index') }}">Página Principal</a></li>
+                    <li class="breadcrumb-item active text-bold">Registrar Unidad Tributaria</li>
                 </ol>
             </div>
         </div>

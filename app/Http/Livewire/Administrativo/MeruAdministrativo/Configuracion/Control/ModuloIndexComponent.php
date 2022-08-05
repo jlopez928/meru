@@ -17,7 +17,7 @@ class ModuloIndexComponent extends Component
 
     public function mount()
     {
-        $this->sort = 'name';
+        $this->sort = 'nombre';
         $this->direction = 'asc';
     }
 
@@ -46,7 +46,7 @@ class ModuloIndexComponent extends Component
         'modulo' =>  Modulo::query()
                             ->whereNull('deleted_at')
                             ->where('id', 'LIKE', '%'.$this->search.'%')
-                            ->orWhere('name','LIKE','%'.($this->search).'%')
+                            ->orWhere('nombre','LIKE','%'.($this->search).'%')
                             ->orderBy($this->sort, $this->direction)
                             ->paginate($this->paginate)
    ]);

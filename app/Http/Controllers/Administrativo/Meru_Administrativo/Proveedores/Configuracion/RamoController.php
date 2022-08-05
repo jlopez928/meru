@@ -24,7 +24,12 @@ class RamoController extends Controller
 
         return view('administrativo.meru_administrativo.proveedores.configuracion.ramo.create', compact('ramo'));
     }
+    public function show(Ramo $ramo)
+    {
 
+        return view('administrativo.meru_administrativo.proveedores.configuracion.ramo.show', compact('ramo'));
+
+    }
     public function store(RamoRequest $request)
     {
         try {

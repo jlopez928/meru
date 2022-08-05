@@ -5,12 +5,9 @@
 <section class="content-header">
 	<div class="container-fluid">
 		<div class="row mb-2">
-			<div class="col-sm-1">
+            <div class="col-sm-6">
 				<x-button class="btn-success" href="{{ route('configuracion.configuracion.gerencia.create') }}" title="Nuevo"><i class="fas fa-plus-circle"></i> Nuevo</x-button>
-			</div>			
-			<div class="col-sm-5">
-				{{-- <x-button href="" target="_blank" class="btn-primary" title="Generar PDF"><i class="fas fa-download"> Generar PDF</x-button> --}}
-			</div>	
+             </div>
 			<div class="col-sm-6">
 				<ol class="breadcrumb float-sm-right">
 					<li class="breadcrumb-item text-bold"><a href="{{ route('home') }}">P&aacute;gina principal</a></li>

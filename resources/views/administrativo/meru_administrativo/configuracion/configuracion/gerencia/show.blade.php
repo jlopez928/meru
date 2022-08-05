@@ -8,7 +8,7 @@
 			<div class="col-sm-12">
 				<ol class="breadcrumb float-sm-right">
 					<li class="breadcrumb-item text-bold"><a href="{{ route('configuracion.configuracion.gerencia.index') }}">Gerencia</a></li>
-					<li class="breadcrumb-item active text-bold">Consultar</li>
+					<li class="breadcrumb-item active text-bold">Ver Gerencia</li>
 				</ol>
 			</div>
 		</div>

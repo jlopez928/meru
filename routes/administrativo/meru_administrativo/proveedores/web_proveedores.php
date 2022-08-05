@@ -38,6 +38,7 @@ Route::controller(RamoController::class)
 		Route::get('ramos/create', 'create')->name('create');
 		Route::post('ramos', 'store')->name('store');
 		Route::get('ramos/{ramo}/edit', 'edit')->name('edit');
+        Route::get('ramos/{ramo}/show', 'show')->name('show');
 		Route::put('ramos/{ramo}', 'update')->name('update');
 		Route::get('print_ramos', 'print_ramos')->name('print_ramos');
 	});
@@ -63,7 +64,7 @@ Route::controller(ReporteProveedorController::class)
 
 		Route::get('proveedoressuspendidos', 'proveedoressuspendidos')->name('proveedoressuspendidos');
 	});
-  
+
 Route::middleware(['auth'])
 	->prefix('proveedores')
 	->as('proveedores.')

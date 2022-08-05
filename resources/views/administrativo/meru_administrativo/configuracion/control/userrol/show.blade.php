@@ -20,22 +20,22 @@
         </x-slot>
     <x-slot name="body">
         <div class="row col-12">
-            <x-field class="col-1">
+            <x-field class="form-group col-1 ">
                 <x-label for="id">{{ __('ID') }}</x-label>
-                <x-input name="id" value="{{ old('id', $userrol->id) }}" readonly/>
+                <x-input name="id" class="form-control-sm" value="{{ old('id', $userrol->id) }}" readonly/>
             </x-field>
 
-            <x-field class="col-4">
+            <x-field class="form-group col-4">
                 <x-label for="id">{{ __('Nombre') }}</x-label>
-                <x-input name="id" value="{{ old('id', $userrol->name) }}" readonly/>
+                <x-input name="id" class="form-control-sm" value="{{ old('id', $userrol->name) }}" readonly/>
             </x-field>
-            <x-field class="col-2">
+            <x-field class="form-group col-2">
                 <x-label for="id">{{ __('Cédula') }}</x-label>
-                <x-input name="id" value="{{ old('id', $userrol->cedula) }}" readonly/>
+                <x-input name="id" class="form-control-sm" value="{{ old('id', $userrol->cedula) }}" readonly/>
             </x-field>
-            <x-field class="col-5">
+            <x-field class="form-group col-5">
                 <x-label for="id">{{ __('Email') }}</x-label>
-                <x-input name="id" value="{{ old('id', $userrol->email) }}" readonly/>
+                <x-input name="id" class="form-control-sm" value="{{ old('id', $userrol->email) }}" readonly/>
             </x-field>
         </div>
         @if (count($rol))

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Administrativo\Meru_Administrativo\Configuracion\
 use App\Http\Requests\Administrativo\Meru_Administrativo\Configuracion\Configuracion\UnidadTributariaRequest;
 use App\Models\Administrativo\Meru_administrativo\Configuracion\UnidadTributaria;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Codedge\Fpdf\Fpdf\Fpdf;
@@ -123,14 +124,17 @@ class UnidadTributariaController extends Controller
         $data['revision']			        = '';
         $data['usuario']			        = auth()->user()->name;
         $data['cod_reporte']			    = '';
-        $data['registros']                  = UnidadTributaria::query()->orderby('fec_ut','desc')->get();
+        $data['registros']                  = UnidadTributaria::query()
+                                                                ->select(
+                                                                        DB::raw("fec_ut"),
+                                                                        DB::raw("coalesce(bs_ut, 0) as bs_ut"),
+                                                                        DB::raw("coalesce(bs_ucau, 0) as bs_ucau"),
+                                                                        DB::raw("(CASE WHEN vigente = '0' THEN 'Inactivo' ELSE 'Activo' END) as vigente"))
+                                                                        ->orderby('fec_ut','desc')->get();
 
         $pdf = new Fpdf;
-
         $pdf->setTitle(utf8_decode('Listado de Unidades Tributarias'));
-
         $this->pintar_listado_pdf($pdf,$data);
-
         exit;
     }
 
