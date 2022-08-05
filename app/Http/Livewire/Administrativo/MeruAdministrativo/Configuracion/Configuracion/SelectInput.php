@@ -6,7 +6,7 @@ use App\Models\Administrativo\Meru_Administrativo\Configuracion\TipoMonto;
 use App\Models\Administrativo\Meru_Administrativo\Configuracion\Residencia;
 use App\Models\Administrativo\Meru_Administrativo\Configuracion\Retencion;
 use Livewire\Component;
-
+use Carbon\Carbon;
 
 class SelectInput extends Component
 {
@@ -17,11 +17,11 @@ class SelectInput extends Component
     public $residente;
     public $tip_mto;
     public $cla_desc;
-    public $fecha;
+
 
 
     public function mount(){
-        //dd($this->descuento->fecha->format('Y-m-d'));
+
         if ($this->descuento){
             $this->selectedResidencia = $this->descuento->adm_residencia_id;
             $this->selectedTipoMonto = $this->descuento->tipo_montos_id;
@@ -29,12 +29,6 @@ class SelectInput extends Component
             $this->residente = $this->descuento->residente;
             $this->tip_mto = $this->descuento->tip_mto;
             $this->cla_desc = $this->descuento->cla_desc;
-            //$this->fecha    = \Carbon\Carbon::parse(str_replace('/', '-',$this->descuento->fecha))->format('Y-m-d');
-            if ( $this->descuento->fecha)
-                $this->fecha    = $this->descuento->fecha->format('Y-m-d');
-            // else
-            //     $this->fecha    = date('d-m-Y H:i:s');
-
         }
     }
 

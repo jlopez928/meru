@@ -6,20 +6,20 @@
 
         <x-slot name="body">
             <div class="row col-12">
-                <x-field class="col-2">
+                <x-field class="form-group col-2 offset-1">
                     <x-label for="id">Id</x-label>
-                    <x-input wire:model="iden" readonly/>
+                    <x-input  class="form-control-sm " wire:model="iden" readonly/>
                 </x-field>
 
-                <x-field class="col-6">
+                <x-field class="form-group col-6">
                     <x-label for="name">Descripción</x-label>
-                    <x-input wire:model="name" readonly/>
+                    <x-input class="form-control-sm " wire:model="name" readonly/>
                 </x-field>
             </div>
             <div class="row mb-2">
-                <x-field class="col-5">
+                <x-field class="form-group col-5 offset-1">
                     <x-label for="name">Modulo</x-label>
-                    <x-select wire:change="addPermiso" wire:model="selectedModuloId"  class="{{ $errors->has('selectedModuloId') ? 'is-invalid' : 'is-valid' }}">
+                    <x-select  wire:change="addPermiso" wire:model="selectedModuloId"  class="form-control-sm {{ $errors->has('selectedModuloId') ? 'is-invalid' : '' }}">
                         <option value="">-- Seleccione Modulo --</option>
                         @foreach ($this->Modulo as $index => $Modulo)
                             <option value="{{ $index }}">

@@ -8,7 +8,7 @@
 			<div class="col-sm-12">
 				<ol class="breadcrumb float-sm-right">
 					<li class="breadcrumb-item text-bold"><a href="{{ route('configuracion.configuracion.ubicacion_geografica.index') }}">Ubicaciones Geográficas</a></li>
-					<li class="breadcrumb-item active text-bold">Consultar</li>
+					<li class="breadcrumb-item active text-bold">Ver Ubicaciones Geograficas </li>
 				</ol>
 			</div>
 		</div>

@@ -8,6 +8,7 @@ use App\Http\Requests\Administrativo\Meru_Administrativo\Configuracion\Control\P
 use App\Models\Administrativo\Meru_Administrativo\Configuracion\Modulo;
 use Illuminate\Support\Str;
 use Codedge\Fpdf\Fpdf\Fpdf;
+use Illuminate\Support\Facades\DB;
 use App\Traits\ReportFpdf;
 use App\Http\Controllers\Controller;
 
@@ -133,14 +134,18 @@ class PermisoController extends Controller
         $data['revision']			        = '';
         $data['usuario']			        = auth()->user()->name;
         $data['cod_reporte']			    = '';
-        $data['registros']                  = Permiso::query()->where('status', '1')->orderby('name')->get();
+        $data['registros']                  = Permiso::query()
+                                                ->select(
+                                                    DB::raw("id"),
+                                                    DB::raw("route_name"),
+                                                    DB::raw("guard_name"),
+                                                    DB::raw("name"),
+                                                    DB::raw("(CASE WHEN status = '0' THEN 'Inactivo' ELSE 'Activo' END) as status"))
+                                                    ->orderby('name','desc')->get();
 
         $pdf = new Fpdf;
-
         $pdf->setTitle(utf8_decode('Listado de Usuarios'));
-
         $this->pintar_listado_pdf($pdf,$data);
-
         exit;
     }
 

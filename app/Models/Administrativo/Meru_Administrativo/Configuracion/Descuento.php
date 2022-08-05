@@ -12,6 +12,7 @@ class Descuento extends Model
 
     protected $table = 'adm_descuentos';
 
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -33,7 +34,7 @@ class Descuento extends Model
             'adm_residencia_id',
             ];
 
-    protected $dates = ['fecha'];
+
 
     public function tipomontos()
     {

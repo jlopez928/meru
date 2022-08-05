@@ -20,21 +20,27 @@
         </x-slot>
         <x-slot name="body">
             <div class="row col-12">
-                <x-field class="col-1">
-                    <x-label for="id">Id</x-label>
-                    <x-input name="id" value="{{ $rol->id }}" readonly />
+                <x-field class="form-group col-2 offset-1">
+                    <x-label for="id">{{ __('ID') }}</x-label>
+                    <x-input id="id" name="id" class="text-center form-control-sm " value="{{ old('id', $rol->id) }}" readonly/>
                 </x-field>
 
-                <x-field class="col-4">
-                    <x-label >Descripción</x-label>
-                    <x-input name="name" value="{{ $rol->name }}" readonly />
+                <x-field class="form-group col-4 ">
+                    <x-label for="name">Descripción</x-label>
+                    <x-input readonly  name="name" class="form-control-sm  {{ $errors->has('name') ? 'is-invalid' : '' }}" placeholder="Ingrese Descripción" value="{{ old('name', $rol->name) }}"  />
+                    <div class="invalid-feedback">
+                        @error('name') {{ $message }} @enderror
+                    </div>
                 </x-field>
-                <x-field class="col-2">
-                    <x-label >Estado</x-label>
-                    <x-select  disabled readonly name="status" class="{{ $errors->has('status') ? 'is-invalid' : 'is-valid' }}">
-                        <option value="{{ old('status', $rol->status) == '0' ? '0' : '1' }}" selected>{{ old('status', $rol->status) == '0' ? 'INACTIVO' : 'ACTIVO' }}</option>
-                        <option value="{{ old('status', $rol->status) == '0' ? '1' : '0'}}"> {{ old('status', $rol->status) == '0' ? 'ACTIVO' : 'INACTIVO' }}</option>
-                 </x-select>
+                <x-field class="form-group col-2 ">
+                    <x-label for="Estado">Estado</x-label>
+                    <x-select readonly  disabled  name="status" class="form-control-sm  {{ $errors->has('status') ? 'is-invalid' : '' }}">
+                            <option value="{{ old('status', $rol->status) == '0' ? '0' : '1' }}" selected>{{ old('status', $rol->status) == '0' ? 'INACTIVO' : 'ACTIVO' }}</option>
+                            <option value="{{ old('status', $rol->status) == '0' ? '1' : '0'}}"> {{ old('status', $rol->status) == '0' ? 'ACTIVO' : 'INACTIVO' }}</option>
+                     </x-select>
+                    <div class="invalid-feedback">
+                        @error('status') {{ $message }} @enderror
+                    </div>
                 </x-field>
             </div>
             <div class="dropdown-divider col-12" style="border-color:#84b7e0 !important; padding-bottom: 20px !important;"></div>
@@ -54,7 +60,7 @@
                             @forelse ($rol->permissions as $permission)
                                 <tr>
                                     <td>
-                                        <a href="{{ route('permiso.show', $permission) }}">
+                                        <a href="{{ route('configuracion.control.permiso.show', $permission) }}">
                                             {{ $permission->id }}
                                         </a>
                                     </td>

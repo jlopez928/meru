@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Administrativo\Meru_Administrativo\Configuracion\TasaCambio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Administrativo\Meru_Administrativo\Configuracion\Configuracion\TasaCambioRequest;
 use Illuminate\Support\Str;
 use Codedge\Fpdf\Fpdf\Fpdf;
@@ -34,7 +35,7 @@ class TasaCambioController extends Controller
     public function create()
     {
         $tasacambio= new TasaCambio();
-        $tasacambio->fecha = Carbon::now()->format('d-m-Y');
+        $tasacambio->fecha = Carbon::now()->format('Y-m-d');
          return view('administrativo.meru_administrativo.configuracion.configuracion.tasacambio.create', compact('tasacambio'));
 
     }
@@ -48,6 +49,7 @@ class TasaCambioController extends Controller
     public function store(TasaCambioRequest $request)
     {
         try {
+             TasaCambio::where('sta_reg', '1')->update(array('sta_reg' => '0'));
              TasaCambio::create($request->validated());
              flash()->addSuccess('Registro Guardado Exitosamente');
              return redirect()->route('configuracion.configuracion.tasacambio.index');
@@ -78,7 +80,7 @@ class TasaCambioController extends Controller
      */
     public function edit(TasaCambio $tasacambio)
     {
-        $tasacambio->fecha = Carbon::parse($tasacambio->fecha)->format('d-m-Y');
+        //$tasacambio->fecha = Carbon::parse($tasacambio->fecha)->format('Y-m-d');
         return view('administrativo.meru_administrativo.configuracion.configuracion.tasacambio.edit', compact('tasacambio'));
 
     }
@@ -90,7 +92,7 @@ class TasaCambioController extends Controller
      * @param  \App\Models\Administrativo\Meru_Administrativo\Configuracion\TasaCambio  $tasaCambio
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, TasaCambio $tasacambio)
+    public function update(TasaCambioRequest $request, TasaCambio $tasacambio)
     {
 
         try {
@@ -132,12 +134,15 @@ class TasaCambioController extends Controller
         $data['revision']			        = '';
         $data['usuario']			        = auth()->user()->name;
         $data['cod_reporte']			    = '';
-        $data['registros']                  = TasaCambio::query()->where('sta_reg', '1')->orderby('fec_tasa')->get();
+        $data['registros']                  = TasaCambio::query()
+                                                        ->select(
+                                                            DB::raw("fec_tasa"),
+                                                            DB::raw("coalesce(bs_tasa, 0) as bs_tasa"),
+                                                            DB::raw("(CASE WHEN sta_reg = '0' THEN 'Inactivo' ELSE 'Activo' END) as sta_reg"))
+                                                             ->orderby('fec_tasa','desc')->get();
 
         $pdf = new Fpdf;
-
         $pdf->setTitle(utf8_decode('Listado de Modulos'));
-
         $this->pintar_listado_pdf($pdf,$data);
 
         exit;

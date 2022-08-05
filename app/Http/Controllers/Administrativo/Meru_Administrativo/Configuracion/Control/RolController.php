@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Codedge\Fpdf\Fpdf\Fpdf;
 use App\Traits\ReportFpdf;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 class RolController extends Controller
 {   use ReportFpdf;
     /**
@@ -139,14 +140,15 @@ class RolController extends Controller
         $data['revision']			        = '';
         $data['usuario']			        = auth()->user()->name;
         $data['cod_reporte']			    = '';
-        $data['registros']                  = Rol::query()->where('status', '1')->orderby('name')->get();
-
+        $data['registros']                  = Rol::query()
+                                                ->select(
+                                                    DB::raw("id"),
+                                                    DB::raw("name"),
+                                                    DB::raw("(CASE WHEN status = '0' THEN 'Inactivo' ELSE 'Activo' END) as status"))
+                                                    ->orderby('name','desc')->get();
         $pdf = new Fpdf;
-
         $pdf->setTitle(utf8_decode('Listado de Roles'));
-
         $this->pintar_listado_pdf($pdf,$data);
-
         exit;
     }
 }

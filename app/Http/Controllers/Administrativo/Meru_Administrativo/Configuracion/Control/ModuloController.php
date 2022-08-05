@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Administrativo\Meru_Administrativo\Configuracion\
 
 use App\Http\Requests\Administrativo\Meru_Administrativo\Configuracion\Control\ModuloRequest;
 use App\Models\Administrativo\Meru_Administrativo\Configuracion\Modulo;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Codedge\Fpdf\Fpdf\Fpdf;
 use App\Traits\ReportFpdf;
@@ -46,7 +47,8 @@ class ModuloController extends Controller
     {
          //
          try {
-            modulo::create($request->validated());
+
+            Modulo::create($request->validated() + ['codigo' =>  $request->nombre]);
             flash()->addSuccess('Modulo Creado Exitosamente.');
             return redirect()->route('configuracion.control.modulo.index');
 
@@ -91,7 +93,7 @@ class ModuloController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(ModuloRequest $request, Modulo $modulo)
-    { //
+    {
         try {
 
             if ($modulo->status == '0' && $request->status=='0'){
@@ -123,21 +125,23 @@ class ModuloController extends Controller
         $data['nombre_columnas']		   	= array(utf8_decode('Código'),utf8_decode('Nombe'),utf8_decode('Estado'));
         $data['funciones_columnas']         = '';
         $data['fuente']		   	            = 8;
-        $data['registros_mostar']           = array('id', 'name','estado');
+        $data['registros_mostar']           = array('id', 'nombre','sta_reg');
         $data['nombre_documento']			= 'listado_modulo.pdf'; //Nombre de Archivo
         $data['con_imagen']			        = true;
         $data['vigencia']			        = '';
         $data['revision']			        = '';
         $data['usuario']			        = auth()->user()->name;
         $data['cod_reporte']			    = '';
-        $data['registros']                  = Modulo::query()->where('status', '1')->orderby('name')->get();
+        $data['registros']                  = Modulo::query()
+                                                ->select(
+                                                    DB::raw("id"),
+                                                    DB::raw("nombre"),
+                                                    DB::raw("(CASE WHEN status = '0' THEN 'Inactivo' ELSE 'Activo' END) as sta_reg"))
+                                                    ->orderby('nombre','desc')->get();
 
         $pdf = new Fpdf;
-
         $pdf->setTitle(utf8_decode('Listado de Modulos'));
-
         $this->pintar_listado_pdf($pdf,$data);
-
         exit;
     }
 

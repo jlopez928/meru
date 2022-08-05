@@ -16,21 +16,18 @@ class ModuloRequest extends FormRequest
     {
         return true;
     }
-
-    /**
+   /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, mixed>
      */
     public function rules()
     {
-
-            return [
-                'name'  => ['required', 'string',  'max:100', Rule::unique('modulos')->ignore($this->modulo)],
-                'status' => 'required',
-
-
-            ];
+        return [
+             'nombre' =>['required',  Rule::unique('modulos')->ignore($this->id)]  ,
+             'status' =>'required'
+        ];
 
     }
+
 }

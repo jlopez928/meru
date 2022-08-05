@@ -8,7 +8,7 @@
             <div class="col-sm-12">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item text-bold"><a href="{{ route('configuracion.configuracion.descuento.index') }}">Descuentos y Retenciones </a></li>
-                    <li class="breadcrumb-item active text-bold">Registar Descuentos y Retenciones</li>
+                    <li class="breadcrumb-item active text-bold">Registrar Descuentos y Retenciones</li>
                 </ol>
             </div>
         </div>

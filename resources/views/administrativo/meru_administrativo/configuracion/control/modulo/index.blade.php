@@ -7,8 +7,8 @@
 	<div class="container-fluid">
 		<div class="row mb-12">
             <div class="col-sm-6">
-				<x-button class="btn-success" href="{{ route('modulo.create') }}" title="Nuevo"><i class="fas fa-plus-circle"></i> Nuevo</x-button>
-                <x-button href="{{ route('print_modulo')}}" target="_blank" class="btn-primary" title="Generar PDF"><i class="fas fa-download"> Generar PDF</i></i></x-button>
+				<x-button class="btn-success" href="{{ route('configuracion.control.modulo.create') }}" title="Nuevo"><i class="fas fa-plus-circle"></i> Nuevo</x-button>
+                <x-button href="{{ route('configuracion.control.modulo.print_modulo')}}" target="_blank" class="btn-primary" title="Generar PDF"><i class="fas fa-download"> Generar PDF</i></i></x-button>
 			</div>
 			<div class="col-sm-6">
 				<ol class="breadcrumb float-sm-right">
