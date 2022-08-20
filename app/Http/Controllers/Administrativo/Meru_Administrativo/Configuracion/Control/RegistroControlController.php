@@ -5,6 +5,7 @@ use App\Models\Administrativo\Meru_Administrativo\Configuracion\RegistroControl;
 use App\Http\Controllers\Controller;
 use Codedge\Fpdf\Fpdf\Fpdf;
 use App\Traits\ReportFpdf;
+use Illuminate\Http\Request;
 
 class RegistroControlController extends Controller
 {  use ReportFpdf;
@@ -54,5 +55,12 @@ class RegistroControlController extends Controller
        exit;
    }
 
+    public function periodoActual(Request $request)
+    {
+        if (!empty($request->get('ano_pro'))) {
+            session(['ano_pro' => $request->get('ano_pro')]);
+        }
 
+        return redirect()->back();
+    }
 }

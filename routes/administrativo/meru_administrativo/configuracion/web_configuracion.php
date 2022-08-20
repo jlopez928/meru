@@ -48,6 +48,8 @@ Route::middleware(['auth'])
                       Route::get('print_descuento', [DescuentoController::class, 'print_descuento'])->name('print_descuento');
                  });
 
+                
+
 			});
             Route::name('control.')
 			->group(function () {
@@ -60,6 +62,9 @@ Route::middleware(['auth'])
                 ->as('registrocontrol.')
                 ->group(function() {
                      Route::get('print_registrocontrol', [RegistroControlController::class, 'print_registrocontrol'])->name('print_registrocontrol');
+
+                     // Periodo Fiscal global
+                     Route::post('periodo_actual', [RegistroControlController::class, 'periodoActual'])->name('periodo_actual');
                  });
                  Route::controller(PermisoController::class)
                  ->as('permiso.')
