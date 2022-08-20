@@ -19,4 +19,9 @@ class RegistroControl extends Model
     {
         return RegistroControl::where('sta_con', 'A')->max('ano_pro');
     }
+
+    public static function periodosAbiertos()
+    {
+        return RegistroControl::where('sta_pre', '!=', 0)->get()->pluck('ano_pro', 'ano_pro');
+    }
 }

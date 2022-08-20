@@ -95,7 +95,7 @@
 </head>
 
 <body
-    class="hold-transition sidebar-mini layout-fixed"
+    class="hold-transition layout-fixed"
 >
     <div class="wrapper">
 
@@ -191,6 +191,12 @@
     <!-- Select2 4.0.13 -->
     <script src="{{ asset('template/plugins/select2/js/select2.min.js') }}"></script>
     <script src="{{ asset('template/plugins/select2/js/select2.full.min.js') }}"></script>
+
+    <!-- Bs-custom-file-input -->
+    <script src="{{ asset('template/plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
+
+    <!-- Sweetalert -->
+    @include('sweetalert::alert')
 
     @livewireScripts
 
