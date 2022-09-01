@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Administrativo\Meru_Administrativo\Configuracion\Configuracion;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Codedge\Fpdf\Fpdf\Fpdf;
+use App\Support\Fpdf;
 use App\Traits\ReportFpdf;
 use App\Models\Administrativo\Meru_Administrativo\Configuracion\UbicacionGeografica;
 use App\Http\Requests\Administrativo\Meru_Administrativo\Configuracion\Configuracion\UbicacionGeograficaRequest;
@@ -66,11 +65,11 @@ class UbicacionGeograficaController extends Controller
 
 			DB::commit();
 
-			flash()->addSuccess('Registro creado exitosamente');
+			alert()->success('¡Éxito!', 'Registro creado exitosamente');
 			return redirect()->route('configuracion.configuracion.ubicacion_geografica.index');
 		} catch (\Illuminate\Database\QueryException $e) {
 			DB::rollBack();
-			flash()->addError('Transacci&oacute;n Fallida<br>' . $e->getMessage());
+			alert()->addError('¡Transacción Fallida!', $e->getMessage());
 			return redirect()->back()->withInput();
 		}
 	}
@@ -126,11 +125,11 @@ class UbicacionGeograficaController extends Controller
 
 			DB::commit();
 
-			flash()->addSuccess('Registro Modificado Exitosamente');
+			alert()->addSuccess('¡Éxito!', 'Registro Modificado Exitosamente');
 			return redirect()->route('configuracion.configuracion.ubicacion_geografica.index');
 		} catch(\Illuminate\Database\QueryException $e){
 			DB::rollBack();
-			flash()->addError('Transacci&oacute;n Fallida<br>'. $e->getMessage());
+			alert()->error('¡Transacción Fallida!', $e->getMessage());
 			return redirect()->back()->withInput();
 		}
 	}
