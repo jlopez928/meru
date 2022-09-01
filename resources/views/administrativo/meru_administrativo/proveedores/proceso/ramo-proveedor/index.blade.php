@@ -4,19 +4,11 @@
 
     <section class="content-header">
 		<div class="container-fluid">
-			<div class="row mb-2">
-				<div class="col-sm-1">
-                    {{--  <x-button class="btn-success" href="{{ route('proveedores.configuracion.ramo.create') }}" title="Nuevo">Nuevo</x-button>  --}}
-				</div>
-				<div class="col-sm-5">
-                    {{--  <a target="_blank" href="{{ route('proveedores.configuracion.ramo.print_ramos') }}" class="btn btn-sm  btn-primary text-bold" title="Generar PDF">Generar PDF</a>  --}}
-				</div>
-				<div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item text-bold"><a href="{{ route('home') }}">Página principal</a></li>
-                        <li class="breadcrumb-item active text-bold">Ramos de Proveedor</li>
-                    </ol>
-				</div>
+			<div class="row mb-2 d-flex justify-content-end">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item text-bold"><a href="{{ route('home') }}">Página principal</a></li>
+                    <li class="breadcrumb-item active text-bold">Ramos de Proveedor</li>
+                </ol>
 			</div>
 		</div>
     </section>

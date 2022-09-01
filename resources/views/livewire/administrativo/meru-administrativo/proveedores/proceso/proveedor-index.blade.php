@@ -13,7 +13,7 @@
                         <td align="left">{{ $proveedor->nom_prov }}</td>
                         <td align="left">{{ $proveedor->sta_con->name }}</td>
                         <td align="center">
-                            <a href="{{ route('proveedores.proceso.proveedor.edit', $proveedor) }}" type="button" class="btn btn-primary btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Editar">
+                            <a href="{{ route('proveedores.proceso.proveedor.edit', $proveedor) }}" type="button" class="btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Editar">
                                 <span class="fas fa-edit" aria-hidden="true"></span>
                             </a>
                         </td>

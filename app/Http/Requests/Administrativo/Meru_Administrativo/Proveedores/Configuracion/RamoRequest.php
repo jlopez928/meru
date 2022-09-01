@@ -32,7 +32,7 @@ class RamoRequest extends FormRequest
     public function prepareForValidation()
     {
         $this->merge([
-            'des_ram' => strtoupper($this->des_ram)
+            'des_ram' => strtoupper($this->des_ram ?? '')
         ]);
     }
 }

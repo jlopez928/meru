@@ -24,11 +24,11 @@
                 <div class="row col-12">
                     <x-field class="col-2">
                         <x-label for="rif_prov">Rif</x-label>
-                        <x-input name="rif_prov" value="{{ $proveedor->rif_prov }}" readonly />
+                        <x-input class="form-control-sm" name="rif_prov" value="{{ $proveedor->rif_prov }}" readonly />
                     </x-field>
                     <x-field class="col-6">
                         <x-label >Nombre</x-label>
-                        <x-input name="nom_prov" value="{{ $proveedor->nom_prov }}" readonly />
+                        <x-input class="form-control-sm" name="nom_prov" value="{{ $proveedor->nom_prov }}" readonly />
                     </x-field>
                 </div>
                 <div class="row col-12 mt-3">

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
-class Menu extends Model
+class MenuPermiso extends Model
 {
     //
 
@@ -30,7 +30,7 @@ class Menu extends Model
         foreach ($data as $line1) {
             $line1a = (array)$line1;
             if ($line['id'] == $line1a['padre']) {
-                $children = array_merge($children, [ array_merge($line1a, ['submenu' => $this->getChildren($data, $line1a) ]) ]);
+                $children = array_merge($children, [array_merge($line1a, ['submenu' => $this->getChildren($data, $line1a)])]);
             }
         }
         return $children;
@@ -119,7 +119,7 @@ class Menu extends Model
         $menuAll = [];
         foreach ($data as $line) {
             $linea = (array)$line;
-            $item = [ array_merge($linea, ['submenu' => $menus->getChildren($data,$linea) ]) ];
+            $item = [array_merge($linea, ['submenu' => $menus->getChildren($data, $linea)])];
             $menuAll = array_merge($menuAll, $item);
         }
 
