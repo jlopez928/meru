@@ -41,7 +41,8 @@ class DescuentoController extends Controller
          }
     }
     public function show(Descuento $descuento)
-    {   $descuento->fecha = Carbon::parse($descuento->fecha)->format('Y-m-d');
+    {
+        $descuento->fecha = Carbon::parse($descuento->fecha)->format('Y-m-d');
          return view('administrativo.meru_administrativo.configuracion.configuracion.descuento.show',compact('descuento'));
 
     }

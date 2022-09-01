@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Administrativo\Meru_Administrativo\Proveedores;
+namespace  App\Models\Administrativo\Meru_Administrativo\Proveedores;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
