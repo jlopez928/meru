@@ -8,6 +8,11 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+// Juan Durán
+use App\Models\Administrativo\Meru_Administrativo\Configuracion\RegistroControl;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -56,6 +61,31 @@ class RegisterController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
+
+    // Juan  Durán
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+        $this->guard()->login($user);
+
+        if ($response = $this->registered($request, $user)) {
+            return $response;
+        }
+
+        if (RegistroControl::periodosAbiertos()->count() == 1) {
+            session(['ano_pro' => RegistroControl::periodoActual()]);
+        } else {
+            session(['ano_pro' => '']);
+        }
+
+        return $request->wantsJson()
+                    ? new JsonResponse([], 201)
+                    : redirect($this->redirectPath());
+    }
+
 
     /**
      * Create a new user instance after a valid registration.

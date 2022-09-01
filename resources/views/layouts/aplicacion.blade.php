@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Icono app -->
-    <link rel="icon" href="{{ asset('img/favicon.ico') }}">
+    <link rel="icon" href="{{ asset('img/favicon.png') }}">
 
     <!-- Title app -->
     <title>{{ config('app.name', 'MERÚ Administrativo') }}</title>
@@ -198,17 +198,23 @@
     <!-- Sweetalert -->
     @include('sweetalert::alert')
 
+    <!-- InputMask 5.x -->
+    <script src="{{ asset('js/jquery.inputmask.min.js' ) }}"></script>
+    <script src="{{ asset('js/inputmask.binding.js' ) }}"></script>
+
     @livewireScripts
 
     @yield('js')
 
     @stack('scripts')
 
-    <!-- AlpineJS - Mask 3.10.2 -->
-    <script src="{{ asset('js/alpinejs-mask.min.js') }}"></script>
+    <!-- AlpineJS - Mask 3.10.3 -->
+    {{-- <script src="{{ asset('js/alpinejs-mask.min.js') }}"></script> --}}
+    <script src="{{ asset('js/alpinejs/alpinejs.3.10.3.mask.min.js') }}"></script>
 
-    <!-- AlpineJS 3.8.1 -->
-    <script src="{{ asset('js/alpinejs.min.js') }}"></script>
+    <!-- AlpineJS 3.10.3 -->
+    {{-- <script src="{{ asset('js/alpinejs.min.js') }}"></script> --}}
+    <script src="{{ asset('js/alpinejs/alpinejs.3.10.3.min.js') }}"></script>
 
 </body>
 
