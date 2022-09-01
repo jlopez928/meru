@@ -43,11 +43,11 @@ class RamoController extends Controller
 
             });
 
-            flash()->addSuccess('Registro Guardado Exitosamente');
+            alert()->success('Éxito','Registro Guardado Exitosamente');
 
             return to_route('proveedores.configuracion.ramo.index');
         } catch (\Exception $ex) {
-            flash()->addError('Transacción Fallida: ' . str($ex)->limit(250));
+            alert()->error('Error', str($ex)->limit(250));
 
             return redirect()->back()->withInput();
         }
@@ -63,13 +63,29 @@ class RamoController extends Controller
         try {
             $ramo->update($request->validated());
 
-            flash()->addSuccess('Registro Modificado Exitosamente');
+            alert()->success('Éxito','Registro Modificado Exitosamente');
 
             return to_route('proveedores.configuracion.ramo.index');
         } catch (\Exception $ex) {
-            flash()->addError('Transacción Fallida: ' . str($ex)->limit(250));
+            alert()->error('Error', str($ex)->limit(250));
 
             return redirect()->back()->withInput();
+        }
+    }
+
+    public function destroy(Ramo $ramo)
+    {
+        try {
+            $ramo->delete();
+
+            alert()->success('Éxito','Registro Eliminado Exitosamente');
+
+            return to_route('proveedores.configuracion.ramo.index');
+        } catch (\Exception $ex) {
+
+            alert()->error('Error', str($ex)->limit(250));
+
+            return redirect()->back();
         }
     }
 

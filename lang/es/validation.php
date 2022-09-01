@@ -182,17 +182,7 @@ return [
         'title'                 => 'título',
         'username'              => 'usuario',
         'year'                  => 'año',
-        'Salida' => [
-            'serial'            => 'serial',
-            'codigo'            => 'codigo',
-            'descripcion'       => 'descripcion',
-            'cantidad'          => 'cantidad',
-            'unidad'            => 'unidad'
-        ],
-        'metal_red_prog'        => 'metal reducción',
-        'metal_env_prog'        => 'metal envarillado',
-        'metal_esc_prog'        => 'metal escoria',
-        'ling_menor_prog'       => 'lingotes menor',
-        'ling_mayor_prog'       => 'lingotes mayor'
+        'des_ram'               => 'descripción',
+        'selectedRamoId'        => 'ramo'
     ],
 ];

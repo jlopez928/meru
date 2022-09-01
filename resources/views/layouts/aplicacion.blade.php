@@ -198,9 +198,10 @@
     <!-- Sweetalert -->
     @include('sweetalert::alert')
 
-    <!-- InputMask 5.x -->
-    <script src="{{ asset('js/jquery.inputmask.min.js' ) }}"></script>
-    <script src="{{ asset('js/inputmask.binding.js' ) }}"></script>
+    <!-- InputMask 5.0.7 -->
+    <script src="{{ asset('template/plugins/inputmask/inputmask.min.js') }}"></script>
+    <script src="{{ asset('template/plugins/inputmask/bindings/inputmask.binding.js') }}"></script>
+    <script src="{{ asset('template/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
 
     @livewireScripts
 
@@ -209,11 +210,9 @@
     @stack('scripts')
 
     <!-- AlpineJS - Mask 3.10.3 -->
-    {{-- <script src="{{ asset('js/alpinejs-mask.min.js') }}"></script> --}}
     <script src="{{ asset('js/alpinejs/alpinejs.3.10.3.mask.min.js') }}"></script>
 
     <!-- AlpineJS 3.10.3 -->
-    {{-- <script src="{{ asset('js/alpinejs.min.js') }}"></script> --}}
     <script src="{{ asset('js/alpinejs/alpinejs.3.10.3.min.js') }}"></script>
 
 </body>

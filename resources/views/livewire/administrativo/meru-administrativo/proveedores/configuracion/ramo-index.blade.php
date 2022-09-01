@@ -14,16 +14,24 @@
                         <td align="left">{{ $ramo->des_ram }}</td>
                         <td align="center">{{ $ramo->sta_reg->name }}</td>
                         <td align="center">
-                            <div x-data>
                                 <a href="{{ route('proveedores.configuracion.ramo.edit', $ramo) }}" type="button" class="btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Editar">
                                     <span class="fas fa-edit" aria-hidden="true"></span>
                                 </a>
                                 @if ($ramo->ramoproveedores_count === 0)
-                                    <a x-on:click="confirm('Seguro que desea eliminar este Registro?') ? @this.deleteRamo({{ $ramo->cod_ram }}) : false" type="button" class="btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Eliminar">
+                                    <a class="btn-sm confirm-delete" type="button" form-target="delete-form-{{ $ramo->cod_ram }}"
+                                        onclick="event.preventDefault();" title="Eliminar">
                                         <i class="fa fa-trash" aria-hidden="true"></i>
                                     </a>
+                                    <form 
+                                        id="delete-form-{{ $ramo->cod_ram }}" 
+                                        action="{{ route('proveedores.configuracion.ramo.destroy', $ramo->cod_ram) }}"
+                                        method="POST" 
+                                        style="display: none;"
+                                    >
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
                                 @endif
-                            </div>
                         </td>
                     </tr>
                 @endforeach
@@ -36,3 +44,7 @@
     @endif
 
 </x-datatable>
+
+@push('scripts')
+    {!! Helper::swalConfirm('.confirm-delete') !!}
+@endpush

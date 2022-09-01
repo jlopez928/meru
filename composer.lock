@@ -4,8 +4,68 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4dd7999b9d82045674d21e1454b1a1dd",
+    "content-hash": "17a71450fa0c87c179115854dec2f929",
     "packages": [
+        {
+            "name": "awobaz/compoships",
+            "version": "2.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/topclaudy/compoships.git",
+                "reference": "ba86741d9b439d1179a6432dded92b0ecc89a63a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/topclaudy/compoships/zipball/ba86741d9b439d1179a6432dded92b0ecc89a63a",
+                "reference": "ba86741d9b439d1179a6432dded92b0ecc89a63a",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": ">=5.6 <10.0"
+            },
+            "require-dev": {
+                "ext-sqlite3": "*"
+            },
+            "suggest": {
+                "awobaz/blade-active": "Blade directives for the Laravel 'Active' package",
+                "awobaz/eloquent-auto-append": "Automatically append accessors to model serialization",
+                "awobaz/eloquent-mutators": "Reusable mutators (getters/setters) for Laravel 5's Eloquent",
+                "awobaz/syntactic": "Syntactic sugar for named and indexed parameters call."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Awobaz\\Compoships\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Claudin J. Daniel",
+                    "email": "cdaniel@awobaz.com"
+                }
+            ],
+            "description": "Laravel relationships with support for composite/multiple keys",
+            "keywords": [
+                "laravel",
+                "laravel composite keys",
+                "laravel relationships"
+            ],
+            "support": {
+                "issues": "https://github.com/topclaudy/compoships/issues",
+                "source": "https://github.com/topclaudy/compoships/tree/2.1.4"
+            },
+            "funding": [
+                {
+                    "url": "https://paypal.me/awobaz",
+                    "type": "custom"
+                }
+            ],
+            "time": "2022-06-22T11:42:37+00:00"
+        },
         {
             "name": "barryvdh/laravel-ide-helper",
             "version": "v2.12.3",
@@ -1653,6 +1713,73 @@
             "time": "2022-05-21T17:30:32+00:00"
         },
         {
+            "name": "laradumps/laradumps",
+            "version": "v1.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laradumps/laradumps.git",
+                "reference": "d0612d78cd302a7761d1a52e1e685dd6f1513277"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laradumps/laradumps/zipball/d0612d78cd302a7761d1a52e1e685dd6f1513277",
+                "reference": "d0612d78cd302a7761d1a52e1e685dd6f1513277",
+                "shasum": ""
+            },
+            "require": {
+                "nunomaduro/termwind": "^1.12",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.8",
+                "illuminate/support": "^8.18 | ^9.0",
+                "nunomaduro/larastan": "^1.0 | ^2.1",
+                "orchestra/testbench": "^6.17 | ^7.0",
+                "pestphp/pest": "^1.21",
+                "symfony/var-dumper": "^5.4 | ^6.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "LaraDumps\\LaraDumps\\LaraDumpsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/functions.php"
+                ],
+                "psr-4": {
+                    "LaraDumps\\LaraDumps\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Luan Freitas",
+                    "email": "luanfreitas10@protonmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A Dump Component for Laravel.",
+            "homepage": "https://github.com/laradumps/laradumps",
+            "support": {
+                "issues": "https://github.com/laradumps/laradumps/issues",
+                "source": "https://github.com/laradumps/laradumps/tree/v1.3.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/luanfreitasdev",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-08-19T13:53:38+00:00"
+        },
+        {
             "name": "laravel/framework",
             "version": "v9.19.0",
             "source": {
@@ -2854,6 +2981,59 @@
             "time": "2022-06-09T08:59:12+00:00"
         },
         {
+            "name": "mopo922/laravel-treats",
+            "version": "v2.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mopo922/LaravelTreats.git",
+                "reference": "f272cf1f3ac0c98b33fad43c692dc4f0a86fa58d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mopo922/LaravelTreats/zipball/f272cf1f3ac0c98b33fad43c692dc4f0a86fa58d",
+                "reference": "f272cf1f3ac0c98b33fad43c692dc4f0a86fa58d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "laravel/framework": ">=5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "LaravelTreats\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mark Potter",
+                    "homepage": "https://github.com/mopo922"
+                }
+            ],
+            "description": "A collection of goodies for Laravel 5.",
+            "homepage": "https://github.com/mopo922/LaravelTreats",
+            "keywords": [
+                "api",
+                "controllers",
+                "eloquent",
+                "l5",
+                "laravel",
+                "models",
+                "web"
+            ],
+            "support": {
+                "issues": "https://github.com/mopo922/LaravelTreats/issues",
+                "source": "https://github.com/mopo922/LaravelTreats/tree/v2"
+            },
+            "time": "2018-06-06T02:20:19+00:00"
+        },
+        {
             "name": "myclabs/php-enum",
             "version": "1.8.3",
             "source": {
@@ -3217,6 +3397,92 @@
                 "source": "https://github.com/nikic/PHP-Parser/tree/v4.14.0"
             },
             "time": "2022-05-31T20:59:12+00:00"
+        },
+        {
+            "name": "nunomaduro/termwind",
+            "version": "v1.14.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nunomaduro/termwind.git",
+                "reference": "10065367baccf13b6e30f5e9246fa4f63a79eb1d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nunomaduro/termwind/zipball/10065367baccf13b6e30f5e9246fa4f63a79eb1d",
+                "reference": "10065367baccf13b6e30f5e9246fa4f63a79eb1d",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": "^8.0",
+                "symfony/console": "^5.3.0|^6.0.0"
+            },
+            "require-dev": {
+                "ergebnis/phpstan-rules": "^1.0.",
+                "illuminate/console": "^8.0|^9.0",
+                "illuminate/support": "^8.0|^9.0",
+                "laravel/pint": "^1.0.0",
+                "pestphp/pest": "^1.21.0",
+                "pestphp/pest-plugin-mock": "^1.0",
+                "phpstan/phpstan": "^1.4.6",
+                "phpstan/phpstan-strict-rules": "^1.1.0",
+                "symfony/var-dumper": "^5.2.7|^6.0.0",
+                "thecodingmachine/phpstan-strict-rules": "^1.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Termwind\\Laravel\\TermwindServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/Functions.php"
+                ],
+                "psr-4": {
+                    "Termwind\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nuno Maduro",
+                    "email": "enunomaduro@gmail.com"
+                }
+            ],
+            "description": "Its like Tailwind CSS, but for the console.",
+            "keywords": [
+                "cli",
+                "console",
+                "css",
+                "package",
+                "php",
+                "style"
+            ],
+            "support": {
+                "issues": "https://github.com/nunomaduro/termwind/issues",
+                "source": "https://github.com/nunomaduro/termwind/tree/v1.14.0"
+            },
+            "funding": [
+                {
+                    "url": "https://www.paypal.com/paypalme/enunomaduro",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/nunomaduro",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/xiCO2k",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-08-01T11:03:24+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -4291,6 +4557,51 @@
                 }
             ],
             "time": "2022-05-28T13:28:03+00:00"
+        },
+        {
+            "name": "robinherbots/jquery.inputmask",
+            "version": "5.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/RobinHerbots/Inputmask.git",
+                "reference": "e76b7c9dd9049e2d0f8f439b5f393fd5a5f1c84f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/RobinHerbots/Inputmask/zipball/e76b7c9dd9049e2d0f8f439b5f393fd5a5f1c84f",
+                "reference": "e76b7c9dd9049e2d0f8f439b5f393fd5a5f1c84f",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Robin Herbots"
+                }
+            ],
+            "description": "Inputmask is a javascript library which creates an input mask.  Inputmask can run against vanilla javascript, jQuery and jqlite.",
+            "homepage": "http://robinherbots.github.io/Inputmask",
+            "keywords": [
+                "form",
+                "input",
+                "inputmask",
+                "jquery",
+                "mask",
+                "plugins"
+            ],
+            "support": {
+                "issues": "https://github.com/RobinHerbots/Inputmask/issues",
+                "source": "https://github.com/RobinHerbots/Inputmask/tree/5.0.7"
+            },
+            "funding": [
+                {
+                    "type": "custom"
+                }
+            ],
+            "time": "2021-12-30T12:48:06+00:00"
         },
         {
             "name": "spatie/laravel-navigation",
@@ -9701,5 +10012,5 @@
         "php": "^8.0.2"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.0.0"
 }
