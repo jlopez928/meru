@@ -21,7 +21,7 @@
         <div class="row">
             <div class="col-12">
                 <x-form method="post" action="{{ route('formulacion.configuracion.maestro_ley.importar.store') }}" enctype="multipart/form-data">
-                    <x-card x-data="handler()">
+                    <x-card>
                         <x-slot name="header">
                             <h3 class="card-title text-bold">Importar Maestro de Ley</h3>
                         </x-slot>
@@ -98,13 +98,10 @@
     @include('layouts.sidebar')
 @endsection
 
-@section('js')
-    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
-
+@push('scripts')
     <script type="text/javascript"> 
         $(function () {
-            //https://github.com/Johann-S/bs-custom-file-input
             bsCustomFileInput.init();
         });
     </script>
-@endsection
+@endpush
