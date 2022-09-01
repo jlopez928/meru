@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Administrativo\Meru_Administrativo\Formulacion\Configuracion;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Codedge\Fpdf\Fpdf\Fpdf;
+use App\Support\Fpdf;
 use App\Traits\ReportFpdf;
 use App\Models\Administrativo\Meru_Administrativo\Configuracion\RegistroControl;
 use App\Models\Administrativo\Meru_Administrativo\Formulacion\PartidaPresupuestaria;
@@ -14,7 +13,7 @@ use App\Http\Requests\Administrativo\Meru_Administrativo\Formulacion\Configuraci
 
 class PartidaPresupuestariaController extends Controller
 {
-	 use ReportFpdf;
+	use ReportFpdf;
 
 	/**
 	 * Display a listing of the resource.
@@ -71,12 +70,11 @@ class PartidaPresupuestariaController extends Controller
 
 			DB::commit();
 
-			flash()->addSuccess('Registro creado exitosamente<br><b>' . $newPartida->cod_cta . '</b>');
+			alert()->html('¡Éxito!', 'Registro creado exitosamente<br><b>' . $newPartida->cod_cta . '</b>',  'success');
 			return redirect()->route('formulacion.configuracion.partida_presupuestaria.index');
 		} catch (\Illuminate\Database\QueryException $e) {
 			DB::rollBack();
-
-			flash()->addError('Transacci&oacute;n Fallida<br>' . $e->getMessage());
+			alert()->error('¡Transacción Fallida!', $e->getMessage());
 			return redirect()->back()->withInput();
 		}
 	}
@@ -127,11 +125,11 @@ class PartidaPresupuestariaController extends Controller
 
 			DB::commit();
 
-			flash()->addSuccess('Registro Modificado Exitosamente');
+			alert()->success('¡Éxito!', 'Registro Modificado Exitosamente');
 			return redirect()->route('formulacion.configuracion.partida_presupuestaria.index');
 		} catch(\Illuminate\Database\QueryException $e){
 			DB::rollBack();
-			flash()->addError('Transacci&oacute;n Fallida<br>'. $e->getMessage());
+			alert()->error('¡Transacción Fallida!', $e->getMessage());
 			return redirect()->back()->withInput();
 		}
 	}
@@ -174,11 +172,11 @@ class PartidaPresupuestariaController extends Controller
 
 			DB::commit();
 
-			flash()->addSuccess('Registro Modificado Exitosamente<br>Cuentas Contables asociadas.');
+			alert()->html('¡Éxito!', 'Registro Modificado Exitosamente<br>Cuentas Contables asociadas.', 'success');
 			return redirect()->route('formulacion.configuracion.partida_presupuestaria.index');
 		} catch(\Illuminate\Database\QueryException $e){
 			DB::rollBack();
-			flash()->addError('Transacci&oacute;n Fallida<br>'. $e->getMessage());
+			alert()->error('¡Transacción Fallida!', $e->getMessage());
 			return redirect()->back()->withInput();
 		}
 	}

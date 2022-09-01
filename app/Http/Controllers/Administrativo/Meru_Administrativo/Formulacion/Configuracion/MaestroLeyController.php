@@ -89,11 +89,11 @@ class MaestroLeyController extends Controller
 
 			DB::commit();
 
-			flash()->addSuccess('Registro creado exitosamente<br><b>' . $maestroLey->cod_com . '</b>');
+			alert()->html('¡Éxito!', 'Registro creado exitosamente<br><b>' . $maestroLey->cod_com . '</b>');
 			return redirect()->route('formulacion.configuracion.maestro_ley.index');
 		} catch (\Illuminate\Database\QueryException $e) {
 			DB::rollBack();
-			flash()->addError('Transacci&oacute;n Fallida<br>' . $e->getMessage());
+			alert()->error('¡Transacción Fallida!', $e->getMessage());
 			return redirect()->back()->withInput();
 		}
 	}
@@ -142,11 +142,11 @@ class MaestroLeyController extends Controller
 
 			DB::commit();
 
-			flash()->addSuccess('Registro Modificado Exitosamente!');
+			alert()->success('¡Éxito!', 'Registro Modificado Exitosamente!');
 			return redirect()->route('formulacion.configuracion.maestro_ley.index');
 		} catch(\Illuminate\Database\QueryException $e){
 			DB::rollBack();
-			flash()->addError('Transacci&oacute;n Fallida<br>'. $e->getMessage());
+			alert()->error('¡Transacción Fallida!', $e->getMessage());
 			return redirect()->back()->withInput();
 		}
 	}
@@ -190,11 +190,10 @@ class MaestroLeyController extends Controller
             $import->import($request->file('import_file'));
             $failures = $import->getErrores();
 
-            flash()->addSuccess('Proceso realizado.');
+            alert()->info('¡Éxito!', 'Proceso realizado');
             return view('administrativo.meru_administrativo.formulacion.configuracion.maestro_ley.importar', compact('failures'));
-
         } catch (\Illuminate\Database\QueryException $e) {
-            flash()->addError('Hubo un error.<br>' . $e->getMessage());
+            alert()->error('¡Error!', $e->getMessage());
             return redirect()->route('formulacion.configuracion.maestro_ley.importar.create');
         }
     }
