@@ -12,7 +12,7 @@ use  App\Http\Controllers\Administrativo\Meru_Administrativo\Configuracion\Confi
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Configuracion\Configuracion\GerenciaController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Configuracion\Configuracion\UbicacionGeograficaController;
 
-Route::middleware(['auth'])
+Route::middleware(['auth', 'periodo-fiscal'])
 	->prefix('configuracion')
 	->as('configuracion.')
 	->group(function () {
@@ -48,7 +48,7 @@ Route::middleware(['auth'])
                       Route::get('print_descuento', [DescuentoController::class, 'print_descuento'])->name('print_descuento');
                  });
 
-                
+
 
 			});
             Route::name('control.')

@@ -17,7 +17,7 @@ use App\Http\Controllers\Administrativo\Meru_Administrativo\Proveedores\Reporte\
 
 // Proveedores
 Route::controller(ProveedorController::class)
-	->middleware(['auth'])
+	->middleware(['auth', 'periodo-fiscal'])
 	->prefix('proveedores/procesos')
 	->name('proveedores.proceso.proveedor.')
 	->group(function () {
@@ -32,7 +32,7 @@ Route::controller(ProveedorController::class)
 
 // Ramos
 Route::controller(RamoController::class)
-	->middleware(['auth'])
+	->middleware(['auth', 'periodo-fiscal'])
 	->prefix('proveedores/configuracion')
 	->name('proveedores.configuracion.ramo.')
 	->group(function () {
@@ -49,7 +49,7 @@ Route::controller(RamoController::class)
 
 // Ramos de Proveedores
 Route::controller(RamoProveedorController::class)
-	->middleware(['auth'])
+	->middleware(['auth', 'periodo-fiscal'])
 	->prefix('proveedores/procesos')
 	->name('proveedores.proceso.ramo_proveedor.')
 	->group(function () {
@@ -61,14 +61,14 @@ Route::controller(RamoProveedorController::class)
 
 // Reportes
 Route::controller(ReporteProveedorController::class)
-	->middleware(['auth'])
+	->middleware(['auth', 'periodo-fiscal'])
 	->prefix('proveedores/reportes')
 	->name('proveedores.reporte.')
 	->group(function () {
 
 		Route::get('proveedoressuspendidos', 'proveedoressuspendidos')->name('proveedoressuspendidos');
 	});
-Route::middleware(['auth'])
+Route::middleware(['auth', 'periodo-fiscal'])
     ->prefix('proveedores')
     ->as('proveedores.')
     ->group(function () {

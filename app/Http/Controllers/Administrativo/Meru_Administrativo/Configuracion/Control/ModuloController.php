@@ -9,27 +9,14 @@ use Illuminate\Support\Str;
 use Codedge\Fpdf\Fpdf\Fpdf;
 use App\Traits\ReportFpdf;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
-
 class ModuloController extends Controller
 {  use ReportFpdf;
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         return view('administrativo.meru_administrativo.configuracion.control.modulo.index');
 
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
 
@@ -37,46 +24,28 @@ class ModuloController extends Controller
         $modulo= new Modulo();
         return view('administrativo.meru_administrativo.configuracion.control.modulo.create', compact('modulo'));
     }
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(ModuloRequest $request)
     {
          //
          try {
 
             Modulo::create($request->validated() + ['codigo' =>  $request->nombre]);
-            flash()->addSuccess('Modulo Creado Exitosamente.');
+            alert()->success('¡Éxito!','Modulo Creado Exitosamente.');
             return redirect()->route('configuracion.control.modulo.index');
 
         } catch(\Illuminate\Database\QueryException $e){
-            flash()->addError('Transacci&oacute;n Fallida: '.Str::limit($e, 200));
+            alert()->error('Transacci&oacute;n Fallida: ',Str::limit($e->getMessage(), 120));
             return redirect()->back()->withInput();
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Administrativo\Meru_Administrativo\Configuracion\Configuracion\Modulo  $modulo
-     * @return \Illuminate\Http\Response
-     */
     public function show(Modulo $modulo)
     {
 
         return view('administrativo.meru_administrativo.configuracion.control.modulo.show', compact('modulo'));
    }
 
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Administrativo\Meru_Administrativo\Configuracion\Configuracion\Modulo  $modulo
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Modulo $modulo)
     {
 
@@ -85,27 +54,20 @@ class ModuloController extends Controller
 
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Administrativo\Meru_Administrativo\Configuracion\Configuracion\Modulo  $modulo
-     * @return \Illuminate\Http\Response
-     */
     public function update(ModuloRequest $request, Modulo $modulo)
     {
         try {
 
             if ($modulo->status == '0' && $request->status=='0'){
-                flash()->addInfo('Registro Inactivo NO puede ser Modificado. Favor verifique.');
+                alert()->info('Registro Inactivo NO puede ser Modificado. Favor verifique.');
                 return redirect()->back()->withInput();
             }
             $modulo->update($request->validated());
-            flash()->addSuccess('Registro Modificado Exitosamente');
+            alert()->success('¡Éxito!','Registro Modificado Exitosamente');
             return redirect()->route('configuracion.control.modulo.index');
 
         } catch(\Illuminate\Database\QueryException $e){
-            flash()->addError('Transacci&oacute;n Fallida'.Str::limit($e, 200));
+            alert()->error('Transacci&oacute;n Fallida: ',Str::limit($e->getMessage(), 120));
             return redirect()->back()->withInput();
         }
     }

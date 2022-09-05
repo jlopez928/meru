@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\OtrosPagos\Proceso\CertificacionServicioController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\OtrosPagos\Configuracion\OpConceptosController;
-Route::middleware(['auth'])
+Route::middleware(['auth', 'periodo-fiscal'])
 	->prefix('otrospagos')
 	->as('otrospagos.')
 	->group(function () {

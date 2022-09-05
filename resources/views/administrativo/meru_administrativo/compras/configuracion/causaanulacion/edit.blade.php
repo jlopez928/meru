@@ -7,7 +7,7 @@
 		<div class="row mb-2">
 			<div class="col-sm-12">
 				<ol class="breadcrumb float-sm-right">
-					<li class="breadcrumb-item text-bold"><a href="{{ route('compra.configuracion.unidadmedida.index') }}">Unidad de medidas</a></li>
+					<li class="breadcrumb-item text-bold"><a href="{{ route('compras.configuracion.causaanulacion.index') }}">Causa de Anulacion</a></li>
 					<li class="breadcrumb-item active text-bold">Editar</li>
 				</ol>
 			</div>
@@ -20,8 +20,8 @@
 		<div class="row">
 			<div class="col-12">
 
-			 	 <x-form method="put" action="{{ route('compra.configuracion.unidadmedida.update', $unidadmedida->id) }}">
-				     @include('administrativo/meru_administrativo/compra/configuracion/unidadmedida/partials/_form', ['submit_text' => 'Guardar'])
+			 	 <x-form method="put" action="{{ route('compras.configuracion.causaanulacion.update', $causaanulacion->id) }}">
+				     @include('administrativo/meru_administrativo/compras/configuracion/causaanulacion/partials/_form', ['submit_text' => 'Guardar'])
 				</x-form>
 			</div>
 		</div>

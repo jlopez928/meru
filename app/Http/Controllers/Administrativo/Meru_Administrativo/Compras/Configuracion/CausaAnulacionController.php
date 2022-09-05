@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Administrativo\Meru_Administrativo\Compra\Configuracion;
+namespace App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Configuracion;
 
 use App\Http\Controllers\Controller;
-use App\Models\Administrativo\Meru_Administrativo\Compra\CausaAnulacion;
+use App\Models\Administrativo\Meru_Administrativo\Compras\CausaAnulacion;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\Administrativo\Meru_Administrativo\Compra\Configuracion\CausaAnulacionRequest;
+use App\Http\Requests\Administrativo\Meru_Administrativo\Compras\Configuracion\CausaAnulacionRequest;
 use Codedge\Fpdf\Fpdf\Fpdf;
 use App\Traits\ReportFpdf;
 
@@ -14,12 +14,12 @@ class CausaAnulacionController extends Controller
     use ReportFpdf;
 
     public function index()
-    {  return view('administrativo.meru_administrativo.compra.configuracion.causaanulacion.index');
+    {  return view('administrativo.meru_administrativo.compras.configuracion.causaanulacion.index');
     }
     public function create()
     {
         $causaanulacion= new CausaAnulacion();
-        return view('administrativo.meru_administrativo.compra.configuracion.causaanulacion.create', compact('causaanulacion'));
+        return view('administrativo.meru_administrativo.compras.configuracion.causaanulacion.create', compact('causaanulacion'));
     }
 
     public function store(CausaAnulacionRequest $request)
@@ -28,7 +28,7 @@ class CausaAnulacionController extends Controller
                     CausaAnulacion::create( $request->only(['cod_cau', 'des_cau','sta_reg','usuario','fecha'] ));
                     DB::connection('pgsql')->commit();
                     alert()->success('¡Éxito!', 'Registro Ingresado Exitosamente');
-                    return redirect()->route('compra.configuracion.causaanulacion.index');
+                    return redirect()->route('compras.configuracion.causaanulacion.index');
 
          } catch(\Illuminate\Database\QueryException $e){
             DB::connection('pgsql')->rollBack();
@@ -38,10 +38,10 @@ class CausaAnulacionController extends Controller
     }
 
     public function show(CausaAnulacion $causaanulacion)
-    {        return view('administrativo.meru_administrativo.compra.configuracion.causaanulacion.show',compact('causaanulacion'));
+    {        return view('administrativo.meru_administrativo.compras.configuracion.causaanulacion.show',compact('causaanulacion'));
     }
     public function edit(CausaAnulacion $causaanulacion)
-    {   return view('administrativo.meru_administrativo.compra.configuracion.causaanulacion.edit', compact('causaanulacion'));
+    {   return view('administrativo.meru_administrativo.compras.configuracion.causaanulacion.edit', compact('causaanulacion'));
     }
     public function update(CausaAnulacionRequest $request, CausaAnulacion $causaanulacion)
     {   try {
@@ -53,7 +53,7 @@ class CausaAnulacionController extends Controller
             $causaanulacion->update($request->validated());
             DB::connection('pgsql')->commit();
             alert()->success('¡Éxito!', 'Registro Modificado Exitosamente');
-            return redirect()->route('compra.configuracion.causaanulacion.index');
+            return redirect()->route('compras.configuracion.causaanulacion.index');
 
         } catch(\Illuminate\Database\QueryException $e){
             DB::connection('pgsql')->rollBack();

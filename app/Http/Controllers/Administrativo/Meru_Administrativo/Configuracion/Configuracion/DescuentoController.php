@@ -33,10 +33,10 @@ class DescuentoController extends Controller
     {
         try {
              Descuento::create($request->validated());
-             flash()->addSuccess('Registro Guardado Exitosamente');
+             alert()->success('¡Éxito!','Registro Guardado Exitosamente');
              return redirect()->route('configuracion.configuracion.descuento.index');
          } catch(\Illuminate\Database\QueryException $e){
-            flash()->addError('Transacci&oacute;n Fallida: '.Str::limit($e, 120));
+             alert()->error('Transacci&oacute;n Fallida: ',Str::limit($e->getMessage(), 120));
              return redirect()->back()->withInput();
          }
     }
@@ -60,14 +60,14 @@ class DescuentoController extends Controller
     {//
         try {
             if ($descuento->status == '0' && $request->status=='0'){
-                flash()->addInfo('Registro Inactivo NO puede ser Modificado. Favor verifique.');
+                alert()->info('Registro Inactivo NO puede ser Modificado. Favor verifique.');
                 return redirect()->back()->withInput();
             }
             $descuento->update($request->validated());
-            flash()->addSuccess('Registro Modificado Exitosamente');
+            alert()->success('¡Éxito!','Registro Modificado Exitosamente');
             return redirect()->route('configuracion.configuracion.descuento.index');
         } catch(\Illuminate\Database\QueryException $e){
-            flash()->addError('Transacci&oacute;n Fallida: '.Str::limit($e, 120));
+            alert()->error('Transacci&oacute;n Fallida: ',Str::limit($e->getMessage(), 120));
             return redirect()->back()->withInput();
         }
     }

@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Livewire\Administrativo\MeruAdministrativo\Compra\Configuracion;
-use App\Models\Administrativo\Meru_Administrativo\Compra\UnidadMedida;
+namespace App\Http\Livewire\Administrativo\MeruAdministrativo\Compras\Configuracion;
+use App\Models\Administrativo\Meru_Administrativo\Compras\UnidadMedida;
 use Livewire\Component;
 use App\Traits\WithSorting;
 use Livewire\WithPagination;
+
+
 class UnidadMedidaIndex extends Component
-{
-    use WithPagination, WithSorting;
+{ use WithPagination, WithSorting;
 
     protected $paginationTheme = 'bootstrap';
     public $search = '';
@@ -31,7 +32,7 @@ class UnidadMedidaIndex extends Component
     }
     public function render()
     {
-        return view('livewire.administrativo.meru-administrativo.compra.configuracion.unidad-medida-index', [
+        return view('livewire.administrativo.meru-administrativo.compras.configuracion.unidad-medida-index', [
             'headers' => [
                 ['name' => 'ID',          'align' => 'center', 'sort' => 'id'],
                 ['name' => 'Código.',     'align' => 'center', 'sort' => 'cod_uni'],

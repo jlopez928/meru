@@ -1,17 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Administrativo\Meru_Administrativo\Compra\Configuracion\CausaAnulacionController;
-use App\Http\Controllers\Administrativo\Meru_Administrativo\Compra\Configuracion\UnidadMedidaController;
+use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Configuracion\CausaAnulacionController;
+use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Configuracion\UnidadMedidaController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Configuracion\CompradorController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Configuracion\GrupoProductoController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Configuracion\SubGrupoProductoController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Configuracion\BienMaterialServicioController;
 
 
-Route::middleware(['auth'])
-	->prefix('compra')
-	->as('compra.')
+Route::middleware(['auth', 'periodo-fiscal'])
+	->prefix('compras')
+	->as('compras.')
 	->group(function () {
 		    Route::name('configuracion.')
 			->group(function () {
@@ -32,10 +32,9 @@ Route::middleware(['auth'])
 
 	        });
     });
-
 // Grupos de Productos
 Route::controller(GrupoProductoController::class)
-->middleware(['auth'])
+->middleware(['auth', 'periodo-fiscal'])
 ->prefix('compras/configuracion')
 ->name('compras.configuracion.grupo_producto.')
 ->group(function () {
@@ -52,7 +51,7 @@ Route::controller(GrupoProductoController::class)
 
 // SubGrupo de Productos
 Route::controller(SubGrupoProductoController::class)
-->middleware(['auth'])
+->middleware(['auth', 'periodo-fiscal'])
 ->prefix('compras/configuracion')
 ->name('compras.configuracion.subgrupo_producto.')
 ->group(function () {
@@ -70,7 +69,7 @@ Route::controller(SubGrupoProductoController::class)
 
 // Bienes/Materiales/Servicios Compras
 Route::controller(BienMaterialServicioController::class)
-->middleware(['auth'])
+->middleware(['auth', 'periodo-fiscal'])
 ->prefix('compras/configuracion')
 ->name('compras.configuracion.bien_material_servicio.')
 ->group(function () {
@@ -85,7 +84,7 @@ Route::controller(BienMaterialServicioController::class)
 
 // Compradores
 Route::controller(CompradorController::class)
-->middleware(['auth'])
+->middleware(['auth', 'periodo-fiscal'])
 ->prefix('compras/configuracion')
 ->name('compras.configuracion.comprador.')
 ->group(function () {

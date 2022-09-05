@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Administrativo\Meru_Administrativo\Compra\Configuracion;
+namespace App\Http\Requests\Administrativo\Meru_Administrativo\Compras\Configuracion;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\Administrativo\Meru_Administrativo\Compra\CausaAnulacion;
+
+use App\Models\Administrativo\Meru_Administrativo\Compras\CausaAnulacion;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Str;
+
 class CausaAnulacionRequest extends FormRequest
 {
     public function authorize()

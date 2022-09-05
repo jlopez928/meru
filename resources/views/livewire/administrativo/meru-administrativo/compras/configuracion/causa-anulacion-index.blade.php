@@ -6,7 +6,7 @@
                 @foreach ($causaanulacion as $causaanulacionItem)
                     <tr>
                         <td align="center" >
-                            <a href="{{ route('compra.configuracion.causaanulacion.show', $causaanulacionItem->id ) }}" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Mostrar">
+                            <a href="{{ route('compras.configuracion.causaanulacion.show', $causaanulacionItem->id ) }}" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Mostrar">
                                 {{ $causaanulacionItem->id }}
                             </a>
                         </td>
@@ -19,7 +19,7 @@
                         </td>
 
                         <td align="center" >
-                            <a href="{{ route('compra.configuracion.causaanulacion.edit', $causaanulacionItem->id) }}" type="button" class="btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Editar">
+                            <a href="{{ route('compras.configuracion.causaanulacion.edit', $causaanulacionItem->id) }}" type="button" class="btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Editar">
                                 <span class="fas fa-edit" aria-hidden="true"></span>
                             </a>
                         </td>
@@ -34,6 +34,5 @@
         </div>
      @endif
 </x-datatable>
-
 
 

@@ -15,23 +15,13 @@ use App\Traits\ReportFpdf;
 
 class TasaCambioController extends Controller
 {use ReportFpdf;
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         //
         return view('administrativo.meru_administrativo.configuracion.configuracion.tasacambio.index');
 
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $tasacambio= new TasaCambio();
@@ -39,79 +29,48 @@ class TasaCambioController extends Controller
          return view('administrativo.meru_administrativo.configuracion.configuracion.tasacambio.create', compact('tasacambio'));
 
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(TasaCambioRequest $request)
     {
         try {
              TasaCambio::where('sta_reg', '1')->update(array('sta_reg' => '0'));
              TasaCambio::create($request->validated());
-             flash()->addSuccess('Registro Guardado Exitosamente');
+             alert()->success('¡Éxito!','Registro Guardado Exitosamente');
              return redirect()->route('configuracion.configuracion.tasacambio.index');
          } catch(\Illuminate\Database\QueryException $e){
-             flash()->addError('Transacci&oacute;n Fallida: '.Str::limit($e, 120));
+             alert()->error('Transacci&oacute;n Fallida: ',Str::limit($e->getMessage(), 120));
              return redirect()->back()->withInput();
          }
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Administrativo\Meru_Administrativo\Configuracion\TasaCambio  $tasaCambio
-     * @return \Illuminate\Http\Response
-     */
     public function show(TasaCambio $tasacambio)
     {
 
         return view('administrativo.meru_administrativo.configuracion.configuracion.tasacambio.show',compact('tasacambio'));
 
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Administrativo\Meru_Administrativo\Configuracion\TasaCambio  $tasaCambio
-     * @return \Illuminate\Http\Response
-     */
     public function edit(TasaCambio $tasacambio)
     {
         //$tasacambio->fecha = Carbon::parse($tasacambio->fecha)->format('Y-m-d');
         return view('administrativo.meru_administrativo.configuracion.configuracion.tasacambio.edit', compact('tasacambio'));
 
     }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Administrativo\Meru_Administrativo\Configuracion\TasaCambio  $tasaCambio
-     * @return \Illuminate\Http\Response
-     */
     public function update(TasaCambioRequest $request, TasaCambio $tasacambio)
     {
 
         try {
 
             if ($tasacambio->sta_reg == '0' && $request->sta_reg=='0'){
-                flash()->addInfo('Registro Inactivo NO puede ser Modificado. Favor verifique.');
+                alert()->info('Registro Inactivo NO puede ser Modificado. Favor verifique.');
                 return redirect()->back()->withInput();
             }
             $tasacambio->update($request->validated());
-            flash()->addSuccess('Registro Modificado Exitosamente');
+            alert()->success('¡Éxito!','Registro Modificado Exitosamente');
             return redirect()->route('configuracion.configuracion.tasacambio.index');
 
         } catch(\Illuminate\Database\QueryException $e){
-           flash()->addError('Transacci&oacute;n Fallida: '.Str::limit($e, 120));
+          alert()->error('Transacci&oacute;n Fallida: ',Str::limit($e->getMessage(), 120));
             return redirect()->back()->withInput();
         }
     }
-
-
     public function print_tasacambio()
     {
 

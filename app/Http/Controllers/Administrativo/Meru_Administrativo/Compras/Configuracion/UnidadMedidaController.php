@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Administrativo\Meru_Administrativo\Compra\Configuracion;
-use App\Models\Administrativo\Meru_Administrativo\Compra\UnidadMedida;
+namespace App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Configuracion;
+use App\Models\Administrativo\Meru_Administrativo\Compras\UnidadMedida;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\Administrativo\Meru_Administrativo\Compra\Configuracion\UnidadMedidaRequest;
+use App\Http\Requests\Administrativo\Meru_Administrativo\Compras\Configuracion\UnidadMedidaRequest;
 use Codedge\Fpdf\Fpdf\Fpdf;
 use App\Traits\ReportFpdf;
 
@@ -12,12 +12,12 @@ class UnidadMedidaController extends Controller
 {  use ReportFpdf;
 
     public function index()
-    {  return view('administrativo.meru_administrativo.compra.configuracion.unidadmedida.index');
+    {  return view('administrativo.meru_administrativo.compras.configuracion.unidadmedida.index');
     }
     public function create()
     {
         $unidadmedida= new UnidadMedida();
-        return view('administrativo.meru_administrativo.compra.configuracion.unidadmedida.create', compact('unidadmedida'));
+        return view('administrativo.meru_administrativo.compras.configuracion.unidadmedida.create', compact('unidadmedida'));
     }
 
     public function store(UnidadMedidaRequest $request)
@@ -27,7 +27,7 @@ class UnidadMedidaController extends Controller
                     UnidadMedida::create( $request->only(['cod_uni', 'des_uni','sta_reg','usuario','fecha'] ));
                     DB::connection('pgsql')->commit();
                     alert()->success('¡Éxito!', 'Registro Ingresado Exitosamente');
-                    return redirect()->route('compra.configuracion.unidadmedida.index');
+                    return redirect()->route('compras.configuracion.unidadmedida.index');
 
          } catch(\Illuminate\Database\QueryException $e){
             DB::connection('pgsql')->rollBack();
@@ -37,10 +37,10 @@ class UnidadMedidaController extends Controller
     }
 
     public function show(unidadmedida $unidadmedida)
-    {        return view('administrativo.meru_administrativo.compra.configuracion.unidadmedida.show',compact('unidadmedida'));
+    {        return view('administrativo.meru_administrativo.compras.configuracion.unidadmedida.show',compact('unidadmedida'));
     }
     public function edit(unidadmedida $unidadmedida)
-    {   return view('administrativo.meru_administrativo.compra.configuracion.unidadmedida.edit', compact('unidadmedida'));
+    {   return view('administrativo.meru_administrativo.compras.configuracion.unidadmedida.edit', compact('unidadmedida'));
     }
     public function update(UnidadMedidaRequest $request, unidadmedida $unidadmedida)
     {   try {
@@ -52,7 +52,7 @@ class UnidadMedidaController extends Controller
             $unidadmedida->update($request->validated());
             DB::connection('pgsql')->commit();
             alert()->success('¡Éxito!', 'Registro Modificado Exitosamente');
-            return redirect()->route('compra.configuracion.unidadmedida.index');
+            return redirect()->route('compras.configuracion.unidadmedida.index');
 
         } catch(\Illuminate\Database\QueryException $e){
             DB::connection('pgsql')->rollBack();
