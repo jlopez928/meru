@@ -1,17 +1,14 @@
 <?php
 
-namespace App\Http\Requests\Administrativo\Meru_Administrativo\Compra\Configuracion;
+namespace App\Http\Requests\Administrativo\Meru_Administrativo\Compras\Configuracion;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\Administrativo\Meru_Administrativo\Compra\UnidadMedida;
+use App\Models\Administrativo\Meru_Administrativo\Compras\UnidadMedida;
 use Illuminate\Validation\Rule;
+
 class UnidadMedidaRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
+
     public function authorize()
     {
         return true;
@@ -45,7 +42,7 @@ class UnidadMedidaRequest extends FormRequest
     {
         $this->merge([
         'cod_uni' =>UnidadMedida::select('cod_uni')->max('cod_uni')+1,
-        'des_uni'  =>strtoupper($this->des_cau),
+        'des_uni'  =>strtoupper($this->des_uni),
         'fecha' =>now()->format('Y-m-d'),
         'usuario' => \Str::replace('@hidrobolivar.com.ve', '', auth()->user()->email),
         ]);

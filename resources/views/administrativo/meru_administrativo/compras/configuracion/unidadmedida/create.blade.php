@@ -7,7 +7,7 @@
         <div class="row mb-2">
             <div class="col-sm-12">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item text-bold"><a href="{{ route('compra.configuracion.unidadmedida.index') }}">Unidad de Medida </a></li>
+                    <li class="breadcrumb-item text-bold"><a href="{{ route('compras.configuracion.unidadmedida.index') }}">Unidad de Medida </a></li>
                     <li class="breadcrumb-item active text-bold">Registrar Unidad de Medida</li>
                 </ol>
             </div>
@@ -19,8 +19,8 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <x-form method="post" action="{{ route('compra.configuracion.unidadmedida.store') }}">
-                       @include('administrativo/meru_administrativo/compra/configuracion/unidadmedida/partials/_form', ['submit_text' => 'Guardar'])
+                <x-form method="post" action="{{ route('compras.configuracion.unidadmedida.store') }}">
+                       @include('administrativo/meru_administrativo/compras/configuracion/unidadmedida/partials/_form', ['submit_text' => 'Guardar'])
                 </x-form>
             </div>
         </div>

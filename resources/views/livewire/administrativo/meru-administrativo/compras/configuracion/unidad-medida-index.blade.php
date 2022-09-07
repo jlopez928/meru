@@ -7,20 +7,20 @@
                 @foreach ($unidadmedida as $unidadmedidaItem)
                     <tr>
                         <td align="center" >
-                            <a href="{{ route('compra.configuracion.unidadmedida.show', $unidadmedidaItem->id ) }}" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Mostrar">
+                            <a href="{{ route('compras.configuracion.unidadmedida.show', $unidadmedidaItem->id ) }}" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Mostrar">
                                 {{ $unidadmedidaItem->id }}
                             </a>
                         </td>
                         <td align="center" >{{ $unidadmedidaItem->cod_uni }}</td>
                         <td align="left" >{{ $unidadmedidaItem->des_uni }} </td>
                         <td align="center" >
-                            <span class="text-bold {{ $unidadmedidaItem->sta_reg == '1' ? 'text-success' : 'text-danger' }}" >
-                                {{  $unidadmedidaItem->sta_reg == '1' ? 'Activo':'Inactivo' }}
+                            <span class="text-bold {{  $unidadmedidaItem->sta_reg->value  == '1' ? 'text-success' : 'text-danger' }}" >
+                                {{  $unidadmedidaItem->sta_reg->value == '1' ? 'Activo':'Inactivo' }}
                             </span>
                         </td>
 
                         <td align="center" >
-                            <a href="{{ route('compra.configuracion.unidadmedida.edit', $unidadmedidaItem->id) }}" type="button" class="btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Editar">
+                            <a href="{{ route('compras.configuracion.unidadmedida.edit',$unidadmedidaItem->cod_uni) }}" type="button" class="btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Editar">
                                 <span class="fas fa-edit" aria-hidden="true"></span>
                             </a>
                         </td>
@@ -35,5 +35,4 @@
         </div>
      @endif
 </x-datatable>
-
-
+>

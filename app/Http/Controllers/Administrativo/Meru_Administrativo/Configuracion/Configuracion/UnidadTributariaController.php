@@ -5,29 +5,16 @@ use App\Http\Requests\Administrativo\Meru_Administrativo\Configuracion\Configura
 use App\Models\Administrativo\Meru_administrativo\Configuracion\UnidadTributaria;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Codedge\Fpdf\Fpdf\Fpdf;
 use App\Traits\ReportFpdf;
-
-
-
-
 class UnidadTributariaController extends Controller
 {   use ReportFpdf;
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {    return view('administrativo.meru_administrativo.configuracion.configuracion.unidadtributaria.index');
     }
-        /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
         $unidadtributarium= new UnidadTributaria();
@@ -35,70 +22,44 @@ class UnidadTributariaController extends Controller
 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(UnidadTributariaRequest $request)
     {
 
         try {
             UnidadTributaria::where('vigente', '1')->update(array('vigente' => '0'));
             UnidadTributaria::create($request->validated());
-            flash()->addSuccess('Unidad Tributaria Creada Exitosamente.');
+              alert()->success('¡Éxito!','Unidad Tributaria Creada Exitosamente.');
             return redirect()->route('configuracion.configuracion.unidadtributaria.index');
 
         } catch(\Illuminate\Database\QueryException $e){
-            flash()->addError('Transacci&oacute;n Fallida: '.Str::limit($e, 200));
+            alert()->error('Transacci&oacute;n Fallida: ',Str::limit($e->getMessage(), 120));
             return redirect()->back()->withInput();
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Administrativo\Meru_administrativo\Configuracion\UnidadTributaria  $unidadTributaria
-     * @return \Illuminate\Http\Response
-     */
     public function show(UnidadTributaria $unidadtributarium)
     {
         return view('administrativo.meru_administrativo.configuracion.configuracion.unidadtributaria.show', compact('unidadtributarium'));
     }
 
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Administrativo\Meru_administrativo\Configuracion\UnidadTributaria  $unidadTributaria
-     * @return \Illuminate\Http\Response
-     */
     public function edit(UnidadTributaria $unidadtributarium)
     {
         return view('administrativo.meru_administrativo.configuracion.configuracion.unidadtributaria.edit', compact('unidadtributarium'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Administrativo\Meru_administrativo\Configuracion\UnidadTributaria  $unidadTributaria
-     * @return \Illuminate\Http\Response
-     */
     public function update(UnidadTributariaRequest $request, UnidadTributaria $unidadtributarium)
     {
         try {
             if ($unidadtributarium->vigente == '0' && $request->unidadtributarium->vigente=='0'){
-                flash()->addInfo('Registro Inactivo NO puede ser Modificado. Favor verifique.');
+                alert()->info('Registro Inactivo NO puede ser Modificado. Favor verifique.');
                 return redirect()->back()->withInput();
             }
             $unidadtributarium->update($request->validated());
-            flash()->addSuccess('Registro Modificado Exitosamente');
+              alert()->success('¡Éxito!','Registro Modificado Exitosamente');
             return redirect()->route('configuracion.configuracion.unidadtributaria.index');
 
         } catch(\Illuminate\Database\QueryException $e){
-            flash()->addError('Transacci&oacute;n Fallida'.Str::limit($e, 200));
+            alert()->error('Transacci&oacute;n Fallida: ',Str::limit($e->getMessage(), 120));
             return redirect()->back()->withInput();
         }
     }

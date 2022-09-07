@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Livewire\Administrativo\MeruAdministrativo\Compra\Configuracion;
-use App\Models\Administrativo\Meru_Administrativo\Compra\CausaAnulacion;
+namespace App\Http\Livewire\Administrativo\MeruAdministrativo\Compras\Configuracion;
+use App\Models\Administrativo\Meru_Administrativo\Compras\CausaAnulacion;
 use Livewire\Component;
 use App\Traits\WithSorting;
 use Livewire\WithPagination;
+
 
 class CausaAnulacionIndex extends Component
 {use WithPagination, WithSorting;
@@ -31,7 +32,7 @@ class CausaAnulacionIndex extends Component
     }
     public function render()
     {
-        return view('livewire.administrativo.meru-administrativo.compra.configuracion.causa-anulacion-index' ,[
+        return view('livewire.administrativo.meru-administrativo.compras.configuracion.causa-anulacion-index',[
             'headers' => [
                 ['name' => 'ID',          'align' => 'center', 'sort' => 'id'],
                 ['name' => 'Código.',     'align' => 'center', 'sort' => 'cod_cau'],
@@ -47,6 +48,4 @@ class CausaAnulacionIndex extends Component
                             ->paginate($this->paginate)
                             ]);
     }
-
-    }
-
+}

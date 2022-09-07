@@ -7,28 +7,17 @@ use App\Models\Administrativo\Meru_Administrativo\Configuracion\Permiso;
 use App\Models\Administrativo\Meru_Administrativo\Configuracion\Modulo;
 use App\Http\Requests\Administrativo\Meru_Administrativo\Configuracion\Control\RolRequest;
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use Codedge\Fpdf\Fpdf\Fpdf;
 use App\Traits\ReportFpdf;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 class RolController extends Controller
 {   use ReportFpdf;
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         return view('administrativo.meru_administrativo.configuracion.control.rol.index');
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $rol= new rol();
@@ -38,74 +27,45 @@ class RolController extends Controller
         return view('administrativo.meru_administrativo.configuracion.control.rol.create',
         compact('rol','permisos','modulos'));
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(RolRequest $request)
     {
         try {
 
 
             Rol::create($request->validated());
-            flash()->addSuccess('Registro Guardado Exitosamente.');
+            alert()->success('¡Éxito!','Registro Guardado Exitosamente.');
             return redirect()->route('configuracion.control.rol.index');
 
         } catch(\Illuminate\Database\QueryException $e){
-            flash()->addError('Transacci&oacute;n Fallida: '.Str::limit($e, 200));
+            alert()->error('Transacci&oacute;n Fallida: ',Str::limit($e->getMessage(), 120));
           return redirect()->back()->withInput();
         }
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Administrativo\Meru_Administraivo\Configuracion\control\rol  $rol
-     * @return \Illuminate\Http\Response
-     */
     public function show(rol $rol)
     {
         //
         return view('administrativo.meru_administrativo.configuracion.control.rol.show', compact('rol'));
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Administrativo\Meru_Administraivo\Configuracion\control\rol  $rol
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Rol $rol)
     {
         $modulo= Modulo::query()->whereNull('deleted_at')->get();
         return view('administrativo.meru_administrativo.configuracion.control.rol.edit', compact('rol','modulo'));
     }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Administrativo\Meru_Administraivo\Configuracion\control\rol  $rol
-     * @return \Illuminate\Http\Response
-     */
     public function update(RolRequest $request, rol $rol)
     {
         try {
             $status =$rol->status;
             if ($status == '0' && $request->estado=='0'){
-                flash()->addSuccess('Registro Inactivo NO puede ser Modificado. Favor verifique.');
+                alert()->info('¡Éxito!','Registro Inactivo NO puede ser Modificado. Favor verifique.');
                 return redirect()->back()->withInput();
             }
             $rol->update($request->validated());
             app()['cache']->forget('spatie.permission.cache');
-            flash()->addSuccess('Registro Modificado Exitosamente.');
+            alert()->success('¡Éxito!','Registro Modificado Exitosamente.');
             return redirect()->route('configuracion.control.rol.index');
 
         } catch(\Illuminate\Database\QueryException $e){
-            flash()->addError('Transacci&oacute;n Fallida: '.Str::limit($e, 200));
+            alert()->error('Transacci&oacute;n Fallida: ',Str::limit($e->getMessage(), 120));
             return redirect()->back()->withInput();
         }
 

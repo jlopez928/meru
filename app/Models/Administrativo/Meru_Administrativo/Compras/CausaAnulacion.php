@@ -1,24 +1,25 @@
 <?php
 
-namespace App\Models\Administrativo\Meru_Administrativo\Compra;
+namespace App\Models\Administrativo\Meru_Administrativo\Compras;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class UnidadMedida extends Model
+class CausaAnulacion extends Model
 {
     use HasFactory;
 
-    protected $table = 'unidadmedida';
+    protected $table = 'com_causasanulacion';
 
     public $timestamps = false;
 
     protected $fillable = [
-            'cod_uni',
-            'des_uni',
+            'cod_cau',
+            'des_cau',
             'sta_reg',
             'usuario',
-            'fecha',
+            'fec_hor',
             'id',
             ];
 }
+

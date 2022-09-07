@@ -9,33 +9,16 @@ use Illuminate\Http\Request;
 
 class UserRolController extends Controller
 {   use ReportFpdf;
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
          return view('administrativo.meru_administrativo.configuracion.control.userrol.index');
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Administrativo\Meru_Administrativo\Configuracion\Control\UserRol  $userRol
-     * @return \Illuminate\Http\Response
-     */
     public function show(User $userrol)
     {  $rol = Rol::query()->get();
         return view('administrativo.meru_administrativo.configuracion.control.userrol.show', compact('userrol','rol'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Administrativo\Meru_Administrativo\Configuracion\Control\UserRol$userRol
-     * @return \Illuminate\Http\Response
-     */
     public function edit(User $userrol)
     {
         $rol = Rol::query()->get();
@@ -43,17 +26,10 @@ class UserRolController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Administrativo\Meru_Administrativo\Configuracion\Control\UserRol  $userRol
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request,User $userrol)
     {
        $userrol->syncRoles($request->rolesItem_id);
-        flash()->addSuccess('Roles asociados al Usuario Exitosamente.');
+        alert()->success('¡Éxito!','Roles asociados al Usuario Exitosamente.');
         app()['cache']->forget('spatie.permission.cache');
         return redirect()->route('configuracion.control.userrol.index');
     }
