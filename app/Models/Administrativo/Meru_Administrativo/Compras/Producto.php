@@ -2,12 +2,12 @@
 
 namespace App\Models\Administrativo\Meru_Administrativo\Compras;
 
-use App\Enums\Administrativo\Meru_Administrativo\Compras\TipoProducto;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Enums\Administrativo\Meru_Administrativo\Estado;
-use App\Models\Administrativo\Meru_Administrativo\Compras\SubGrupoProducto;
 use App\Models\Administrativo\Meru_Administrativo\Proveedores\Ramo;
+use App\Enums\Administrativo\Meru_Administrativo\Compras\TipoProducto;
+use App\Models\Administrativo\Meru_Administrativo\Compras\SubGrupoProducto;
 
 class Producto extends Model
 {
@@ -65,7 +65,7 @@ class Producto extends Model
     public $dates = [
         'fec_act',
     ];
-    
+
     protected $casts = [
         'sta_reg'   => Estado::class,
         'tip_prod'  => TipoProducto::class,
@@ -89,5 +89,10 @@ class Producto extends Model
     public function gruporamo()
     {
         return $this->belongsTo(Ramo::class, 'gru_ram');
+    }
+
+    public function unidadmedida()
+    {
+        return $this->belongsTo(UnidadMedida::class, 'cod_uni');
     }
 }
