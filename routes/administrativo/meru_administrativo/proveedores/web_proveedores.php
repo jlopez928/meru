@@ -61,7 +61,7 @@ Route::controller(RamoProveedorController::class)
 
 // Reportes
 Route::controller(ReporteProveedorController::class)
-	->middleware(['auth', 'periodo-fiscal'])
+	->middleware(['auth'])
 	->prefix('proveedores/reportes')
 	->name('proveedores.reporte.')
 	->group(function () {

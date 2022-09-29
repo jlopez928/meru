@@ -1,10 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Configuracion\CausaAnulacionController;
-use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Configuracion\UnidadMedidaController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Configuracion\CompradorController;
+use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Proceso\SolicitudUnidadController;
+use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Configuracion\UnidadMedidaController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Configuracion\GrupoProductoController;
+use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Configuracion\CausaAnulacionController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Configuracion\SubGrupoProductoController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Configuracion\BienMaterialServicioController;
 
@@ -93,4 +94,16 @@ Route::controller(CompradorController::class)
     Route::get('compradores/create', 'create')->name('create');
     Route::get('compradores/{comprador}', 'show')->name('show');
     Route::get('print_compradores', 'print_compradores')->name('print_compradores');
+});
+
+// Solicitudes - Unidad
+Route::controller(SolicitudUnidadController::class)
+->middleware(['auth', 'periodo-fiscal'])
+->prefix('compras/proceso')
+->name('compras.proceso.solicitud_unidad.')
+->group(function () {
+
+    Route::get('solicitudunidad', 'index')->name('index');
+    Route::get('solicitudunidad/create', 'create')->name('create');
+    Route::post('solicitudunidad', 'store')->name('store');
 });
