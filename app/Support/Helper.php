@@ -35,7 +35,7 @@ class Helper
                     })
                     .then ((result) => {
                         if (result.value) {
-                            form = "$formSelector"
+                            form = '$formSelector'
                                 ? $('$formSelector')
                                 : $('#'+$(this).attr('form-target'));
 
@@ -49,5 +49,17 @@ class Helper
                 });
             </script>
 HTML;
+    }
+
+    public static function formatNumber($num, $dec, $puntodecimal, $sepmiles, $neg = null)
+    {
+        $f = number_format($num, $dec, $puntodecimal, $sepmiles);
+
+        if (strstr($f,'-') && !is_null($neg)) {
+            $f = str_replace('-', '(', $f);
+            $f .= ')'; 
+        }
+
+        return $f;
     }
 }
