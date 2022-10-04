@@ -56,6 +56,7 @@ class SolicitudUnidadDetalle extends Component
 
     public function updatedCodProd($cod_prod)
     {
+        ds($cod_prod);
         if($cod_prod)
         {
             $producto = Producto::query()

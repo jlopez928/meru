@@ -20,20 +20,26 @@
                     <button @click.prevent="tab = 'tab4'" :class="{'active' : tab === 'tab4'}" class="nav-link" data-toggle="tab">Bienes/Vehiculos</button>
                 </li>
             </div>
+            <li class="nav-item">
+                <button @click.prevent="tab = 'tab5'" :class="{'active' : tab === 'tab5'}" class="nav-link" data-toggle="tab">Contratante</button>
+            </li>
         </ul>
 
         <div class="tab-content">
             <div x-show="tab === 'tab1'" :class="{'show active' : tab === 'tab1'}" class="tab-pane fade">
-            {{--   @include('administrativo/meru_administrativo/compras/proceso/solicitud-unidad/partials/_encabezado') --}}
+                @include('administrativo/meru_administrativo/compras/proceso/solicitud-unidad/partials/_encabezado')
             </div>
             <div x-show="tab === 'tab2'" :class="{'show active' : tab === 'tab2'}" class="tab-pane fade">
-            {{--   @include('administrativo/meru_administrativo/compras/proceso/solicitud-unidad/partials/_detalle') --}}
+                @include('administrativo/meru_administrativo/compras/proceso/solicitud-unidad/partials/_detalle')
             </div>
             <div x-show="tab === 'tab3'" :class="{'show active' : tab === 'tab3'}" class="tab-pane fade">
-            {{-- @include('administrativo/meru_administrativo/compras/proceso/solicitud-unidad/partials/_producto') --}}
+                @include('administrativo/meru_administrativo/compras/proceso/solicitud-unidad/partials/_producto')
             </div>
             <div x-show="tab === 'tab4'" :class="{'show active' : tab === 'tab4'}" class="tab-pane fade">
-                {{-- @include('administrativo/meru_administrativo/compras/proceso/solicitud-unidad/partials/_bien-vehiculo') --}}
+                @include('administrativo/meru_administrativo/compras/proceso/solicitud-unidad/partials/_bien-vehiculo')
+            </div>
+            <div x-show="tab === 'tab5'" :class="{'show active' : tab === 'tab5'}" class="tab-pane fade">
+                @include('administrativo/meru_administrativo/compras/proceso/solicitud-unidad/partials/_contratante')
             </div>
         </div>
     </div>
@@ -66,22 +72,28 @@
                 pri_sol: '',
                 aplica_pre: '',
                 cierre: '',
+                contratante: '',
+                fk_cod_com: '',
+                licita: '',
 
                 init(){
-                    this.ano_pro    = "{{ old('ano_pro', $solicitudUnidad?->ano_pro ?? session('ano_pro')) }}"
-                    this.grupo      = "{{ old('grupo', $solicitudUnidad->grupo) }}"
-                    this.cla_sol    = "{{ old('cla_sol', $solicitudUnidad->cla_sol) }}"
-                    this.gru_ram    = "{{ old('gru_ram', $solicitudUnidad->gru_ram) }}"
-                    this.fk_cod_ger = "{{ old('fk_cod_ger', $solicitudUnidad->fk_cod_ger) }}"
-                    this.cod_uni    = "{{ old('cod_uni', $solicitudUnidad->cod_uni) }}"
-                    this.tip_cod    = "{{ old('tip_cod', $solicitudUnidad->tip_cod ?? 0) }}"
-                    this.cod_pryacc = "{{ old('cod_pryacc', $solicitudUnidad->cod_pryacc ?? 0) }}"
-                    this.cod_obj    = "{{ old('cod_obj', $solicitudUnidad->cod_obj ?? 0) }}"
-                    this.gerencia   = "{{ old('gerencia', $solicitudUnidad->gerencia ?? '') }}"
-                    this.unidad     = "{{ old('unidad', $solicitudUnidad->unidad ?? '') }}"
-                    this.pri_sol    = "{{ old('pri_sol', $solicitudUnidad->pri_sol ?? 'N') }}"
-                    this.aplica_pre = "{{ old('aplica_pre', $solicitudUnidad->aplica_pre ?? '1') }}"
-                    this.cierre     = "{{ old('cierre', $solicitudUnidad->cierre ?? '0') }}"
+                    this.ano_pro        = "{{ old('ano_pro', $solicitudUnidad?->ano_pro ?? session('ano_pro')) }}"
+                    this.grupo          = "{{ old('grupo', $solicitudUnidad->grupo) }}"
+                    this.cla_sol        = "{{ old('cla_sol', $solicitudUnidad->cla_sol) }}"
+                    this.gru_ram        = "{{ old('gru_ram', $solicitudUnidad->gru_ram) }}"
+                    this.fk_cod_ger     = "{{ old('fk_cod_ger', $solicitudUnidad->fk_cod_ger) }}"
+                    this.cod_uni        = "{{ old('cod_uni', $solicitudUnidad->cod_uni) }}"
+                    this.tip_cod        = "{{ old('tip_cod', $solicitudUnidad->tip_cod ?? 0) }}"
+                    this.cod_pryacc     = "{{ old('cod_pryacc', $solicitudUnidad->cod_pryacc ?? 0) }}"
+                    this.cod_obj        = "{{ old('cod_obj', $solicitudUnidad->cod_obj ?? 0) }}"
+                    this.gerencia       = "{{ old('gerencia', $solicitudUnidad->gerencia ?? '') }}"
+                    this.unidad         = "{{ old('unidad', $solicitudUnidad->unidad ?? '') }}"
+                    this.pri_sol        = "{{ old('pri_sol', $solicitudUnidad->pri_sol ?? 'N') }}"
+                    this.aplica_pre     = "{{ old('aplica_pre', $solicitudUnidad->aplica_pre ?? $opcion) }}"
+                    this.cierre         = "{{ old('cierre', $solicitudUnidad->cierre ?? '0') }}"
+                    this.contratante    = "{{ old('contratante', $solicitudUnidad->contratante ?? 'L') }}"
+                    this.fk_cod_com     = "{{ old('fk_cod_com', $solicitudUnidad->fk_cod_com ?? '') }}"
+                    this.licita         = "{{ old('licita', $solicitudUnidad->licita ?? '') }}"
                 },
 
                 updateGrupo(){
@@ -128,10 +140,72 @@
                 },
 
                 updateGrupoRamo(){
-                    console.log(this.gru_ram)
                     Livewire.emit('getProductos', this.gru_ram, this.grupo)
-                }
+                },
 
+                evaluarTipoCompra(){
+                    var bs_ut
+                    var monto = 0
+
+                    fetch('{{ env('APP_URL') }}/api/compras/ultimaunidadtributaria')
+                    .then(response => response.json())
+                    .then(data => {
+
+                        bs_ut = data[0].bs_ut
+                        if (data.length != 0)
+                        {
+                            fetch('{{ env('APP_URL') }}/api/compras/rangosunidadtributaria/'+ this.licita)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.length != 0) {
+                                    var row2 = data[0]
+                                    var mon_ut = monto / bs_ut
+
+                                    if (row2.ut_bie_ser_has > 0) {
+                                        if (!((mon_ut > row2.ut_bie_ser_des) && (mon_ut <= row2.ut_bie_ser_has))) {
+                                            Swal.fire({
+                                                title: 'Solicitudes',
+                                                text:   'El MONTO de la solicitud no corresponde al rango en UNIDADES ' +
+                                                        'TRIBUTARIAS (UT) definidas para el TIPO DE COMPRA seleccionado, ' +
+                                                        'porque debe encontrarse en un valor superior a ' + row2.ut_bie_ser_des + ' UT ' +
+                                                        'hasta ' + row2.ut_bie_ser_has + ' UT:\n\n' +
+                                                        '\t\t*\tEl monto de la Solicitud en Bs. ' + monto + '.\n' +
+                                                        '\t\t*\tEl monto de la Solicitud en UT. ' + mon_ut + '.\n' +
+                                                        '\nPor favor Verifique.',
+                                                icon: 'warning',
+                                            })
+                                        }
+                                    } else {
+                                        if (!(mon_ut > row2.ut_bie_ser_des)) {
+                                            Swal.fire({
+                                                title: 'Solicitudes',
+                                                text:   'El MONTO de la solicitud no corresponde al rango en UNIDADES ' +
+                                                        'TRIBUTARIAS (UT) definidas para el TIPO DE COMPRA seleccionado, ' +
+                                                        'porque debe encontrarse en un valor superior a ' + row2.ut_bie_ser_des + ' UT:\n\n' +
+                                                        '\t\t*\tEl monto de la Solicitud en Bs. ' + monto + '.\n' +
+                                                        '\t\t*\tEl monto de la Solicitud en UT. ' + mon_ut + '.\n' +
+                                                        '\nPor favor Verifique.',
+                                                icon: 'warning',
+                                            })
+                                        }
+                                    }
+                                }else{
+                                        Swal.fire({
+                                                    title: 'Solicitudes',
+                                                    text: "El Tipo de Compra no existe en tabla.\nPor favor Verifique.",
+                                                    icon: 'warning',
+                                        })
+                                }
+                            })
+                        }else{
+                            Swal.fire({
+                                        title: 'Solicitudes',
+                                        text: 'No Existen valores de Conversion para la UNIDAD TRIBUTARIA.\nPor favor Verifique.',
+                                        icon: 'warning',
+                            })
+                        }
+                    })
+                }
             }
         }
     </script>
