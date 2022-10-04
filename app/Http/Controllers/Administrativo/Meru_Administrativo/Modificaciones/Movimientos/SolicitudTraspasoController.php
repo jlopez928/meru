@@ -59,7 +59,7 @@ class SolicitudTraspasoController extends Controller
                 $corr = CorrModificaciones::create([
                     'ano_pro' => $this->anoPro,
                     'nro_reg' => 1,
-                    'nro_sol' => 1
+                    'num_sol' => 1
                 ]);
             }
 

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Modificaciones\Configuracion\PermisoTraspasoController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Modificaciones\Movimientos\SolicitudTraspasoController;
+use App\Http\Controllers\Administrativo\Meru_Administrativo\Modificaciones\Movimientos\TraspasoPresupuestarioController;
 
 Route::middleware(['auth', 'periodo-fiscal'])
 	->prefix('modificaciones')
@@ -16,7 +17,39 @@ Route::middleware(['auth', 'periodo-fiscal'])
 
         Route::name('movimientos.')
 			->group(function () {
-				// Permisos para Traspasos
+				// Traspasos Presupuestarios
+				Route::resource('traspaso_presupuestario', TraspasoPresupuestarioController::class)
+					->except('destroy')
+					->parameters([
+						'traspaso_presupuestario' => 'traspaso'
+					]);
+
+				Route::controller(TraspasoPresupuestarioController::class)
+					->as('traspaso_presupuestario.')
+					->prefix('traspaso_presupuestario')
+					->group(function() {
+						// Anular
+						Route::get('{traspaso}/anular', [TraspasoPresupuestarioController::class, 'anularEdit'])->name('anular.edit');
+						Route::put('anular/{traspaso}', [TraspasoPresupuestarioController::class, 'anularUpdate'])->name('anular.update');
+
+						// Apartar
+						Route::get('{traspaso}/apartar', [TraspasoPresupuestarioController::class, 'apartarEdit'])->name('apartar.edit');
+						Route::put('apartar/{traspaso}', [TraspasoPresupuestarioController::class, 'apartarUpdate'])->name('apartar.update');
+
+						// Reversar Apartado
+						Route::get('{traspaso}/reversar_apartado', [TraspasoPresupuestarioController::class, 'reversarApartadoEdit'])->name('reversar_apartado.edit');
+						Route::put('reversar_apartado/{traspaso}', [TraspasoPresupuestarioController::class, 'reversarApartadoUpdate'])->name('reversar_apartado.update');
+
+						// Aprobar
+						Route::get('{traspaso}/aprobar', [TraspasoPresupuestarioController::class, 'aprobarEdit'])->name('aprobar.edit');
+						Route::put('aprobar/{traspaso}', [TraspasoPresupuestarioController::class, 'aprobarUpdate'])->name('aprobar.update');
+
+						// Reversar Aprobación
+						Route::get('{traspaso}/reversar_aprobacion', [TraspasoPresupuestarioController::class, 'reversarAprobacionEdit'])->name('reversar_aprobacion.edit');
+						Route::put('reversar_aprobacion/{traspaso}', [TraspasoPresupuestarioController::class, 'reversarAprobacionUpdate'])->name('reversar_aprobacion.update');
+					});
+
+				// Solicitud de Traspasos
 				Route::resource('solicitud_traspaso', SolicitudTraspasoController::class)->except('destroy');
 				Route::controller(SolicitudTraspasoController::class)
 					->as('solicitud_traspaso.')
@@ -35,8 +68,7 @@ Route::middleware(['auth', 'periodo-fiscal'])
 
 						// Imprimir
 						Route::get('solicitud_traspaso/{solicitud_traspaso}/imprimir', [SolicitudTraspasoController::class, 'imprimir'])->name('imprimir');
-				});
-				
+					});
 			});
 
 		Route::name('reportes.')
