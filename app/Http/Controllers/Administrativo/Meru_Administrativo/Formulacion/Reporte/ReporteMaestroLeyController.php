@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrativo\Meru_Administrativo\Formulacion\Reporte;
 
+use App\Exports\Administrativo\Meru_Administrativo\Formulacion\ResumenPresupuestarioExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Traits\ReportFpdf;
@@ -9,7 +10,6 @@ use App\Support\Fpdf;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\MaestroLeyExport;
-use App\Exports\ResumenPresupuestarioExport;
 use App\Models\Administrativo\Meru_Administrativo\Configuracion\RegistroControl;
 use App\Models\Administrativo\Meru_Administrativo\Formulacion\MaestroLey;
 use App\Models\Administrativo\Meru_Administrativo\Formulacion\CentroCosto;
@@ -156,9 +156,8 @@ class ReporteMaestroLeyController extends Controller
 
 		$res = $sql->get();
 
-		// if ($request->get('tipo_reporte') == 'E') {
-		if (true == false) {
-			return Excel::download(new ResumenPresupuestarioExport($res), 'resumen_presupuestario.xlsx');
+		if ($request->get('tipo_reporte') == 'E') {
+			return Excel::download(new ResumenPresupuestarioExport($anoPro, $this->meses[$mes], $res), 'resumen_presupuestario.xlsx');
 		} else {
 			if ($res->count() > 0) {
 				$pdf = new Fpdf;

@@ -166,7 +166,7 @@
 			</div>
 
 			<div class="form-group col-1">
-				<x-label for="cod_sub">Sub-específica</x-label>
+				<x-label for="cod_sub">Sub-esp</x-label>
 				<x-input name="cod_sub" x-mask="99" class="text-center {{ $errors->has('cod_sub') ? 'is-invalid' : '' }}" value="{{ old('cod_sub') }}" maxlength="2" @keyup="generarCodPartida()"/>
 
 				@error('cod_sub')
