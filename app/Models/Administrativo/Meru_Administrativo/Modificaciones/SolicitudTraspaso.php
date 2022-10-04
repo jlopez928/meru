@@ -6,6 +6,7 @@ use App\Enums\Administrativo\Meru_Administrativo\Modificaciones\EstadoSolicitudT
 use App\Models\Administrativo\Meru_Administrativo\Configuracion\Gerencia;
 use App\Models\Administrativo\Meru_Administrativo\Formulacion\CentroCosto;
 use App\Models\Administrativo\Meru_Administrativo\Formulacion\PartidaPresupuestaria;
+use App\Models\Administrativo\Meru_Administrativo\Formulacion\MaestroLey;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -37,6 +38,7 @@ class SolicitudTraspaso extends Model
         // Nuevos
         'user_id',
         'user_id_apr',
+        'user_id_status',
         'centro_costo_id'
 	];
 
@@ -65,8 +67,8 @@ class SolicitudTraspaso extends Model
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////// MÉTODOS PROPIOS ///////////////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////// MÉTODOS PROPIOS ///////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     public function obtenerEstructuras()
     {
@@ -80,6 +82,11 @@ class SolicitudTraspaso extends Model
                         ->where('cod_sub', $row->cod_sub)
                         ->first();
 
+            $mtoDis = MaestroLey::where('ano_pro', $this->ano_pro)
+                ->where('cod_com', $row->cod_com)
+                ->pluck('mto_dis')
+                ->first();
+
             $estructuras[$row->cod_com] = [
                 'cod_com'    => $row->cod_com,
                 'tip_cod'    => $row->tip_cod,
@@ -92,6 +99,7 @@ class SolicitudTraspaso extends Model
                 'cod_esp'    => $row->cod_esp,
                 'cod_sub'    => $row->cod_sub,
                 'descrip'    => $partida->des_con,
+                'mto_dis'    => $mtoDis,
                 'mto_tra'    => $row->mto_tra,
             ];
         }

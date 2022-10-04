@@ -231,7 +231,7 @@ trait ReportFpdf
      * @param $ancho_columnas= Arreglo de contiene el ancho de las columnas
      * @param $campos= Arreglo con los datos a colocar en las columnas
      *****************************************************************/
-	function pintar_registros_pdf($pdf,$data,$campos)
+	function pintar_registros_pdf($pdf,$data,$campos,$setX = true)
 	{
 		$y1 = $pdf->GetY();
 		if($data['fuente']!=''){
@@ -241,11 +241,23 @@ trait ReportFpdf
 		}
 		$pdf->SetFont('Arial','',$data['tamano']);
 		$pdf->SetTextColor(10);
+
+		// Juan Durán
+		if ($setX) {
+			$x = $data['orientacion'] == 'H' ? 16 : 11;
+			$pdf->SetXY($x, $y1);
+		} else {
+			$pdf->SetY($y1);
+		}
+
+		/*
 		if ($data['orientacion']=='H'){
 			$pdf->SetXY(16, $y1);
 		}else{
 			$pdf->SetXY(11, $y1);
 		}
+		*/
+
 		$pdf->SetFillColor(255,255,255);
 		$pdf->SetAligns($data['alineacion_columnas']);
 		$pdf->SetWidths($data['ancho_columnas']);
@@ -262,11 +274,11 @@ trait ReportFpdf
 	 * @param $ancho_columnas= Arreglo de contiene el ancho de las columnas
 	 * @param $nombre_columnas= Arreglo de Contiene el nombre de las columnas
 	 *****************************************************************/
-	function pintar_listado_pdf($pdf,$data)
+	function pintar_listado_pdf($pdf,$data,$setX = true)
 	{
 		$pdf->AliasNbPages();
 		$this->pintar_encabezado_pdf($pdf,$data);
-		$this->pintar_cabecera_columnas_pdf($pdf,$data);
+		$this->pintar_cabecera_columnas_pdf($pdf,$data,$setX);
 		$y=0;
 		foreach ($data['registros'] as $linea)
 		{
@@ -301,7 +313,7 @@ trait ReportFpdf
 					$y=0;
 					$this->pintar_footer_pdf($pdf,$data);
 					$this->pintar_encabezado_pdf($pdf,$data);
-					$this->pintar_cabecera_columnas_pdf($pdf,$data);
+					$this->pintar_cabecera_columnas_pdf($pdf,$data,$setX);
 
 				}
 			}else{
@@ -309,11 +321,11 @@ trait ReportFpdf
 					$y=0;
 					$this->pintar_footer_pdf($pdf,$data);
 					$this->pintar_encabezado_pdf($pdf,$data);
-					$this->pintar_cabecera_columnas_pdf($pdf,$data);
+					$this->pintar_cabecera_columnas_pdf($pdf,$data,$setX);
 				}
 			}
 
-			$this->pintar_registros_pdf($pdf,$data,$campos);
+			$this->pintar_registros_pdf($pdf,$data,$campos,$setX);
 		}
 
 		$pdf->Output($data['nombre_documento'],'D');

@@ -110,18 +110,17 @@ class FromQueryExport implements FromQuery, WithColumnWidths, WithColumnFormatti
 	}
 
 	/*
-	// UsoD
-
-    D=para el formato de fecha
+	// Uso
 	$data = [
-		'query'      => $sql, // objeto de la consulta (sin get())
+		'query'      => $sql,
 		'titulo'     => ['TITULO REPORTE', 'SUBTITULOS'],
 		'ancho'      => [30,20,20,20,20,20,20,20,20],
 		'alineacion' => ['R','C','C','C','L','R','C','C','C'],
-		'formatos'   => ['T','M','M','M','M','M','M','M','M'], // T: texto, N:moneda,D:fecha
+		'formatos'   => ['T','M','M','M','M','M','M','M','M'],
 		'columnas'   => ['ESTRUCTURA','MONTO LEY','MODIFICADO','APARTADO','PRE-COMP','COMP','CAUSADO','PAGADO','DISPONIBLE']
 	];
 
 	return (new FromQueryExport($data))->download('nombre_archivo.xlsx');
 	*/
 }
+

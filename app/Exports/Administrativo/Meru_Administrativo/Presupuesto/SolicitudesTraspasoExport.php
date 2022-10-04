@@ -1,9 +1,7 @@
 <?php
 
-namespace App\Exports;
+namespace App\Exports\Administrativo\Meru_Administrativo\Presupuesto;
 
-// use App\Models\Administrativo\Meru_Administrativo\Formulacion\MaestroLey;
-// use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
@@ -13,18 +11,17 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\Exportable;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class MaestroLeyExport implements FromQuery, WithColumnWidths, WithColumnFormatting, WithHeadings, WithStyles
+class SolicitudesTraspasoExport implements FromQuery, WithColumnWidths, WithColumnFormatting, WithHeadings, WithStyles
 {
-	use Exportable;
+    use Exportable;
 
 	private $queryExec;
 	private $titulo;
 
 	public function __construct()
 	{
-		$this->titulo = 'PRESUPUESTO HIDROBOLIVAR';
+		$this->titulo = 'SOLICITUDES DE TRASPASOS PRESUPUESTARIOS';
 	}
-
 
 	public function query()
 	{
@@ -46,24 +43,26 @@ class MaestroLeyExport implements FromQuery, WithColumnWidths, WithColumnFormatt
 	public function columnWidths(): array
     {
         return [
-        	'A' => 30,
-            'B' => 20,
+            'A' => 20,
+            'B' => 30,
 			'C' => 20,
-			'D' => 20,
-			'E' => 20,
+			'D' => 50,
+			'E' => 30,
 			'F' => 20,
-			'G' => 20,
-			'H' => 20,
-			'I' => 20,
+			'G' => 50,
+			'H' => 50,
         ];
     }
 
     public function styles(Worksheet $sheet)
     {
-    	$sheet->mergeCells('A1:I1');
+        $sheet->mergeCells('A1:I1');
         return [
             2 	 => ['font' => ['bold' => true], 'alignment' => ['horizontal' => 'center']],
             'A'  => ['alignment' => ['horizontal' => 'center']],
+            'B'  => ['alignment' => ['horizontal' => 'center']],
+            'C'  => ['alignment' => ['horizontal' => 'center']],
+            'E'  => ['alignment' => ['horizontal' => 'center']],
             'A1' => ['font' => ['bold' => true]]
         ];
     }
@@ -72,21 +71,21 @@ class MaestroLeyExport implements FromQuery, WithColumnWidths, WithColumnFormatt
 	{
 		return [
 			[$this->titulo],
-			['ESTRUCTURA','MONTO LEY','MODIFICADO','APARTADO','PRE-COMP','COMP','CAUSADO','PAGADO','DISPONIBLE']
+			['SOLICITUD', 'STATUS', 'FECHA', 'GERENCIA', 'ESTRUCTURA DE GASTOS', 'MONTO', 'CONCEPTO', 'JUSTIFICACIÓN']
 		];
 	}
 
 	public function columnFormats(): array
 	{
 		return [
-			'B' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
-			'C' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
-			'D' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
-			'E' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
+            'A' => NumberFormat::FORMAT_DATE_DMYSLASH,
+			'B' => NumberFormat::FORMAT_TEXT,
+			'C' => NumberFormat::FORMAT_TEXT,
+			'D' => NumberFormat::FORMAT_TEXT,
+			'E' => NumberFormat::FORMAT_TEXT,
 			'F' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
-			'G' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
-			'H' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
-			'I' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1
+			'G' => NumberFormat::FORMAT_TEXT,
+			'H' => NumberFormat::FORMAT_TEXT
 		];
 	}
 }
