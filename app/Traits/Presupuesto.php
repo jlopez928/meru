@@ -65,7 +65,10 @@ public function generarCentroCosto($tip_cod,$cod_pryacc,$cod_obj,$gerencia,$unid
     // partida presupuestaria que trae la orden o la certificacion
     $partida=      PartidaPresupuestaria::generarCodPartida($codPar, $codGen, $codEsp, $codSub);
     //Busca el centro de costo actual
+
     $centro_costo=$this->BuscarCentroCostoActual($cod_centro,$partida,$this->anoPro,$ano_doc);
+
+
     //Validar Centro de Costo
     if($centro_costo!=''){
             //  $cod_centro==$centro_costo  si se cumple la condición
@@ -90,14 +93,15 @@ function BuscarCentroCostoActual($centro_viejo,$partida,$ano_fiscal,$ano_doc)
                                        ->where('ano_pro',$ano_doc)
                                        ->where('cod_cencosto', $centro_viejo)->first();
     if(!empty($centro_costo->ajust_ctrocosto)){
+
          //----------------------------------------------------------------------------
          //Validar que el centro de costo exista en pre_maestro_ley para el año fiscal
          //----------------------------------------------------------------------------
          $query_partida= MaestroLey::query()
                                     ->where('ano_pro',$ano_fiscal)
-                                    ->where('cod_com', $centro_costo.".".$partida)->first();
+                                    ->where('cod_com', $centro_costo->ajust_ctrocosto.".".$partida)->first();
         if(empty($query_partida)){
-            alert()->error("Partida Presupuestaria [".$centro_costo.".".$partida ." ] No Existe en Pre Maestro Ley ");
+             alert()->error("Partida Presupuestaria [".$centro_costo->ajust_ctrocosto.".".$partida ." ] No Existe en Pre Maestro Ley ");
             return  $centro_costo='';
         }
     }else{
@@ -121,7 +125,7 @@ function BuscarCentroCostoActual($centro_viejo,$partida,$ano_fiscal,$ano_doc)
         }
 
     }
-    return  $centro_costo;
+    return  $centro_costo->ajust_ctrocosto;
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -160,7 +164,20 @@ public function  varmarCodcom($tip_cod,$cod_pryacc,$cod_obj,$gerencia,$unidad,$c
         \Str::padLeft($cod_sub, 2, '0'),
     ]);
 }
-
+//--------------------------------------------------------------------------------
+//             funcion para armar cod
+//---------------------------------------------------------------------------------
+public function  varmarpartida($cod_par,$cod_gen,$cod_esp,$cod_sub) {
+    return implode('.', [
+        \Str::padLeft($cod_par, 2, '0'),
+        \Str::padLeft($cod_gen, 2, '0'),
+        \Str::padLeft($cod_esp, 2, '0'),
+        \Str::padLeft($cod_sub, 2, '0'),
+    ]);
+}
+//--------------------------------------------------------------------------------
+//             funcion para ObtenerIdpartida
+//---------------------------------------------------------------------------------
 public function  ObtenerIdpartida($cod_par,$cod_gen,$cod_esp,$cod_sub) {
 
    return PartidaPresupuestaria::query()
@@ -169,5 +186,15 @@ public function  ObtenerIdpartida($cod_par,$cod_gen,$cod_esp,$cod_sub) {
                                    ->where('cod_esp', $cod_esp)
                                    ->where('cod_sub', $cod_sub)->first()->id;
 }
+//--------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------
+public function  ObtenerDatosPartida($cod_par,$cod_gen,$cod_esp,$cod_sub) {
+
+    return PartidaPresupuestaria::query()
+                                    ->where('cod_par', $cod_par)
+                                    ->where('cod_gen', $cod_gen)
+                                    ->where('cod_esp', $cod_esp)
+                                    ->where('cod_sub', $cod_sub)->first();
+ }
 
 }

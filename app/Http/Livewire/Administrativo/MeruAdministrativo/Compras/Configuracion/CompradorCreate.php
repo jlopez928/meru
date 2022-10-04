@@ -72,7 +72,7 @@ class CompradorCreate extends Component
             return redirect()->back();
         }
     }
-    
+
     public function render()
     {
         return view('livewire.administrativo.meru-administrativo.compras.configuracion.comprador-create', [

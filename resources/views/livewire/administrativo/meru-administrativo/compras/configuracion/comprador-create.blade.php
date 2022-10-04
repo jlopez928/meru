@@ -51,6 +51,7 @@
             }).then((result) => {
                 if(result.isConfirmed){
                     Livewire.emitTo('administrativo.meru-administrativo.compras.configuracion.comprador-create', param['funcion'], param['usuario'])
+
                 }
             })
         })

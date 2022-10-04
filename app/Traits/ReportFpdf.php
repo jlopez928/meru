@@ -316,7 +316,7 @@ trait ReportFpdf
 			$this->pintar_registros_pdf($pdf,$data,$campos);
 		}
 
-		$pdf->Output($data['nombre_documento'],'I');
+		$pdf->Output($data['nombre_documento'],'D');
 	}
 
 	/****************************************************************

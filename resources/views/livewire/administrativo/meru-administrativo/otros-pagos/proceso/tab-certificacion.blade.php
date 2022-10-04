@@ -2,7 +2,7 @@
   <x-form method="{{ $accion =='create' ?  'post' : 'put'   }}" action="{{ $accion == 'create' ? route('otrospagos.proceso.certificacionservicio.store') : route('otrospagos.proceso.certificacionservicio.update', $certificacionservicio->id) }}">
       <x-card>
         <x-slot name="header">
-            <h3 class="card-title text-bold">Certificación de Servicio</h3>
+            <h3 class="card-title text-bold">Certificación de Servicios</h3>
         </x-slot>
         <x-slot name="body">
             <ul class="nav nav-tabs" id="TabCertificacion" role="tablist">
@@ -51,8 +51,7 @@
 					return false;
 				}
 			});
-		});
-
+        });
         $(function () {
             $('.select2bs4').select2({
                 theme: 'bootstrap4',
@@ -73,7 +72,9 @@
             $(param['tab']).tab('show');
             $(param['onfocus']).focus();
             var detalle = JSON.stringify(param['det']);
-            $("#hiddenDetalle").val(detalle);
+            if (typeof detalle !== 'undefined') {
+                $("#hiddenDetalle").val(detalle);
+           }
         });
         window.livewire.on('swal:alert', param => {
             Swal.fire({title:param['titulo'],
@@ -81,6 +82,23 @@
             icon:param['tipo']
             })
         });
-
+        Livewire.on('swal:confirm', param => {
+            Swal.fire({
+                title: param['titulo'],
+                text: param['mensaje'],
+                icon: param['tipo'],
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: '¡Sí!',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Cancelar',
+            }).then((result) => {
+                if(result.isConfirmed){
+                    Livewire.emitTo('administrativo.meru-administrativo.otros-pagos.proceso.tab-certificacion', param['funcion'],param['posicion'])
+               }else{
+                    Livewire.emitTo('administrativo.meru-administrativo.otros-pagos.proceso.tab-certificacion', param['funcion2'],param['posicion'])
+               }
+            })
+        })
     </script>
 @endpush

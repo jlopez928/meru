@@ -14,9 +14,11 @@ Route::middleware(['auth', 'periodo-fiscal'])
 	        });
             Route::name('proceso.')
 			->group(function () {
-                Route::resource('certificacionservicio', CertificacionServicioController::class)->except('destroy', 'show');
+                Route::resource('certificacionservicio', CertificacionServicioController::class)->except('destroy', 'show','create');
                 Route::get('print_certificacion_servicios', [CertificacionServicioController::class, 'print_certificacion_servicios'])->name('print_certificacion_servicios');
+                Route::get('certificacionservicio/{accion}/crear', [CertificacionServicioController::class, 'crear'])->name('certificacionservicio.crear');
                 Route::get('certificacionservicio/{certificacionservicio}/aprobar_certificacion', [CertificacionServicioController::class, 'aprobar_certificacion'])->name('certificacionservicio.aprobar_certificacion');
+                Route::get('certificacionservicio/{certificacionservicio}/anular_anticipo', [CertificacionServicioController::class, 'anular_anticipo'])->name('certificacionservicio.anular_anticipo');
                 Route::get('certificacionservicio/{certificacionservicio}/anular_certificacion', [CertificacionServicioController::class, 'anular_certificacion'])->name('certificacionservicio.anular_certificacion');
                 Route::get('certificacionservicio/{certificacionservicio}/reversar_certificacion', [CertificacionServicioController::class, 'reversar_certificacion'])->name('certificacionservicio.reversar_certificacion');
                 Route::get('certificacionservicio/{certificacionservicio}/comprometer_certificacion', [CertificacionServicioController::class, 'comprometer_certificacion'])->name('certificacionservicio.comprometer_certificacion');
@@ -27,5 +29,7 @@ Route::middleware(['auth', 'periodo-fiscal'])
 	        });
             Route::name('reporte.')
 			->group(function () {
+                Route::post('print_certificacion_contrato', [CertificacionServicioController::class, 'print_certificacion_contrato'])->name('print_certificacion_contrato');
+                Route::get('show_certificacion_contrato', [CertificacionServicioController::class, 'show_certificacion_contrato'])->name('show_certificacion_contrato');
 	        });
     });

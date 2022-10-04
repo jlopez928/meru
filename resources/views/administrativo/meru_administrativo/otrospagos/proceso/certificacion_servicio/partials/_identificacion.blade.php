@@ -31,12 +31,8 @@
              <x-field class="text-center col-2">
                 <x-label for="provision">{{ __('Provisión') }}</x-label>
                 <x-select  style="pointer-events:none" readonly wire:model.defer="provision" id="provision" name="provision" class="form-control-sm {{ $errors->has('provision') ? 'is-invalid' : '' }}">
-                    @foreach (\App\Enums\Administrativo\Meru_Administrativo\EstadoSiNo::cases() as $estado)
-                        <option value="{{ $estado->value }}" @selected(old('provision', $provision) === $estado->value)>
-                            {{ $estado->name }}
-                        </option>
-                    @endforeach
-                </x-select>
+                    <option value={{ $actprovision=='nuevo'?'N':'S'}}>{{ $actprovision=='nuevo'?'No':'Si'}}</option>
+               </x-select>
                 <div class="invalid-feedback">
                     @error('provision') {{ $message }} @enderror
                 </div>
@@ -116,14 +112,14 @@
         <div class="row col-12">
             <x-field class="text-center col-2 offset-4">
                 <x-label for="por_anticipo">% Anticipo</x-label>
-                <x-input  wire:model.defer="por_anticipo" id="por_anticipo" name="por_anticipo" class="text-center form-control-sm" class="form-control-sm {{ $errors->has('por_anticipo') ? 'is-invalid' : '' }}" />
+                <x-input   wire:model.defer="por_anticipo" wire:keydown.tab.prevent="calcularAnticipo('#identificacion-tab')" x-mask:dynamic="$money($input, ',')" id="por_anticipo" name="por_anticipo"  class="form-control-sm text-right {{ $errors->has('por_anticipo') ? 'is-invalid' : '' }}" />
                     <div class="invalid-feedback">
                         @error('por_anticipo') {{ $message }} @enderror
                     </div>
             </x-field>
             <x-field class="text-center col-2 ">
                 <x-label for="mto_ant">Monto Anticipo</x-label>
-                <x-input  wire:model.defer="mto_ant" readonly  id="mto_ant" name="mto_ant" class="text-center form-control-sm" class="form-control-sm {{ $errors->has('mto_ant') ? 'is-invalid' : '' }}" />
+                <x-input  wire:model.defer="mto_ant" readonly  x-mask:dynamic="$money($input, ',')" id="mto_ant" name="mto_ant"  class="form-control-sm text-right {{ $errors->has('mto_ant') ? 'is-invalid' : '' }}" />
                     <div class="invalid-feedback">
                         @error('mto_ant') {{ $message }} @enderror
                     </div>
@@ -166,7 +162,7 @@
             </x-field>
             <x-field class="text-center col-2">
                 <x-label for="factura">Tiene Factura</x-label>
-                <x-select   wire:model.defer="factura" wire:change="limpiar"  id="factura" name="factura" class="form-control-sm {{ $errors->has('factura') ? 'is-invalid' : '' }}">
+                <x-select style="{{ $actprovision =='provision' ? 'pointer-events: none' : '' }}"   wire:model.defer="factura" wire:change="limpiar()"  id="factura" name="factura" class="form-control-sm {{ $errors->has('factura') ? 'is-invalid' : '' }}">
                     @foreach (\App\Enums\Administrativo\Meru_Administrativo\Factura::cases() as $estado)
                         <option value="{{ $estado->value }}"  @selected(old('factura',$factura ) === $estado->value)  >
                             {{ $estado->name }}

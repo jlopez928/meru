@@ -2,9 +2,11 @@
 
     namespace App\Traits;
 
-    use App\Models\Administrativo\Meru_Administrativo\Formulacion\CentroCosto;
+
     use App\Models\Administrativo\Meru_Administrativo\Presupuesto\RegistroControl;
     use App\Models\Administrativo\Meru_Administrativo\Compra\DetNotaEntrega;
+    use App\Models\Administrativo\Meru_Administrativo\Presupuesto\CentroCosto;
+
 
 trait funcActas
 {
@@ -179,6 +181,59 @@ trait funcActas
                 default:
                     return "Sin Comprobante";
             }
+        }else{
+            return "Sin Comprobante";
+        }
+
+    }
+    // Función que coloca las descripcion del estatus del contrato
+    function EstatusContrato($valor) {
+        $descrip_estado = "";
+        if (!empty($valor)) {
+            switch ($valor) {
+                case "0":
+                    $descrip_estado = "Ingresada en Sistema";;
+                    break;
+                case "1":
+                    $descrip_estado = "Anulada";;
+                    break;
+                case "2":
+                    $descrip_estado = "Aprobada por Gerente de la Unidad Solicitante";;
+                    break;
+                case "3":
+                    $descrip_estado = "Reversada por Gerente de la Unidad Solicitante";;
+                    break;
+                case "4":
+                    $descrip_estado = "Comprometida Presupuestariamente";;
+                    break;
+                case "5":
+                    $descrip_estado = "Reversada Presupuestariamente";;
+                    break;
+                case "6":
+                    $descrip_estado = "Con Orden Impresa";;
+                    break;
+            }
+            return $descrip_estado;
+        }else{
+            return "Ingresada en Sistema";
+        }
+        return $descrip_estado;
+    }
+
+    /* Obtiene El Centro de Costo Original */
+    function ObtenerCentroCostoViejo($ano_pro,$cod_com)
+    {
+        $centro = substr($cod_com, 0, 14);
+
+        $query = CentroCosto::where('ano_pro',$ano_pro)
+                            ->where('ajust_ctrocosto',$centro)
+                            ->select('tip_cod', 'cod_pryacc', 'cod_obj', 'gerencia', 'unidad', 'cod_cencosto', 'ajust_ctrocosto')
+                            ->get();
+        if($query){
+            $centro_costo = $query[0];
+            return $centro_costo;
+        } else{
+            return false;
         }
     }
 

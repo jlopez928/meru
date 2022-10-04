@@ -10,6 +10,7 @@ class Acta extends Model
     use HasFactory;
 
     protected $table    = 'com_actas';
+    protected $primaryKey = 'nro_act';
 
 	protected $fillable = [
 	    'acta',
@@ -35,5 +36,13 @@ class Acta extends Model
         'fec_act',
         'usu_mod',
         'fec_mod',
+        'encnotaentrega_id'
 	];
+    public $timestamps = false;
+
+    public function encnotaentrega()
+	{
+		return $this->belongsTo(EncNotaEntrega::class, 'id', 'encnotaentrega_id');
+	}
+
 }

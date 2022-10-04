@@ -128,5 +128,7 @@
             icon:param['tipo']
             })
         });
+
 	</script>
+
 @endpush

@@ -28,7 +28,7 @@
     <div class="mb-2">
         <table  class="table table-bordered table-sm text-center " >
             <thead class="">
-                <tr class="table-success">
+                <tr class="table-primary">
                     <th style="width:150px">Código</th>
                     <th style="width:350px">Descripción</th>
                     <th>%IVA</th>
@@ -62,10 +62,10 @@
     </div>
     <div class="dropdown-divider col-12" style="border-color:#84b7e0 !important; padding-bottom: 20px !important;"></div>
     <div class="mb-2">
-        <input id="hiddenDetalle" type="hidden" wire:model.defer ="listadoDetalle"   name="listadoDetalle">
+        <input id="listadoDetalle" type="hidden" wire:model.defer ="listadoDetalle"   name="listadoDetalle">
         <table  class="table table-bordered table-sm text-center " >
             <thead class="">
-                <tr class="table-success">
+                <tr class="table-primary">
                     <th style="width:50px">Gasto</th>
                     <th style="width:50px">Tp</th>
                     <th style="width:50px">P/A</th>
@@ -139,7 +139,7 @@
     <div class="row col-12">
         <div class="text-center  form-group col-2 ">
             <x-label for="deposito_garantia"> Deposito en Garantia</x-label>
-            <x-select  id="deposito_garantia" name="deposito_garantia" class="form-control-sm {{ $errors->has('deposito_garantia') ? 'is-invalid' : '' }}">
+            <x-select style="{{ $activardeposito =='true' ? '' : 'pointer-events: none' }}" id="deposito_garantia" name="deposito_garantia" class="form-control-sm {{ $errors->has('deposito_garantia') ? 'is-invalid' : '' }}">
                 @foreach (\App\Enums\Administrativo\Meru_Administrativo\EstadoSiNo::cases() as $estado)
                     <option value="{{ $estado->value }}" @selected(old('deposito_garantia', $opsolservicio->deposito_garantia) === $estado->value)>
                         {{ $estado->name }}
@@ -154,21 +154,21 @@
     <div class="row col-12">
         <div class="text-center  form-group col-2 offset-3">
             <x-label for="base_imponible">Base Imponible</x-label>
-            <x-input  value="{{ $opsolservicio->base_imponible}}"  name="base_imponible" id="base_imponible"  readonly  class="text-center form-control-sm {{ $errors->has('base_imponible') ? 'is-invalid' : '' }}"  />
+            <x-input  x-mask:dynamic="$money($input, ',')"  value="{{ $opsolservicio->base_imponible}}"  name="base_imponible" id="base_imponible"  readonly  class="text-center form-control-sm {{ $errors->has('base_imponible') ? 'is-invalid' : '' }}"  />
             <div class="invalid-feedback">
                 @error('base_imponible') {{ $message }} @enderror
             </div>
          </div>
          <div class="text-center  form-group col-2">
             <x-label for="base_exenta">Base Exenta</x-label>
-            <x-input  value="{{ $opsolservicio->base_exenta}}"  name="base_exenta" id="base_exenta" readonly  class="text-center form-control-sm {{ $errors->has('base_exenta') ? 'is-invalid' : '' }}" />
+            <x-input x-mask:dynamic="$money($input, ',')"  value="{{ $opsolservicio->base_exenta}}"  name="base_exenta" id="base_exenta" readonly  class="text-center form-control-sm {{ $errors->has('base_exenta') ? 'is-invalid' : '' }}" />
             <div class="invalid-feedback">
                 @error('base_exenta') {{ $message }} @enderror
             </div>
          </div>
          <div class="text-center  form-group col-2">
             <x-label for="monto_neto">Monto Neto</x-label>
-            <x-input  value="{{ $opsolservicio->monto_neto}}"  name="monto_neto" id="monto_neto" readonly  class="text-center form-control-sm {{ $errors->has('monto_neto') ? 'is-invalid' : '' }}"  />
+            <x-input x-mask:dynamic="$money($input, ',')"   value="{{ $opsolservicio->monto_neto}}"  name="monto_neto" id="monto_neto" readonly  class="text-center form-control-sm {{ $errors->has('monto_neto') ? 'is-invalid' : '' }}"  />
             <div class="invalid-feedback">
                 @error('monto_neto') {{ $message }} @enderror
             </div>
@@ -177,21 +177,21 @@
     <div class="row col-12">
         <div class="text-center  form-group col-2 offset-3">
             <x-label for="monto_iva">Monto Iva</x-label>
-            <x-input value="{{ $opsolservicio->monto_iva}}"  name="monto_iva" id="monto_iva"  readonly class="text-center form-control-sm {{ $errors->has('monto_iva') ? 'is-invalid' : '' }}" />
+            <x-input x-mask:dynamic="$money($input, ',')"  value="{{ $opsolservicio->monto_iva}}"  name="monto_iva" id="monto_iva"  readonly class="text-center form-control-sm {{ $errors->has('monto_iva') ? 'is-invalid' : '' }}" />
             <div class="invalid-feedback">
                 @error('monto_iva') {{ $message }} @enderror
             </div>
          </div>
          <div class="text-center  form-group col-2">
             <x-label for="monto_total">Monto Total</x-label>
-            <x-input value="{{ $opsolservicio->monto_total}}"   name="monto_total" id="monto_total" readonly  class="text-center form-control-sm {{ $errors->has('monto_total') ? 'is-invalid' : '' }}"  />
+            <x-input x-mask:dynamic="$money($input, ',')"  value="{{ $opsolservicio->monto_total}}"   name="monto_total" id="monto_total" readonly  class="text-center form-control-sm {{ $errors->has('monto_total') ? 'is-invalid' : '' }}"  />
             <div class="invalid-feedback">
                 @error('monto_total') {{ $message }} @enderror
             </div>
          </div>
          <div class="text-center  form-group col-2">
             <x-label for="por_iva">% Iva</x-label>
-            <x-input value="{{ $opsolservicio->por_iva}}"   name="por_iva" id="por_iva" readonly class="text-center form-control-sm {{ $errors->has('por_iva') ? 'is-invalid' : '' }}" />
+            <x-input x-mask:dynamic="$money($input, ',')"  value="{{ $opsolservicio->por_iva}}"   name="por_iva" id="por_iva" readonly class="text-center form-control-sm {{ $errors->has('por_iva') ? 'is-invalid' : '' }}" />
             <div class="invalid-feedback">
                 @error('por_iva') {{ $message }} @enderror
             </div>

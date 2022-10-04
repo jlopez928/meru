@@ -77,13 +77,29 @@ class EncNotaEntrega extends Model
 
     public function comprobantesopendetne()
 	{
-		return $this->hasMany(ComprobanteSopenDetNe::class, 'encnotaentrega_id', 'id');
+		return $this->hasMany(ComprobanteSopenDetNe::class, 'encnotaentrega_id', 'id')->orderBy('con_com');
 	}
 
 
     public function acta()
 	{
 	  return $this->hasOne(Acta::class, 'encnotaentrega_id', 'id')->where('acta','A');
+	}
+
+    public function actai()
+	{
+	  return $this->hasOne(Acta::class, 'encnotaentrega_id', 'id')->where('acta','I');
+	}
+
+    public function actat()
+	{
+	  return $this->hasOne(Acta::class, 'encnotaentrega_id', 'id')->where('acta','T');
+	}
+
+
+    public function actatodas()
+	{
+	  return $this->hasOne(Acta::class, 'encnotaentrega_id', 'id');
 	}
 
     public function beneficiario()

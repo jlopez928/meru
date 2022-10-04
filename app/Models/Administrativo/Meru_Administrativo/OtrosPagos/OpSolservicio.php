@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models\Administrativo\Meru_Administrativo\OtrosPagos;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Enums\Administrativo\Meru_Administrativo\TipoPago;
@@ -11,6 +10,7 @@ use App\Models\Administrativo\Meru_Administrativo\OtrosPagos\OpDetsolservicio;
 use App\Enums\Administrativo\Meru_Administrativo\OtrosPagos\EstadoCertificacion;
 use App\Models\Administrativo\Meru_Administrativo\OtrosPagos\OpDetgastossolservicio;
 use App\Models\Administrativo\Meru_Administrativo\Tesoreria\Beneficiario;
+
 
 class OpSolservicio extends BaseModel
 {
@@ -103,23 +103,26 @@ class OpSolservicio extends BaseModel
                 'fecha_cierre',
                 'cont_fis'
                     ];
-                protected $casts = [
-                        'sta_sol' => EstadoCertificacion::class,
-                        'provision' => EstadoSiNo::class,
-                        'tip_pag' => TipoPago::class,
-                ];
+    protected $casts = [
+            'sta_sol' => EstadoCertificacion::class,
+            'provision' => EstadoSiNo::class,
+            'tip_pag' => TipoPago::class,
+    ];
     ////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////// RELACIONES //////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public function opdetsolservicio()
 	{
-		return $this->hasMany(OpDetsolservicio::class, 'op_solservicio_id', 'id');
+		return $this->hasMany(OpDetsolservicio::class, 'ano_pro', 'ano_pro')
+                                           ->where('xnro_sol', $this->xnro_sol);
 	}
 
 	public function opdetgastossolservicio()
 	{
-		return $this->hasMany(OpDetgastossolservicio::class, 'op_solservicio_id', 'id');
+		return $this->hasMany(OpDetgastossolservicio::class,'ano_pro', 'ano_pro')
+                                            ->where('xnro_sol', $this->xnro_sol)
+                                            ->orderBy('cod_gen','asc');
 	}
     public function gerencias()
 	{
@@ -136,5 +139,34 @@ class OpSolservicio extends BaseModel
     public function formatNumber($attr) {
 		return number_format($this->{$attr}, 2, ',', '.');
 	}
+
+    
+    public static function getEstSol($est_sol)
+	{
+		$desc = '';
+
+		switch($est_sol) {
+			case '1':
+				$desc = 'Anulada';
+				break;
+			case '2':
+				$desc = 'Aprobada por Gerente de la Unidad Solicitante';
+				break;
+			case '3':
+				$desc = 'Reversada por Gerente de la Unidad Solicitante';
+				break;
+			case '4':
+				$desc = 'Comprometida Presupuestariamente';
+				break;
+			case '5':
+				$desc = 'Reversada Presupuestariamente';
+				break;
+            case '6':
+                $desc = 'Con Orden Impresa';
+                break;
+		}
+		return $desc;
+	}
+
 }
 

@@ -11,6 +11,7 @@ class PartidaPresupuestaria extends Model
 	use HasFactory;
 
 	protected $table    = 'pre_partidasgastos';
+
 	protected $fillable = [
 		'tip_cod',
 		'cod_par',

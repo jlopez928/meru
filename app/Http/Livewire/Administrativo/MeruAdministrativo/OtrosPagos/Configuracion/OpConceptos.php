@@ -45,7 +45,6 @@ class OpConceptos extends Component
                     $this->$key = $value;
             }
                 $this->estructuras=  json_decode($this->estructuras,true);
-                dd($this->estructuras);
             }
 
     }

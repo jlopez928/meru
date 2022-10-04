@@ -10,6 +10,7 @@ class DetGastosNotaEntrega extends Model
     use HasFactory;
 
     protected $table = 'com_detgastosnotaentrega';
+    protected $primaryKey = 'nro_ent';
 
     protected $fillable = [
             'ano_pro',
@@ -28,6 +29,7 @@ class DetGastosNotaEntrega extends Model
             'mto_tra',
             'mto_cau',
             'causar',
+            'encnotaentrega_id'
     ];
     public $timestamps = false;
 

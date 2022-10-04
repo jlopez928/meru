@@ -7,7 +7,8 @@
 	<div class="container-fluid">
 		<div class="row mb-12">
             <div class="col-sm-6">
-				<x-button class="btn-success" href="{{ route('otrospagos.proceso.certificacionservicio.create') }}" title="Nuevo"><i class="fas fa-plus-circle"></i> Nuevo</x-button>
+				<x-button class="btn-success" href="{{ route('otrospagos.proceso.certificacionservicio.crear', 'nuevo') }}" title="Nuevo"><i class="fas fa-plus-circle"></i> Nuevo</x-button>
+                <x-button class="btn-success" href="{{ route('otrospagos.proceso.certificacionservicio.crear', 'provision') }}" title="Provisión"><i class="fas fa-plus-circle"></i> Provisión</x-button>
                 <x-button href="{{ route('otrospagos.proceso.print_certificacion_servicios')}}" target="_blank" class="btn-primary" title="Generar PDF"><i class="fas fa-download"> Generar PDF</i></i></x-button>
 			</div>
 			<div class="col-sm-6">
