@@ -3,7 +3,7 @@
         <x-field class="col-5">
             <x-label for="cod_prod">Producto</x-label>
             <x-select
-                class="form-control-sm {{ $errors->has('pri_sol') ? 'is-invalid' : 'is-valid' }}"
+                class="form-control-sm {{ $errors->has('cod_prod') ? 'is-invalid' : 'is-valid' }}"
                 wire:model="cod_prod"
             >
                 <option value="">Seleccione...</option>
@@ -168,7 +168,7 @@
 
     {{--  Detalle de la Tabla  --}}
     <div class="mt-4">
-        <table class="table table-bordered table-sm text-center" >
+        <table class="table table-bordered table-sm text-center">
             <thead>
                 <tr class="table-success">
                     <th style="width:10%">Producto</th>
@@ -193,5 +193,4 @@
             </tbody>
         </table>
     </div>
-
 </div>
