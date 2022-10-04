@@ -114,14 +114,14 @@
         <div class="row col-12">
             <x-field class="text-center col-2 offset-4">
                 <x-label for="por_anticipo">% Anticipo</x-label>
-                <x-input  readonly value="{{$opsolservicio->por_anticipo}}" id="por_anticipo" name="por_anticipo" class="text-center form-control-sm" class="form-control-sm {{ $errors->has('por_anticipo') ? 'is-invalid' : '' }}" />
+                <x-input  readonly value="{{$opsolservicio->por_anticipo}}" x-mask:dynamic="$money($input, ',')" id="por_anticipo" name="por_anticipo"  class="form-control-sm text-right {{ $errors->has('por_anticipo') ? 'is-invalid' : '' }}" />
                     <div class="invalid-feedback">
                         @error('por_anticipo') {{ $message }} @enderror
                     </div>
             </x-field>
             <x-field class="text-center col-2 ">
                 <x-label for="mto_ant">Monto Anticipo</x-label>
-                <x-input   readonly value="{{$opsolservicio->mto_ant}}"  id="mto_ant" name="mto_ant" class="text-center form-control-sm" class="form-control-sm {{ $errors->has('mto_ant') ? 'is-invalid' : '' }}" />
+                <x-input   readonly value="{{$opsolservicio->mto_ant}}" x-mask:dynamic="$money($input, ',')" id="mto_ant" name="mto_ant" class="form-control-sm text-right {{ $errors->has('mto_ant') ? 'is-invalid' : '' }}" />
                     <div class="invalid-feedback">
                         @error('mto_ant') {{ $message }} @enderror
                     </div>

@@ -34,3 +34,4 @@
          @endif
     </x-datatable>
 </div>
+

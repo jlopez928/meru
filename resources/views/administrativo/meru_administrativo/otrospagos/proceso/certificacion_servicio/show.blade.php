@@ -7,7 +7,7 @@
         <div class="row mb-2">
             <div class="col-sm-12">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item text-bold"><a href="{{ route('otrospagos.proceso.certificacionservicio.index') }}">Pagina Principal</a></li>
+                    <li class="breadcrumb-item text-bold"><a href="{{ route('otrospagos.proceso.certificacionservicio.index') }}">Página Principal</a></li>
                     <li class="breadcrumb-item active text-bold">Mostrar Certificación de Servicio</li>
                 </ol>
             </div>
@@ -67,4 +67,15 @@
 	@include('layouts.sidebar')
 @endsection
 
+@push('scripts')
+    <script type="text/javascript">
+        $(document).ready(function () {
+			$('.money-mask').keypress(function (e) {
+				if (e.which != 8 && e.which != 0 && e.which != 44 && (e.which < 48 || e.which > 57)) {
+					return false;
+				}
+			});
+        });
+    </script>
+@endpush
 

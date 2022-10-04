@@ -13,6 +13,8 @@ class DetNotaEntrega extends Model
 
     protected $table = 'com_detnotaentrega';
 
+    protected $primaryKey = 'nro_ent';
+
     protected $fillable = [
         'fk_ano_pro',
         'grupo',
@@ -41,6 +43,7 @@ class DetNotaEntrega extends Model
         'cta_cont',
         'cta_x_pagar',
         'gasto',
+        'encnotaentrega_id'
     ];
 
     public $timestamps = false;

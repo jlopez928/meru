@@ -19,6 +19,9 @@
 			</div>
 		</div>
 	</div>
+
+    <button id="button">Click me!</button>
+    <canvas id="custom_canvas"></canvas>
 </section>
 <section class="content">
 	<div class="container-fluid">
@@ -28,6 +31,25 @@
             </div>
 		</div>
 	</div>
+
+    @push('scripts')
+	<script type="text/javascript">
+
+        const canvas = document.getElementById('custom_canvas')
+const button = document.getElementById('button')
+
+const jsConfetti = new JSConfetti({ canvas })
+
+setTimeout(() => {
+  jsConfetti.addConfetti()
+}, 500)
+
+button.addEventListener('click', () => {
+  jsConfetti.addConfetti()
+})
+	</script>
+
+@endpush
 </section>
 
 @endsection

@@ -58,6 +58,11 @@
                                     </a>
                                 @endif
                             @endif
+                            @if($certificacionItem->por_anticipo !=0.00)
+                                <a href="{{ route('otrospagos.proceso.certificacionservicio.anular_anticipo', [ $certificacionItem->id ] ) }}" type="button" class="btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Anular Certificación">
+                                    <span class="fas fa-print  text-success" aria-hidden="true"></span>
+                                </a>
+                            @endif
 
 
 

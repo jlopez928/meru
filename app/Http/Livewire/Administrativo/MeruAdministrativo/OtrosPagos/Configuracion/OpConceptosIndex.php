@@ -44,7 +44,7 @@ class OpConceptosIndex extends Component
             ],
             'opconceptos' => OpConceptos::query()
                     ->where('cod_con', 'like', '%'.$this->search.'%')
-                    ->orWhere('des_con', 'like', '%'.$this->search.'%')
+                    ->orWhere('des_con', 'like', '%'.strtoupper($this->search).'%')
                     ->orderBy($this->sort2, $this->direction)
                     ->orderBy($this->sort, $this->direction)
                     ->paginate($this->paginate)

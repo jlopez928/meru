@@ -12,7 +12,7 @@ enum EstadoCertificacion : string
     case Reverso_Compromiso='5';
     case Orden_Impresa='6';
     case Cerrada='7';
-    case Error='C';
+    case Cierre_Prespuestario='C';
 }
 
 

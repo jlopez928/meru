@@ -24,7 +24,7 @@
     <div class="mb-2">
         <table  class="table table-bordered table-sm text-center " >
             <thead class="">
-                <tr class="table-success">
+                <tr class="table-primary">
                     <th style="width:150px">Código</th>
                     <th style="width:350px">Descripción</th>
                     <th>%IVA</th>
@@ -37,25 +37,25 @@
             <tbody>
                     <tr>
                         <td>
-                            <input class="form-control-sm border-0" name="codigo" style="width:100px" wire:model.defer="codigo" x-mask="99" wire:keydown.tab.prevent="calculaCostoTotal('codigo')"  type="text">
+                            <input class="form-control-sm border-0 text-center" name="codigo" style="width:100px" wire:model.defer="codigo" x-mask="999" wire:keydown.tab.prevent="calculaCostoTotal('codigo')"  type="text">
                         </td>
                         <td>
-                            <input style="pointer-events:none" readonly   class="form-control-sm border-0" wire:model.defer="des_con" name="des_con" style="width:350px"wire:model.defer="des_con"  type="text" >
+                            <input  readonly   class="form-control-sm border-0" wire:model.defer="des_con" name="des_con" wire:model.defer="des_con"  type="text" style="width:350px">
                         </td>
-                        <td style="text-align:right">
-                            <input class="form-control-sm border-0 money-mask" id="por_iva_con" name="por_iva_con" x-mask:dynamic="$money($input, ',')" style="width:100px" wire:model.defer="por_iva_con" wire:keydown.tab.prevent="calculaCostoTotal('por_iva_con')" >
-                        </td>
-                        <td>
-                            <input class="form-control-sm border-0" id="cantidad" name="cantidad" style="width:100px" wire:model.defer="cantidad" x-mask="99999" wire:keydown.tab.prevent="calculaCostoTotal('cantidad')" type="text" >
+                        <td >
+                            <input class="form-control-sm border-0 text-center money-mask" id="por_iva_con"  name="por_iva_con" x-mask:dynamic="$money($input, ',')" style="width:100px" wire:model.defer="por_iva_con" wire:keydown.tab.prevent="calculaCostoTotal('por_iva_con')" >
                         </td>
                         <td>
-                            <input class="form-control-sm border-0 money-mask" id="cos_uni" name="cos_uni"  style="width:100px" wire:model.defer="cos_uni" x-mask:dynamic="$money($input, ',')" wire:keydown.tab.prevent="calculaCostoTotal('cos_uni')" type="text" >
+                            <input class="form-control-sm border-0 text-center" id="cantidad" name="cantidad"   style="text-align:right width:100px" wire:model.defer="cantidad" x-mask="99999" wire:keydown.tab.prevent="calculaCostoTotal('cantidad')" type="text" >
                         </td>
                         <td>
-                            <input class="form-control-sm border-0 money-mask" id="cos_excenta" name="cos_excenta"  style="width:100px" wire:model.defer="cos_excenta" x-mask:dynamic="$money($input, ',')" wire:keydown.tab.prevent="calculaCostoTotal('cos_excenta')" type="text" >
+                            <input class="form-control-sm border-0 text-right money-mask" id="cos_uni" name="cos_uni"  style="width:100px" wire:model.defer="cos_uni" x-mask:dynamic="$money($input, ',')" wire:keydown.tab.prevent="calculaCostoTotal('cos_uni')" type="text" >
                         </td>
                         <td>
-                            <input readonly class="form-control-sm border-0"  id="cos_tot" name="cos_tot" style="width:100px" wire:model.defer="cos_tot"  type="text" >
+                            <input class="form-control-sm border-0 text-right money-mask" id="cos_excenta" name="cos_excenta"  style="width:100px" wire:model.defer="cos_excenta" x-mask:dynamic="$money($input, ',')" wire:keydown.tab.prevent="calculaCostoTotal('cos_excenta')" type="text" >
+                        </td>
+                        <td>
+                            <input readonly class="form-control-sm border-0 text-right"  id="cos_tot" name="cos_tot" style="width:100px" wire:model.defer="cos_tot"  type="text" >
                         </td>
                     </tr>
             </tbody>
@@ -65,8 +65,9 @@
         <h5 class="card-title text-secondary text-bold">Estructura de Gasto</h5>
     </div>
     <div class="dropdown-divider col-12" style="border-color:#84b7e0 !important; padding-bottom: 20px !important;"></div>
-    <div class="mb-2">
-        <input id="hiddenDetalle" type="hidden" wire:model.defer ="listadoDetalle"   name="listadoDetalle">
+    <div class="mb-2"  x-data="{  open: @entangle('showDropdown')}">
+
+        <input id="hiddenDetalle" type="hidden"   name="listadoDetalle">
         <table  class="table table-bordered table-sm text-center " >
             <thead class="">
                 <tr class="table-primary">
@@ -88,8 +89,9 @@
             <tbody>
                 @forelse ($this->detallegasto as $index => $detalle)
                     <tr>
-                        <td class="text-center">
-                            {{ $detalle['gasto']=='1'?'Si':'No' }}
+                        <td  class="text-center">
+                            <span   wire:click="habilitar_checkbox('N')" x-show="!open[{{ $index }}]" x-on:click="open[{{ $index }}]=!open[{{ $index }}]" style="cursor:pointer"  >{{ $detalle['gasto']=='1'?'Si':'No' }}</span>
+                            <input  wire:click="habilitar_checkbox({{ $index }})"  name="chk-{{ $index }}" x-show="open[{{ $index }}]" x-on:click="open[{{ $index }}]=!open[{{ $index }}]" wire:model.defer="selectedcheck.{{ $index }}" type="checkbox" value="1" >
                         </td>
                         <td class="text-center">
                             {{ $detalle['tip_cod'] }}
@@ -181,7 +183,7 @@
     <div class="row col-12">
         <div class="text-center  form-group col-2 offset-3">
             <x-label for="monto_iva">Monto Iva</x-label>
-            <x-input name="monto_iva" id="monto_iva"  wire:model.defer="monto_iva" x-mask:dynamic="$money($input, ',')" class="money-mask text-center form-control-sm {{ $errors->has('monto_iva') ? 'is-invalid' : '' }}" />
+            <x-input style="{{ $factura =='N' ? 'pointer-events: none' : '' }}" wire:keydown.tab.prevent="validar_monto_Iva()" name="monto_iva" id="monto_iva"  wire:model.defer="monto_iva" x-mask:dynamic="$money($input, ',')" class="money-mask text-center form-control-sm {{ $errors->has('monto_iva') ? 'is-invalid' : '' }}" />
             <div class="invalid-feedback">
                 @error('monto_iva') {{ $message }} @enderror
             </div>

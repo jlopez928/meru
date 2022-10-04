@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Administrativo\Meru_Administrativo\OtrosPagos\Proceso;
 
 use App\Http\Controllers\Controller;
+use App\Models\Administrativo\Meru_Administrativo\Compras\ComprobanteOpen;
 use App\Models\Administrativo\Meru_Administrativo\Presupuesto\RegistroControl;
+use App\Models\Administrativo\Meru_Administrativo\Compras\ComprobanteOpenDet;
+use App\Models\Administrativo\Meru_Administrativo\Compras\CorrelativoComprobante;
 use App\Models\Administrativo\Meru_Administrativo\Tesoreria\Beneficiario;
 use App\Models\Administrativo\Meru_Administrativo\Configuracion\Gerencia;
 use App\Models\Administrativo\Meru_Administrativo\Formulacion\MaestroLey;
@@ -16,9 +19,11 @@ use App\Models\Administrativo\Meru_Administrativo\TesCorrelativo;
 use App\Models\Administrativo\Meru_Administrativo\Presupuesto\PreMovimiento;
 use App\Models\Administrativo\Meru_Administrativo\Corrsolpago;
 use App\Models\Administrativo\Meru_Administrativo\CuentasPorPagar\CxPCabeceraFactura;
+use App\Models\Administrativo\Meru_Administrativo\CuentasPorPagar\Factura;
 use App\Models\Administrativo\Meru_Administrativo\CuentasPorPagar\CxPGastoFactura;
 use App\Models\Administrativo\Meru_Administrativo\CuentasPorPagar\CxpDetGastosSolpago;
 use App\Models\Administrativo\Meru_Administrativo\CuentasPorPagar\CxpDetContableSolpago;
+Use App\Models\Administrativo\Meru_Administrativo\CuentasPorPagar\CxPSolPagoAnticipoProv;
 use App\Http\Requests\Administrativo\Meru_Administrativo\OtrosPagos\Proceso\OpSolServicioRequest;
 use App\Models\Administrativo\Meru_Administrativo\General\DatosEmpresa;
 use App\Traits\MovimientoPresupuestario;
@@ -46,9 +51,14 @@ class CertificacionServicioController extends Controller
     //--------------------------------------------------------------
     //              Funcion que llama al Crear
     //-------------------------------------------------------------
-    public function create()
-    {     $opsolservicio= new OpSolservicio();
-          return view('administrativo.meru_administrativo.otrospagos.proceso.certificacion_servicio.create', compact('opsolservicio'));
+    public function crear($accion)
+    {
+          $opsolservicio= new OpSolservicio();
+          return view('administrativo.meru_administrativo.otrospagos.proceso.certificacion_servicio.create',
+          [
+              'opsolservicio'     => $opsolservicio,
+              'accion'            => $accion
+          ]);
     }
     //--------------------------------------------------------------
     //              Funcion que llama al Insertar
@@ -74,6 +84,9 @@ class CertificacionServicioController extends Controller
                 // Toda Certificacion debe ser ingresada para el año fiscal por sistema no puedo ingresar
                 // solictudes de año anteriores
                 //----------------------------------------------------------------------------------------------
+
+
+
                 $opsolservicio=OpSolservicio::create([
                     'ano_pro'             => $request->ano_pro,
                     'nro_sol'             => $num_reg,
@@ -90,14 +103,14 @@ class CertificacionServicioController extends Controller
                     'fec_sta'             =>  now()->format('Y-m-d'),
                     'usuario'             =>  \Str::replace('@hidrobolivar.com.ve', '', auth()->user()->email),
                     'fecha'               => $this->fechaGuardar,
-                    'por_anticipo'        => $request->por_anticipo,
-                    'mto_ant'             => $request->mto_ant,
-                    'monto_iva'           => $request->monto_iva,
-                    'por_iva'             => $request->por_iva,
-                    'monto_neto'          => $request->monto_neto,
-                    'monto_total'         => $request->monto_total,
-                    'base_exenta'         => $request->base_exenta,
-                    'base_imponible'      => $request->base_imponible,
+                    'por_anticipo'        => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->por_anticipo)))) ,
+                    'mto_ant'             => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->mto_ant)))) ,
+                    'monto_iva'           => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->monto_iva)))),
+                    'por_iva'             => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->por_iva)))),
+                    'monto_neto'          => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->monto_neto)))),
+                    'monto_total'         => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->monto_total)))),
+                    'base_exenta'         => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->base_exenta)))),
+                    'base_imponible'      => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->base_imponible)))),
                     'grupo'               => $request->grupo,
                     'xnro_sol'            => 'PD-'.$num_reg,
                     'observaciones'       => $request->observaciones,
@@ -118,19 +131,31 @@ class CertificacionServicioController extends Controller
                     'ano_pro'               => $request->ano_pro,
                     'nro_sol'               => $num_reg,
                     'cod_prod'              => $request->codigo,
-                    'por_iva'               => $request->por_iva_con,
-                    'cantidad'              => $request->cantidad,
-                    'cos_uni'               => $request->cos_uni,
-                    'cos_tot'               => $request->cos_tot,
+                    'por_iva'               => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->por_iva_con)))),
+                    'cantidad'              => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->cantidad)))),
+                    'cos_uni'               => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->cos_uni)))),
+                    'cos_tot'               => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->cos_tot)))),
                     'grupo'                 => 'PD',
                     'xnro_sol'              => 'PD-'.$num_reg,
-                    'base_excenta'          => $request->cos_excenta,
+                    'base_excenta'          => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->cos_excenta)))),
                     'op_solservicio_id'     => $opsolservicio->id
                 ]);
                 //--------------------------------------------------------------
                 //              Insert en la Tabla Detalle
                 //-------------------------------------------------------------
                 foreach($listadoDetalle as $detalle){
+                    //-------------------------------------------------
+                    //-------------------------------------------------
+                    if($request->provision=='S'){
+                        $result_cuenta_contable=$this->ObtenerDatosPartida($detalle->cod_par,$detalle->cod_gen,$detalle->cod_esp,$detalle->cod_sub);
+                       if($result_cuenta_contable->cta_provision ==null  ||
+                          $result_cuenta_contable->cod_cta!='4.03.18.01.00'){
+                            alert()->error('Error!', 'La la Estructura de Gasto, No tiene asociada Cta. de Provisión .Favor Verifique');
+                            return redirect()->route('otrospagos.proceso.certificacionservicio.index');
+                        }
+                    }
+					//-------------------------------------------------
+                    //-------------------------------------------------
                     $OpDetgastossolserviciox=    OpDetgastossolservicio::create([
                             'ano_pro'                    => $request->ano_pro,
                             'xnro_sol'                   => 'PD-'.$num_reg,
@@ -146,7 +171,7 @@ class CertificacionServicioController extends Controller
                             'cod_esp'                    => $detalle->cod_esp,
                             'cod_sub'                    => $detalle->cod_sub,
                             'descrip'                    => $detalle->descrip,
-                            'mto_tra'                    => $detalle->mto_tra,
+                            'mto_tra'                    => floatval(\Str::replace(',', '.', \Str::replace('.','', ($detalle->mto_tra)))),
                             'cod_cta'                    => $detalle->cod_cta,
                             'partida_presupuestaria_id'  =>$this->ObtenerIdpartida($detalle->cod_par,$detalle->cod_gen,$detalle->cod_esp,$detalle->cod_sub) ,
                             'grupo'                      => 'PD',
@@ -156,21 +181,21 @@ class CertificacionServicioController extends Controller
                             'op_solservicio_id'          =>$opsolservicio->id
                         ]);
                 }
-                        //-------------------------------------------------------------------------------------
-                        //            Incrementar o Crear el correlativo si es un nuevo año Fiscal
-                        //-------------------------------------------------------------------------------------
-                        if ($num_reg ==1) {
-                            TesCorrelativo::create([
-                                'ano_pro'               => $request->ano_pro,
-                                'correlativo'           => $num_reg+1,
-                                'flujo'                 => 'PD'  ]);
-                            }else{
-                                TesCorrelativo::where('flujo', 'PD')->where('ano_pro', $request->ano_pro)->increment('correlativo');
+                //-------------------------------------------------------------------------------------
+                //            Incrementar o Crear el correlativo si es un nuevo año Fiscal
+                //-------------------------------------------------------------------------------------
+                if ($num_reg ==1) {
+                    TesCorrelativo::create([
+                        'ano_pro'               => $request->ano_pro,
+                        'correlativo'           => $num_reg+1,
+                        'flujo'                 => 'PD'  ]);
+                    }else{
+                        TesCorrelativo::where('flujo', 'PD')->where('ano_pro', $request->ano_pro)->increment('correlativo');
 
-                             }
-                        alert()->success('¡Éxito!', 'Certificación Registrada Sastifactoriamente con el Numero: '.$opsolservicio->ano_pro."-".$opsolservicio->xnro_sol);
-                        DB::connection('pgsql')->commit();
-                        return redirect()->route('otrospagos.proceso.certificacionservicio.index');
+                        }
+                alert()->success('¡Éxito!', 'Certificación Registrada Sastifactoriamente con el Numero: '.$opsolservicio->ano_pro."-".$opsolservicio->xnro_sol);
+                DB::connection('pgsql')->commit();
+                return redirect()->route('otrospagos.proceso.certificacionservicio.index');
          } catch(\Illuminate\Database\QueryException $e){
             DB::connection('pgsql')->rollBack();
             alert()->error('¡Transacción Fallida!', $e->getMessage());
@@ -196,8 +221,7 @@ class CertificacionServicioController extends Controller
                     ->select('cod_ger','des_ger')
                     ->orderBy('des_ger', 'asc')
                     ->get();
-
-
+        $activardeposito=false;
         switch ($valor) {
             case "show":
                 $ruta='administrativo.meru_administrativo.otrospagos.proceso.certificacion_servicio.show';
@@ -216,6 +240,17 @@ class CertificacionServicioController extends Controller
                 break;
             case "comprometer":
                 $ruta='administrativo.meru_administrativo.otrospagos.proceso.certificacion_servicio.comprometer';
+                // Si existe una partidaque comienza por 4
+                // se debe habilitar la grilla paraseleccionar las estructuras de gastos (Ojo pendiente)
+                // y el combo de Deposito en Garantia
+                $array=$certificacionservicio->opdetgastossolservicio->toArray();
+                foreach ( $array as $item) {
+                    if( $item['cod_par']=='4'|| ( $item['cod_par'] == 3 &&  $item['cod_gen'] == 1 &&
+                                                  $item['cod_esp'] == 1 &&  $item['cod_sub'] == 0))
+                    {
+                    $activardeposito= true;
+                    }
+                }
                 break;
         }
         return view($ruta,
@@ -224,7 +259,8 @@ class CertificacionServicioController extends Controller
             'registrocontrol'   => $registrocontrol,
             'beneficiario'      => $beneficiario,
             'gerencia'          => $gerencia,
-            'valor'              => $valor
+            'valor'             => $valor,
+            'activardeposito'   => $activardeposito
         ]);
 
     }
@@ -260,14 +296,14 @@ class CertificacionServicioController extends Controller
                  'fec_sta'             =>  now()->format('Y-m-d'),
                  'usuario'             =>  \Str::replace('@hidrobolivar.com.ve', '', auth()->user()->email),
                  'fecha'               => $this->fechaGuardar,
-                 'por_anticipo'        => $request->por_anticipo,
-                 'mto_ant'             => $request->mto_ant,
-                 'monto_iva'           => $request->monto_iva,
-                 'por_iva'             => $request->por_iva,
-                 'monto_neto'          => $request->monto_neto,
-                 'monto_total'         => $request->monto_total,
-                 'base_exenta'         => $request->base_exenta,
-                 'base_imponible'      => $request->base_imponible,
+                 'por_anticipo'        => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->por_anticipo)))),
+                 'mto_ant'             => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->mto_ant)))),
+                 'monto_iva'           => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->monto_iva)))),
+                 'por_iva'             => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->por_iva)))),
+                 'monto_neto'          => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->monto_neto)))),
+                 'monto_total'         => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->monto_total)))),
+                 'base_exenta'         => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->base_exenta)))),
+                 'base_imponible'      => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->base_imponible)))),
                  'observaciones'       => $request->observaciones,
                  'tiempo_entrega '     => $request->tiempo_entrega,
                  'certificados'        => $request->certificados,
@@ -288,13 +324,13 @@ class CertificacionServicioController extends Controller
                  'ano_pro'               => $request->ano_pro,
                  'nro_sol'               => $certificacionservicio->nro_sol,
                  'cod_prod'              => $request->codigo,
-                 'por_iva'               => $request->por_iva_con,
-                 'cantidad'              => $request->cantidad,
-                 'cos_uni'               => $request->cos_uni,
-                 'cos_tot'               => $request->cos_tot,
+                 'por_iva'               => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->por_iva_con)))),
+                 'cantidad'              => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->cantidad)))),
+                 'cos_uni'               => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->cos_uni)))),
+                 'cos_tot'               => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->cos_tot)))),
                  'grupo'                 => $certificacionservicio->grupo,
                  'xnro_sol'              => $certificacionservicio->xnro_sol,
-                 'base_excenta'          => $request->cos_excenta,
+                 'base_excenta'          => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->cos_excenta)))),
                  'op_solservicio_id'     => $certificacionservicio->id
              ]);
              //--------------------------------------------------------------
@@ -303,6 +339,18 @@ class CertificacionServicioController extends Controller
              $OpDetgastossolservicio=OpDetgastossolservicio::where('op_solservicio_id','=',$certificacionservicio->id);
              $OpDetgastossolservicio->delete();
              foreach($listadoDetalle as $detalle){
+                    //-------------------------------------------------
+                    //-------------------------------------------------
+                    if($request->provision=='S'){
+                        $result_cuenta_contable=$this->ObtenerDatosPartida($detalle->cod_par,$detalle->cod_gen,$detalle->cod_esp,$detalle->cod_sub);
+                       if($result_cuenta_contable->cta_provision ==null  ||
+                          $result_cuenta_contable->cod_cta!='4.03.18.01.00'){
+                            alert()->error('Error!', 'La la Estructura de Gasto, No tiene asociada Cta. de Provisión .Favor Verifique');
+                            return redirect()->route('otrospagos.proceso.certificacionservicio.index');
+                        }
+                    }
+					//-------------------------------------------------
+                    //-------------------------------------------------
                     OpDetgastossolservicio::create([
                          'ano_pro'       => $request->ano_pro,
                          'xnro_sol'      => $certificacionservicio->xnro_sol,
@@ -318,7 +366,7 @@ class CertificacionServicioController extends Controller
                          'cod_esp'       => $detalle->cod_esp,
                          'cod_sub'       => $detalle->cod_sub,
                          'descrip'       => $detalle->descrip,
-                         'mto_tra'       => $detalle->mto_tra,
+                         'mto_tra'       => floatval(\Str::replace(',', '.', \Str::replace('.','', ($detalle->mto_tra)))),
                          'cod_cta'       => $detalle->cod_cta,
                          'partida_presupuestaria_id'  =>$this->ObtenerIdpartida($detalle->cod_par,$detalle->cod_gen,$detalle->cod_esp,$detalle->cod_sub),
                          'grupo'         => 'PD',
@@ -336,6 +384,69 @@ class CertificacionServicioController extends Controller
          alert()->error('¡Transacción Fallida!', $e->getMessage());
          return redirect()->back()->withInput();
       }
+
+    }
+
+    //--------------------------------------------------------------
+    //-------------------------------------------------------------
+    public function anular_anticipo(OpSolservicio $certificacionservicio)
+    {
+     try {
+            //---------------------------------------------------------------
+            //Valida que la certificacion exista y tenga % anticipo asociado
+            //---------------------------------------------------------------
+            if($certificacionservicio->por_anticipo==0){
+                alert()->error('Error!', 'Certificación: '.$certificacionservicio->ano_pro."-". $certificacionservicio->xnro_sol.' NO Posee Anticipo.Favor Verifique');
+                return redirect()->route('otrospagos.proceso.certificacionservicio.index');
+            }
+            //-----------------------------------------
+            //Valida que no poseea facturas ya causadas
+            //-------------------------------------------
+             $factura=Factura::where('rif_prov', $certificacionservicio->rif_prov)
+                            ->where('ano_sol', $certificacionservicio->ano_pro)
+                            ->where('nro_doc', $certificacionservicio->xnro_sol)
+                            ->where('tipo_doc','4')
+                            ->whereNotIn('sta_fac', ['0', '2'])->get();
+            if(!$factura->isEmpty()){
+                    alert()->error('Error!', 'Certificación: '.$certificacionservicio->ano_pro."-". $certificacionservicio->xnro_sol.' ya tiene Factura Causada en Sistema.Favor Verifique');
+                    return redirect()->route('otrospagos.proceso.certificacionservicio.index');
+            }
+            //-------------------------------------------------------------------------------------
+            //Validar que no exista anticipo asignado, porque se debe eliminar primero el anticipo
+            //-------------------------------------------------------------------------------------
+            $pagoanticipo=CxPSolPagoAnticipoProv::where('status', '!=','5')
+            ->where('ano_sol', $certificacionservicio->ano_pro)
+            ->where('xnum_orden', $certificacionservicio->xnro_sol)->get();
+            if(!$pagoanticipo->isEmpty()){
+                alert()->error('Error!', 'Certificación: '.$certificacionservicio->ano_pro."-". $certificacionservicio->xnro_sol.' tiene Anticipo Asociadas.Favor Verifique');
+                return redirect()->route('otrospagos.proceso.certificacionservicio.index');
+
+            }
+            //----------------------------------------------------------------------------------------------
+            // Si pasa todas las validadciones se actualizan los datos asociados
+            //         Actualiza el % de anticipo de la certificacion
+            //----------------------------------------------------------------------------------------------
+             DB::connection('pgsql')->beginTransaction();
+                $certificacionservicio->update([
+                    'por_anticipo'         => 0,
+                    'mto_ant'              => 0,
+
+                ]);
+                //--------------------------------------------------------------------------
+                // Modificar el % de anticipo  de las facturas asociadas a la certificación
+                //--------------------------------------------------------------------------
+                Factura::where('rif_prov', $certificacionservicio->rif_prov)
+                        ->where('ano_sol', $certificacionservicio->ano_pro)
+                        ->where('nro_doc', $certificacionservicio->xnro_sol)
+                        ->update(['por_anticipo' => '0','mto_anticipo' => '0','mto_amortizacion' => '0']);
+                alert()->success('¡Éxito!', 'Anticipo Anulado Sastifactoriamente');
+            DB::connection('pgsql')->commit();
+            return redirect()->route('otrospagos.proceso.certificacionservicio.index');
+        } catch(\Illuminate\Database\QueryException $e){
+            DB::connection('pgsql')->rollBack();
+            alert()->error('¡Transacción Fallida!', $e->getMessage());
+            return redirect()->back()->withInput();
+        }
 
     }
     //--------------------------------------------------------------
@@ -359,7 +470,7 @@ class CertificacionServicioController extends Controller
                     'fec_anu'              => $this->fechaGuardar,
                     'sta_sol'              => '1'
                 ]);
-                alert()->success('¡Éxito!', 'Certificación: '.$certificacionservicio->ano_pro."-". $certificacionservicio->ano_pro. '  Eliminada Sastifactoriamente');
+                alert()->success('¡Éxito!', 'Certificación: '.$certificacionservicio->ano_pro."-". $certificacionservicio->xnro_sol. '  Eliminada Sastifactoriamente');
                 DB::connection('pgsql')->commit();
                 return redirect()->route('otrospagos.proceso.certificacionservicio.index');
             }
@@ -377,7 +488,7 @@ class CertificacionServicioController extends Controller
     {
         try {
 
-            if($certificacionservicio->sta_sol->value!='0'){
+            if($certificacionservicio->sta_sol->value!='0'  && $certificacionservicio->sta_sol->value!='3'){
                 //----------------------------------------------------------------------------------------------
                 //      Valida que la Certificación este solo ingresada para poder anular
                 //----------------------------------------------------------------------------------------------
@@ -441,7 +552,8 @@ class CertificacionServicioController extends Controller
     public function  comprometer_certificacion(OpSolservicio $certificacionservicio)
     {
         try {
-            if($certificacionservicio->sta_sol->value!='2'){
+
+            if($certificacionservicio->sta_sol->value!='2'   && $certificacionservicio->sta_sol->value!='5' ){
                 //----------------------------------------------------------------------------------------------
                 //      Valida que la Certificación este solo Aprobada para poder comprometer
                 //----------------------------------------------------------------------------------------------
@@ -568,6 +680,44 @@ class CertificacionServicioController extends Controller
                                         'deposito_garantia'=> $certificacionservicio->deposito_garantia
                                     ]);
                                 }
+                                //----------------------------------------------------------------------------
+                                // Si la solicitud de Certificacion es de provision
+                                // se crea asiento contable del compromiso
+                                // en esta seccion la cabecera del comprobante
+                                //----------------------------------------------------------------------------
+                                if($certificacionservicio->provision=='S'){
+                                    //--------------------------------------------------------------------
+                                    //  Obtener el último correlativo de la tabla comprobantesopen
+                                    //         esto se debe actualizar por cada año fiscal
+                                    //--------------------------------------------------------------------
+                                    $nro = CorrelativoComprobante::query()->where('ano_pro', $certificacionservicio->ano_pro)->first()->corr_compro?? 1;
+                                    Comprobanteopen::create([
+                                        'nro_com'    => $nro,
+                                        'num_mes'    => date('m', strtotime($this->fechaGuardar)),
+                                        'tip_com'    => 'GA' ,
+                                        'fec_com'    => $this->fechaGuardar,
+                                        'fec_pos'    => $this->fechaGuardar,
+                                        'usuario'    => \Str::replace('@hidrobolivar.com.ve', '', auth()->user()->email),
+                                        'nro_sol'    => $certificacionservicio->xnro_sol,
+                                        'tip_mov'    => '1',
+                                        'ano_pro'    => $certificacionservicio->ano_pro,
+                                        'origen'     => 'PD',
+                                        'ano_sol'    => $certificacionservicio->ano_pro,
+                                        'status'     => '0'
+                                    ]);
+                                    //-------------------------------------------------------------------------------------
+                                    //            Incrementar o Crear el correlativo si es un nuevo año Fiscal
+                                    //-------------------------------------------------------------------------------------
+                                    if ($nro ==1) {
+                                        CorrelativoComprobante::create([
+                                            'ano_pro'               => $certificacionservicio->ano_pro,
+                                            'correlativo'           => $nro+1]);
+                                    }else{
+                                        CorrelativoComprobante::where('ano_pro', $certificacionservicio->ano_pro)->increment('corr_compro');
+                                    }
+
+
+                               }// if($certificacionservicio->provision=='S')
                             }//Fin del else if($certificacionservicio->factura =='N')
 
                         //---------------------------------------------------------------------------------
@@ -589,6 +739,8 @@ class CertificacionServicioController extends Controller
                         $datos["fec_sta"] = $this->fechaGuardar;
                         $datos["hor_sta"] = date('h:i:s');
                         $OpDetgastossolservicio=OpDetgastossolservicio::where('op_solservicio_id','=',$certificacionservicio->id)->get();
+                        $mto_cr=0;
+                        $x=1;
                         foreach($OpDetgastossolservicio as $detalle){
                             //-----------------------------------------------------------------
                             /** Validar que no se puedan comprometa las partidas que esten en 0 **/
@@ -610,7 +762,7 @@ class CertificacionServicioController extends Controller
                                     }else{
                                         //Asignar el centro de costo y partida al arreglo
                                         $estructura=[];
-                                        $estructura=$this->obtener_cod_com($cod_com);
+                                        $estructura["cod_com"]=$this->obtener_cod_com($cod_com);
                                         $datos["tip_cod"]    = $estructura["tip_cod"];
                                         $datos["cod_pryacc"] = $estructura["cod_pryacc"];
                                         $datos["cod_obj"]    = $estructura["cod_obj"];
@@ -717,6 +869,40 @@ class CertificacionServicioController extends Controller
                                         DB::connection('pgsql')->rollBack();
                                         return redirect()->route('otrospagos.proceso.certificacionservicio.index');
                                     }
+                                     //-------------------------------------------------------------------------------
+                                    //          armar comprobante contable de provisiones
+                                   //--------------------------------------------------------------------------------
+                                   if($certificacionservicio->provision=='S'){
+                                        $result_cuenta_contable=$this->ObtenerDatosPartida($detalle->cod_par,$detalle->cod_gen,$detalle->cod_esp,$detalle->cod_sub);
+                                        if($result_cuenta_contable->cta_gasto ==null){
+                                            alert()->error('Error!', 'La Partida'.$cod_com.'NO tiene asociada  para Realizar el Asiento Contable.');
+                                            return redirect()->route('otrospagos.proceso.certificacionservicio.index');
+                                       }else{
+                                            $mto_cr = $mto_cr + $detalle->mto_tra;
+                                              ComprobanteOpenDet::create([
+                                                    'nro_com'   => $nro,
+                                                    'con_com'   => $x,
+                                                    'cod_cta'   => $result_cuenta_contable->cta_gasto,
+                                                    'cod_aux'   => $certificacionservicio->rif_prov,
+                                                    'tip_doc'   => '41',
+                                                    'nro_doc'   => $certificacionservicio->xnro_sol,
+                                                    'fec_doc'   => $certificacionservicio->fec_emi,
+                                                    'con_doc'   => 'ASIENTO DE CERTIFICACION DE PROVISION',
+                                                    'tip_mto'   => 'DB',
+                                                    'mto_doc'   => $detalle->mto_tra,
+                                                    'ano_pro'   => $this->anoPro,
+                                                    ]);
+                                                if ($x==1){
+                                                    if(trim($result_cuenta_contable->cta_provision)==''){
+                                                        alert()->error('Error!', 'Error  La Partida no tiene Asociada la Cta. de Provisiones.Comuniquese con su Administrador de sistema');
+                                                        return redirect()->route('otrospagos.proceso.certificacionservicio.index');
+                                                    }
+                                                }
+                                                $x=$x+1;
+                                        }
+                                    }// if($certificacionservicio->provision=='S')
+                             //	-----------------------------------------------------
+
                                  }else{
                                     //-------------------------------------------------
                                     // Validar que el causado no supere el compromiso
@@ -835,6 +1021,24 @@ class CertificacionServicioController extends Controller
                                  $OpDetgastossolservicio_borrar->delete();
                              }
                         }//  foreach($OpDetgastossolservicio as $detalle)
+                        //-------------------------------------------------------------------------------
+                        //          armar comprobante contable de provisiones el CR
+                        //--------------------------------------------------------------------------------
+                        if($certificacionservicio->provision=='S'){
+                                ComprobanteOpenDet::create([
+                                    'nro_com'   => $nro,
+                                    'con_com'   => $x,
+                                    'cod_cta'   => $result_cuenta_contable->cta_provision,
+                                    'cod_aux'   => $certificacionservicio->rif_prov,
+                                    'tip_doc'   => '41',
+                                    'nro_doc'   => $certificacionservicio->xnro_sol,
+                                    'fec_doc'   => $certificacionservicio->fec_emi,
+                                    'con_doc'   => 'ASIENTO DE CERTIFICACION DE PROVISION',
+                                    'tip_mto'   => 'CR',
+                                    'mto_doc'   => $mto_cr,
+                                    'ano_pro'   => $this->anoPro,
+                                    ]);
+                        }// if($certificacionservicio->provision=='S')
                         $certificacionservicio->sta_sol->value =='N'?
                         $msj = "Estructuras de gastos han sido Comprometida y Causada Exitosamente ":
                         $msj = "Estructuras de gastos han sido Comprometida Exitosamente ";
@@ -864,6 +1068,18 @@ class CertificacionServicioController extends Controller
                 alert()->error('Error!', 'Certificación: '.$certificacionservicio->ano_pro."-". $certificacionservicio->xnro_sol. '. Con Estado Invalidos: '.$this->estado($certificacionservicio->sta_sol->value));
                 return redirect()->route('otrospagos.proceso.certificacionservicio.index');
             }else{
+                        //----------------------------------------------------------------------------------------------
+                        //Validar que no exista anticipo asignado, porque se debe eliminar primero el anticipo
+                        //----------------------------------------------------------------------------------------------
+                        if($certificacionservicio->por_anticipo !=0.00){
+                            $pagoanticipo=CxPSolPagoAnticipoProv::where('status', '!=','5')
+                            ->where('ano_sol', $certificacionservicio->ano_pro)
+                            ->where('xnum_orden', $certificacionservicio->xnro_sol)->get();
+                            if(!$pagoanticipo->isEmpty()){
+                                alert()->error('Error!', 'Certificación: '.$certificacionservicio->ano_pro."-". $certificacionservicio->xnro_sol.' tiene Anticipo Asociadas.Favor Verifique');
+                                return redirect()->route('otrospagos.proceso.certificacionservicio.index');
+                            }
+                        }
                         DB::connection('pgsql')->beginTransaction();
                         //-------------------------------------------------------------------------------------------------
                         //  Actualizar el status de la certificacion
@@ -1053,6 +1269,60 @@ class CertificacionServicioController extends Controller
                                 $cxp_gasto_factura->delete();
                         }//if (!empty($detalle->mto_tra) && $detalle->mto_tra != "0,00"  && $detalle->mto_tra != "0.00")
                 }//foreach($OpDetgastossolservicio as $detalle)
+                //-----------------------------------------
+                // Asiento de Reverso de las Provisiones
+                //------------------------------------------
+                if($certificacionservicio->provision=='S'){
+                    //--------------------------------------------------------------------
+                    //  Obtener el último correlativo de la tabla comprobantesopen
+                    //         esto se debe actualizar por cada año fiscal
+                    //--------------------------------------------------------------------
+                    $nro = CorrelativoComprobante::query()->where('ano_pro', $certificacionservicio->ano_pro)->first()->corr_compro?? 1;
+                    //Crea el asiento de reveso
+                    Comprobanteopen::create([
+                        'nro_com'    => $nro,
+                        'num_mes'    => date('m', strtotime($this->fechaGuardar)),
+                        'tip_com'    => 'GA',
+                        'fec_com'    => $this->fechaGuardar,
+                        'fec_pos'    => $this->fechaGuardar,
+                        'usuario'    => \Str::replace('@hidrobolivar.com.ve', '', auth()->user()->email),
+                        'nro_sol'    => $certificacionservicio->xnro_sol,
+                        'tip_mov'    => '1',
+                        'ano_pro'    => $certificacionservicio->ano_pro,
+                        'origen'     => 'PD',
+                        'ano_sol'    => $certificacionservicio->ano_pro,
+                        'status'     => '3'
+                    ]);
+                    //-------------------------------------------------------------------------------------
+                    //            Incrementar o Crear el correlativo si es un nuevo año Fiscal
+                    //-------------------------------------------------------------------------------------
+                    if ($nro ==1) {
+                        CorrelativoComprobante::create([
+                            'ano_pro'               => $certificacionservicio->ano_pro,
+                            'correlativo'           => $nro+1]);
+                    }else{
+                        CorrelativoComprobante::where('ano_pro', $certificacionservicio->ano_pro)->increment('corr_compro');
+                    }
+                    $comprobantereverso=ComprobanteOpenDet::query()->where('ano_sol', $certificacionservicio->ano_pro)
+                                                                ->where('nro_sol', $certificacionservicio->xnro_sol)->get();
+                    for ($x = 1 ;$x <=  $comprobantereverso->count(); $x++)  {
+                        $comprobantereverso->tip_mto=='CR'?$t_mto = 'DB': $t_mto = 'CR';
+                        ComprobanteOpenDet::create([
+                        'nro_com'   => $nro,
+                        'con_com'   => $x,
+                        'cod_cta'   => $comprobantereverso->cod_cta,
+                        'cod_aux'   => $$comprobantereverso->cod_aux,
+                        'tip_doc'   => $comprobantereverso->tip_doc,
+                        'nro_doc'   => $comprobantereverso->nro_doc,
+                        'fec_doc'   => $comprobantereverso->fec_doc,
+                        'con_doc'   => 'ASIENTO DE CERTIFICACION DE PROVISION',
+                        'tip_mto'   => $t_mto,
+                        'mto_doc'   => $comprobantereverso->mto_doc,
+                        'ano_pro'   => $comprobantereverso->ano_pro,
+                        ]);
+
+                        }
+                }// if($certificacionservicio->provision=='S')
                 alert()->success('¡Éxito!', 'Certificación: '.$certificacionservicio->ano_pro."-". $certificacionservicio->xnro_sol. 'Reversada Sastifactoriamente');
                 DB::connection('pgsql')->commit();
                 return redirect()->route('otrospagos.proceso.certificacionservicio.index');
@@ -1981,6 +2251,204 @@ public function print_certificacion(Request $request)
         $this->pintar_listado_pdf($pdf,$data);
         exit;
     }
+
+    //-----------------------------------------------------------------------
+    //    Funcion que llama pantalla de parametros para reporte de certificación/contratos
+    //-----------------------------------------------------------------------
+    public function show_certificacion_contrato()
+    {
+        $gerencias =  Gerencia::query()
+                              ->select('cod_ger','des_ger')
+                              ->orderBy('des_ger', 'asc')
+                              ->get();
+        //return($gerencia);
+        $proveedores = Proveedor::where('cod_edo','1')
+                                    ->select('rif_prov','nom_prov')
+                                    ->orderBy('nom_prov')
+                                     ->get();                             
+         //return($proveedor);
+        $estados = DB::select("select '0' as valor, 'Ingresada en Sistema' descripcion
+                              union
+                              select '1' ,'Anulada'
+                              union
+                              select '2' ,'Aprobada por Gerente de la Unidad Solicitante'
+                              union
+                              select '3' ,'Reversada por Gerente de la Unidad Solicitante'
+                              union
+                              select '4' ,'Comprometida Presupuestariamente'
+                              union
+                              select '5' ,'Reversada Presupuestariamente'
+                              union
+                              select 	'6' ,'Con Orden Impresa'
+                              order by 1");
+        //return $estado;
+        $anos = OpSolservicio::query()
+                            ->select(DB::Raw("distinct ano_pro" ))
+                            ->get();
+        //return $ano;
+        return view('administrativo.meru_administrativo.otrospagos.reporte.certificacion_contrato.show', compact('gerencias','proveedores','estados','anos'));
+    }
+
+    //-----------------------------------------------------------------------
+    //    Funcion para generar reporte de certificación/contratos
+    //-----------------------------------------------------------------------
+    public function print_certificacion_contrato(Request $request)
+    {
+        if ($request->inicio != null || $request->fin != null){
+            if ($request->inicio >  $request->fin){
+                $msj = 'La fecha de inicio debe ser menor o igual a la fecha final.\\n Por Favor Intente de Nuevo.';
+                alert()->Error('Transacci&oacute;n Fallida<br>'.$msj);
+                return redirect()->back()->withInput();
+            }
+        }    
+        if ($request->tipo==null){
+            $msj = 'Debe seleccionar el tipo de salida.\\n Por Favor Intente de Nuevo.';
+            alert()->Error('Transacci&oacute;n Fallida<br>'.$msj);
+            return redirect()->back()->withInput();
+        }
+
+        $pdf = new Fpdf('L','mm','legal','true');
+        // $pdf->titulo = $titulo;
+        $pdf->SetLeftMargin(5);
+        $pdf->SetRightMargin(2);
+        $pdf->AddPage("L");
+
+        if ($request->grupo!=''){
+            if ($request->grupo=='PD') {
+                $titulo = "LISTADO DE CERTIFICACIONES"; 
+            }
+            if ($request->grupo=='CO') { 
+                $titulo = "LISTADO DE CONTRATOS"; 
+            }
+        }else{ 
+            $titulo = "LISTADO DE CERTIFICACIONES Y CONTRATOS"; 
+         }
+
+
+     
+        $data = OpSolservicio::where('cod_ger', $request->gerencia);
+
+        if  ($request->grupo != null){
+            $data = $data->where('grupo', $request->grupo);
+        }
+        if ($request->estado != null){
+            $data = $data->where('sta_sol',  $request->estado);
+        }
+        if ($request->beneficiario != null){
+            $data = $data->where('rif_prov',  $request->beneficiario);
+        }
+        if ($request->provision != null){
+            $data = $data->where('provision',  $request->provision);
+        }
+        if ($request->provision != null){
+            $data = $data->where('provision',  $request->provision);
+        }
+        if ($request->ano_ord_com != null){
+            $data = $data->where('ano_pro',  $request->ano_ord_com);
+        }
+        if ($request->inicio !='' && $request->fin !=''){
+            $data = $data->whereBetween('fecha',[$request->inicio, $request->fin]);
+        }
+
+        $data =$data->get();  
+
+        $detalle_proveedor =  $data;
+        //return $detalle_proveedor;
+        $num_regis_det_prov = count($detalle_proveedor);//Total de Registros que arrojo la consulta
+
+        
+	
+		$pdf->SetFont('Arial','B',12);
+		$pdf->SetY(10);
+		$pdf->Cell(0,5,$titulo,0,1,'C',0);
+		if ($request->inicio != ''){
+			$pdf->SetFont('Arial','B',10);
+			$pdf->Cell(0,5,'DESDE EL '.\Carbon\Carbon::parse($request->inicio)->format('d/m/Y').' HASTA EL '.\Carbon\Carbon::parse($request->fin)->format('d/m/Y'),0,0,'C',0);
+		}
+		
+		$pdf->Image('img/hidrobolivar.jpg',5,5,45,15,'JPG');
+		$Y=5;
+		$x=320;
+		$pdf->SetFont('Arial','B',9);
+		$pdf->SetXY($x,$Y);
+		$pdf->Cell(5,5,"Fecha: ",0,0,'R');
+		$pdf->Cell(21,5,date("d/m/Y"),0,0,'L');
+		$Y+=4;
+		$pdf->SetXY($x,$Y);
+		$pdf->Cell(5,5," Hora: ",0,0,'R');
+		$pdf->Cell(21,5,date("H:i:s"),0,0,'L');
+		$Y+=4;
+		$pdf->SetXY($x,$Y);
+		$pdf->Cell(5,5,utf8_decode("Página: "),0,0,'R');
+        $pdf->AliasNbPages();
+		$pdf->Cell(21,5,$pdf->PageNo().' de '.'{nb}',0,0,'L');
+		$pdf->Ln(5);$pdf->Ln(5);$pdf->Ln(5);
+		
+		$pdf->SetFont('Arial','B',8);
+		$pdf->SetFillColor(235,235,235);
+		$pdf->SetAligns(array('C','C','C','C','C','C','C','C','C'));
+		$pdf->SetWidths(array(20,65,60,20,60,35,18,27,35));
+		$pdf->Row(array("NUMERO", "CONCEPTO", "GERENCIA", "RIF", "PROVEEDOR", "OBSERVACION", "FECHA", "MONTO", "ESTRUCT. GASTOS"),5);
+		$pdf->SetAligns(array('C','L','L','L','L','C','C','C','C'));
+
+
+ 
+
+        if ($num_regis_det_prov >0)
+        {
+            for($i=0; $i<$num_regis_det_prov; $i++){
+
+                $datos2 = OpDetgastossolservicio::query()
+                                                ->select('cod_com')   
+                                                ->where('xnro_sol',$detalle_proveedor[$i]->xnro_sol)
+                                                ->where('ano_pro',$detalle_proveedor[$i]->ano_pro)
+                                                ->get();
+                                     
+
+                $cont_det = count($datos2);
+
+                $estructgast="";
+
+                for($q=0; $q<$cont_det; $q++)
+                {
+                    $estructgast .= $datos2[$q]->cod_com;
+                    if ($q<$cont_det) 
+                        $estructgast .="\r\n";
+                }
+                
+                $pdf->SetFillColor(255,255,255);
+                $pdf->SetFont('Arial','',7);
+                $pdf->SetAligns(array('C','L','L','L','L','C','C','C','C'));
+                $pdf->SetWidths(array(20,65,60,20,60,35,18,27,35)); 
+                
+                if ( $detalle_proveedor[$i]->provision == 'S' )
+                    $num =$detalle_proveedor[$i]->xnro_sol."-".$detalle_proveedor[$i]->ano_pro." (Provision)";
+                else 
+                    $num =$detalle_proveedor[$i]->xnro_sol."-".$detalle_proveedor[$i]->ano_pro;
+
+                $pdf->Row(array(
+                                $num, 
+                                utf8_decode($detalle_proveedor[$i]->motivo).' - Estatus: '.utf8_decode($detalle_proveedor[$i]->getEstSol($detalle_proveedor[$i]->sta_sol->value)), 
+                                utf8_decode($detalle_proveedor[$i]->gerencias->des_ger).' - '.$detalle_proveedor[$i]->usuario, 
+                                $detalle_proveedor[$i]->rif_prov, 
+                                utf8_decode($detalle_proveedor[$i]->beneficiario->nom_ben), 
+                                utf8_decode($detalle_proveedor[$i]->observaciones), 
+                                \Carbon\Carbon::parse($detalle_proveedor[$i]->fecha)->format('d/m/Y'),
+                                number_format($detalle_proveedor[$i]->monto_total, 2, ',', '.'),
+                                $estructgast
+                            ),5);
+                $pdf->SetAligns(array('C','L','L','L','L','C','C','C','C'));
+            };
+            
+            $pdf->Ln(5);
+            $pdf->Cell(0,5,'TOTAL DE REGISTROS: '.$num_regis_det_prov,0,0,'L',0);
+            
+            header("Content-type: application/pdf"); 
+            $pdf->Output();
+            exit();
+        }
+    }
+
 
 }
 

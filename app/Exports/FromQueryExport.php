@@ -123,3 +123,4 @@ class FromQueryExport implements FromQuery, WithColumnWidths, WithColumnFormatti
 	return (new FromQueryExport($data))->download('nombre_archivo.xlsx');
 	*/
 }
+

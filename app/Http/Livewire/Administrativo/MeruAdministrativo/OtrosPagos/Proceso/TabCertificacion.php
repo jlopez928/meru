@@ -1,23 +1,23 @@
 <?php
 
 namespace App\Http\Livewire\Administrativo\MeruAdministrativo\OtrosPagos\Proceso;
-
-
+use Illuminate\Support\Arr;
 use App\Models\Administrativo\Meru_Administrativo\OtrosPagos\OpDetsolservicio;
 use App\Models\Administrativo\Meru_Administrativo\Tesoreria\Beneficiario;
 use App\Models\Administrativo\Meru_Administrativo\Configuracion\Gerencia;
 use App\Models\Administrativo\Meru_Administrativo\OtrosPagos\OpConceptosDet;
 use App\Models\Administrativo\Meru_Administrativo\OtrosPagos\OpConceptos;
 use App\Models\Administrativo\Meru_Administrativo\Configuracion\RegistroControl;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
-
+use App\Traits\Presupuesto;
 class TabCertificacion extends Component
-{
+{   use Presupuesto;
     public $tab = 'identificacion-tab';
     public $opdetsolservicio;
     public $certificacionservicio;
+    public $selectedcheck = [];
+    public $showDropdown = [];
     // Variables Primer Tab
     public $ano_pro;
     public $xnro_sol;
@@ -78,9 +78,11 @@ class TabCertificacion extends Component
    //---------------------
     public $onfocus;
     public $detallegasto= [];
-    public $accion;
-    protected $listeners =['changeSelect'];
+    public $comprobante= [];
+    protected $listeners =['changeSelect','registrar','inactivar'];
     public $EstructuraPresupuestaria ;
+    public $accion;
+    public $actprovision;
 
     public function changeSelect($valor,$id)
     {   ($id == 'rif_prov') ?  $this->rif_prov= $valor : $this->cod_ger= $valor;    }
@@ -96,28 +98,57 @@ class TabCertificacion extends Component
             foreach($valor as $key => $value) {
                 $this->$key = $value;
             }
-            // $this->fec_emi = Carbon::createFromFormat('Y-m-d', $or->fec_emi)->format('Y-m-d');
+            if ( $this->provision=='N'){
+                $this->actprovision='nuevo';
+            }else{
+                $this->actprovision='provision';
+            }
             $this->fec_emi = $this->certificacionservicio->fec_emi->format('Y-m-d');
             $this->fec_serv = $this->certificacionservicio->fec_serv->format('Y-m-d');
             if (!is_null($this->certificacionservicio->fec_pto)){
                 $this->fec_pto = $this->certificacionservicio->fec_pto->format('Y-m-d');
             }
-          //Modificar el detalle
+            $this->por_anticipo    = number_format($this->por_anticipo, 2, ',', '.');
+            $this->mto_ant         = number_format($this->mto_ant, 2, ',', '.');
+            $this->base_imponible  = number_format($this->base_imponible, 2, ',', '.');
+            $this->base_exenta     = number_format($this->base_exenta, 2, ',', '.');
+            $this->monto_neto      = number_format($this->monto_neto, 2, ',', '.');
+            $this->monto_iva       = number_format($this->monto_iva, 2, ',', '.');
+            $this->monto_total       = number_format($this->monto_total, 2, ',', '.');
+            $this->por_iva         = number_format($this->por_iva, 2, ',', '.');
+            //Modificar el detalle
            foreach($this->certificacionservicio->opdetsolservicio  as $index => $detalle) {
                 $this->codigo       = $detalle['cod_prod'];
-                $this->des_con      = $detalle->opconceptos->des_con ;
-                $this->por_iva_con  = $detalle['por_iva'];
-                $this->cantidad     = $detalle['cantidad'];
-                $this->cos_uni      = $detalle['cos_uni'];
-                $this->cos_excenta  = $detalle['base_excenta'];
-                $this->cos_tot      = $detalle['cos_tot'];
+                $this->des_con      = $detalle->opconceptos->des_con;
+                $this->por_iva_con  = number_format($detalle['por_iva'], 2, ',', '.');
+                $this->cantidad     = number_format($detalle['cantidad'], 2, ',', '.');
+                $this->cos_uni      = number_format($detalle['cos_uni'], 2, ',', '.');
+                $this->cos_excenta  = number_format($detalle['base_excenta'], 2, ',', '.');
+                $this->cos_tot      = number_format($detalle['cos_tot'], 2, ',', '.');
             }
-
+            foreach($this->certificacionservicio->opdetgastossolservicio as $index => $estructura){
+                $this->detallegasto[] = [
+                    'gasto'         => $estructura['gasto'],
+                    'tip_cod'       => $estructura['tip_cod'],
+                    'cod_pryacc'    => $estructura['cod_pryacc'],
+                    'cod_obj'       => $estructura['cod_obj'],
+                    'gerencia'      => $estructura['gerencia'],
+                    'unidad'        => $estructura['unidad'],
+                    'cod_par'       => $estructura['cod_par'],
+                    'cod_gen'       => $estructura['cod_gen'],
+                    'cod_esp'       => $estructura['cod_esp'],
+                    'cod_sub'       => $estructura['cod_sub'],
+                    'descrip'       => $estructura->partidapresupuestaria->des_con,
+                    'mto_tra'       =>  number_format( $estructura['mto_tra'], 2, ',', '.'),
+                    'partida'       => $this->varmarpartida($estructura->cod_par,$estructura->cod_gen,$estructura->cod_esp,$estructura->cod_sub),
+                    'cod_cta'        => $estructura['cod_cta'],
+                ];
+            }
           }else{
             $this->opdetsolservicio = new OpDetsolservicio();
             $this->certificacionservicio    = $this->certificacionservicio;
-            $this->ano_pro=2021;
             $this->fec_emi= now()->format('Y-m-d');
+            $this->ano_pro=RegistroControl::periodoActual();
             $this->provision=0;
             $this->sta_sol=0;
             $this->grupo='PD';
@@ -126,6 +157,8 @@ class TabCertificacion extends Component
             $this->tip_contrat='N';
             $this->fec_serv= now()->format('Y-m-d');
             $this->estructuras = [];
+            $this->por_anticipo    = number_format($this->por_anticipo, 2, ',', '.');
+            $this->mto_ant         = number_format($this->mto_ant, 2, ',', '.');
             $this->limpiar();
         }
         $valor = json_encode(session()->getOldInput());
@@ -147,8 +180,9 @@ class TabCertificacion extends Component
                     'cod_esp'       => $estructura->cod_esp,
                     'cod_sub'       => $estructura->cod_sub,
                     'descrip'       => $estructura->descrip,
-                    'mto_tra'       => $estructura->mto_tra,
-                   'cod_cta'       => $estructura->cod_cta,
+                    'mto_tra'       =>$estructura->mto_tra,
+                    'partida'       => $this->varmarpartida($estructura->cod_par,$estructura->cod_gen,$estructura->cod_esp,$estructura->cod_sub),
+                    'cod_cta'        => $estructura->cod_cta,
                 ];
             }
         }
@@ -159,12 +193,13 @@ class TabCertificacion extends Component
 
   }
 public function limpiar()
-  {
+{
     $this->reset(['codigo','des_con','por_iva_con','cantidad','cos_uni','cos_excenta',
                    'base_exenta','base_imponible','monto_neto','cos_tot',
                    'monto_iva','monto_iva','monto_total','por_iva','detallegasto']);
 
-  }
+
+}
 public function getBeneficiarioProperty()
 {
     return Beneficiario::query()
@@ -189,7 +224,28 @@ public function getGerenciaProperty()
     ->pluck('des_ger','cod_ger');
 
 }
+public function calcularAnticipo($tabfocus){
+    $this->mto_ant='';
+    if (!empty($this->por_anticipo)){
+        if (!empty($this->monto_neto)){
+            if (!empty($this->factura) &&  $this->factura!='N'){
+                $monto_neto=floatval(\Str::replace(',', '.', \Str::replace('.','', ($this->monto_neto))));
+                $por_anticipo=floatval(\Str::replace(',', '.', \Str::replace('.','', ($this->por_anticipo))));
+                $mto_ant=$monto_neto * ($por_anticipo / 100);
+                $this->mto_ant=number_format($mto_ant, 2, ',', '.');
+            }else{
+                $this->por_anticipo=0;
+            }
+        }else{
+            $this->por_anticipo=0;
+        }
+    }
+    $this->onfocus='#tip_pag';
+    $this->emit('alert', ['tab' => $tabfocus,'onfocus' => $this->onfocus]);
+}
 public function calculaCostoTotal ($valor){
+    $this->selectedcheck=[];
+    $this->showDropdown=[];
     if (!empty($this->codigo)){
         if (!empty($this->cod_ger)) {
             // LLenar el campo Descripción validando que el concepto exista
@@ -202,7 +258,7 @@ public function calculaCostoTotal ($valor){
                 //Buscar Estructura Presupuestaria
                 $EstructuraPresupuestaria=OpConceptosDet::select(DB::raw("'1' AS gasto"),
                                                                     'ppg.cod_par','ppg.cod_gen', 'ppg.cod_esp', 'ppg.cod_sub',
-                                                                    'ppg.des_con', 'oc.des_con',
+                                                                    'ppg.des_con',
                                                                     'pml.cod_com', 'ppg.cta_gasto',
                                                                     DB::raw("CASE WHEN op_conceptos_det.cod_cta IN ('07.01.02.01') THEN 2 ELSE CAST(substr(g.centro_costo, 1, 2) AS INTEGER) END AS tip_cod"),
                                                                     DB::raw("CASE WHEN op_conceptos_det.cod_cta IN ('07.01.02.01') THEN 1 ELSE CAST(substr(g.centro_costo, 4, 2) AS INTEGER) END AS cod_pryacc"),
@@ -231,12 +287,10 @@ public function calculaCostoTotal ($valor){
                 $cantidad =floatval( \Str::replace(',', '.', \Str::replace('.','', $this->cantidad)));
                 $cos_excenta = floatval(\Str::replace(',', '.', \Str::replace('.','', $this->cos_excenta)));
                 $por_iva_con = floatval(\Str::replace(',', '.', \Str::replace('.','', $this->por_iva_con)));
-                // $this->cos_tot=($this->c*$this->cantidad)+$this->cos_excenta;
                 $cos_tot=($cos_uni*$cantidad )+$cos_excenta;
                 if(!$EstructuraPresupuestaria->isEmpty()){
                     $this->reset(['detallegasto']);
                     foreach($EstructuraPresupuestaria as $estructura){
-
                         $this->detallegasto[] = [
                             'gasto'         => $estructura->gasto,
                             'tip_cod'       => $estructura->tip_cod,
@@ -250,8 +304,11 @@ public function calculaCostoTotal ($valor){
                             'cod_sub'       => $estructura->cod_sub,
                             'descrip'       => $estructura->des_con,
                             'mto_tra'       => number_format((($cos_uni*$cantidad+$cos_excenta)), 2, ',', '.'),
+                            'partida'       => $this->varmarpartida($estructura->cod_par,$estructura->cod_gen,$estructura->cod_esp,$estructura->cod_sub),
                             'cod_cta'       => $estructura->cta_gasto,
                         ];
+                        $this->selectedcheck[]=$estructura->gasto ?: false;
+                        $this->showDropdown[] =false;
                     }
                     //Recorrer la Grilla
                     for ($i = 1; $i < 5; $i++){
@@ -290,9 +347,7 @@ public function calculaCostoTotal ($valor){
                             case 4:{    $this->base_exenta=$this->cos_excenta;
                                         break;
                                     }
-
                         }
-
                     }
                     switch($valor)
                     {
@@ -338,8 +393,11 @@ public function calculaCostoTotal ($valor){
                             'cod_sub'       => $row_iva[0]->cod_subi,
                             'descrip'       => $row_iva[0]->des_con,
                             'mto_tra'       => $this->monto_iva,
+                            'partida'       => $this->varmarpartida($row_iva[0]->cod_pari,$row_iva[0]->cod_geni,$row_iva[0]->cod_espi,$row_iva[0]->cod_subi),
                             'cod_cta'       => '',
                         ];
+                        $this->selectedcheck[]=$row_iva[0]->gasto?:false;
+                        $this->showDropdown[] =false;
                     }
                     $this->emit('alert', ['tab' => '#detalle-tab','det' => $this->detallegasto]);
                 }else{
@@ -355,12 +413,12 @@ public function calculaCostoTotal ($valor){
             }else{
                 $this->reset(['des_con','por_iva_con','cantidad','cos_uni','base_imponible','cos_tot','cos_excenta','detallegasto',
                                 'base_imponible','base_exenta','monto_neto','monto_iva','monto_total','por_iva']);
-            $this->emit('swal:alert', [
-                'tipo'    => 'warning',
-                'titulo'  => 'Error',
-                'mensaje' => 'Servcio no existe.Favor verifique'
-            ]);
-            $this->emit('alert', ['tab' => '#detalle-tab']);
+                $this->emit('swal:alert', [
+                    'tipo'    => 'warning',
+                    'titulo'  => 'Error',
+                    'mensaje' => 'Servicio no existe.Favor verifique'
+                ]);
+                $this->emit('alert', ['tab' => '#detalle-tab']);
             }
         }else{
             $this->reset(['des_con','por_iva_con','cantidad','cos_uni','base_imponible','cos_tot','cos_excenta','detallegasto',
@@ -370,14 +428,148 @@ public function calculaCostoTotal ($valor){
                 'titulo'  => 'Error',
                 'mensaje' => 'Favor seleccione una gerencia.'
             ]);
-            $this->emit('alert', ['tab' => '#detalle-tab']);
+            $this->onfocus='#cod_ger';
+            $this->emit('alert', ['tab' => '#identificacion-tab','onfocus' => $this->onfocus]);
         }
     }else{
         $this->reset(['des_con','por_iva_con','cantidad','cos_uni','base_imponible','cos_tot','cos_excenta','detallegasto',
                         'base_imponible','base_exenta','monto_neto','monto_iva','monto_total','por_iva']);
         $this->emit('alert', ['tab' => '#detalle-tab']);
     }
+
+    $this->calcularAnticipo('#detalle-tab');
 }
+//-------------------------------------------------------------------------
+//-------------------------------------------------------------------------
+public function validar_monto_Iva(){
+
+    $variabilidad = 0.10;
+    $iva = 0;
+    if ($this->por_iva_con== '' || $this->por_iva_con== ''){
+        $this->emit('swal:alert', [
+            'tipo'    => 'warning',
+            'titulo'  => 'Error',
+            'mensaje' => 'No se puede modificar el Monto si no ha especificado un Porcentaje de Iva.'
+        ]);
+    }else{
+        $cos_uni = floatval(\Str::replace(',', '.', \Str::replace('.','', $this->cos_uni)));
+        $cantidad =floatval( \Str::replace(',', '.', \Str::replace('.','', $this->cantidad)));
+        $cos_excenta = floatval(\Str::replace(',', '.', \Str::replace('.','', $this->cos_excenta)));
+        $por_iva_con = floatval(\Str::replace(',', '.', \Str::replace('.','', $this->por_iva_con)));
+        $cos_tot=($cos_uni*$cantidad )+$cos_excenta;
+        $iva=($cos_uni*($por_iva_con/100));
+        $valor=floatval(\Str::replace(',', '.', \Str::replace('.','', $this->monto_iva)));
+        $minimo = (($iva - $variabilidad) * 100) / 100;
+        $maximo = (($iva + $variabilidad) * 100) / 100;
+        if (($valor < $minimo) || ($valor > $maximo)) {
+            $this->emit('swal:alert', [
+                'tipo'    => 'warning',
+                'titulo'  => 'Error',
+                'mensaje' => 'El Monto de Iva esta Fuera del Rango de Tolerancia. ('.$minimo.'<= Monto Iva <='.$maximo.')'
+            ]);
+            $this->monto_iva=number_format($iva, 2, ',', '.');
+        } else {
+            $monto_total=$cos_tot+ $valor;
+            $this->monto_iva=number_format($valor, 2, ',', '.');
+            $this->monto_total=number_format($monto_total, 2, ',', '.');
+            $this->emit('alert', ['tab' => '#detalle-tab']);
+            //Validar si existe la partida de Iva en el arreglo
+            $pos = array_search('03.18.01.00', array_column($this->detallegasto, 'partida'));
+            if($pos>=0){
+                // Actualiza el monto de Iva en e arreglo del gasto
+                Arr::set($this->detallegasto, $pos.'.mto_tra', $valor);
+            };
+            $this->emit('alert', ['tab' => '#detalle-tab','det' => $this->detallegasto]);
+        }
+      }
+      $this->emit('alert', ['tab' => '#detalle-tab']);
+
+}
+
+public function registrar($pos)
+{
+    Arr::set($this->detallegasto, $pos.'.gasto', 1);
+    $this->emit('alert', ['tab' => '#detalle-tab','det' => $this->detallegasto]);
+}
+public function inactivar($pos)
+{
+    $this->selectedcheck[$pos]=0;
+    $this->emit('alert', ['tab' => '#detalle-tab']);
+}
+public function habilitar_checkbox($posicion){
+    if($posicion!='N'){
+        $valor=$this->selectedcheck[$posicion]==false?0:1;
+        if ($valor==1){
+            if (($this->detallegasto[$posicion]['cod_par'] == 4) ||
+                ($this->detallegasto[$posicion]['cod_par'] == 3 &&
+                 $this->detallegasto[$posicion]['cod_gen'] == 1 &&
+                 $this->detallegasto[$posicion]['cod_esp'] == 1 &&
+                 $this->detallegasto[$posicion]['cod_sub'] == 0)) {
+                 $bandera = 3;
+                 $this->emit('swal:confirm', [
+                        'tipo'      => 'warning',
+                        'titulo'    => 'Estructura de Gasto',
+                        'mensaje'   => 'Esta Seguro de Asignar una Cuenta de Gasto a la Partida Presupuestaria[' . $this->detallegasto[$posicion]['partida'] . '] ?',
+                        'funcion'   => 'registrar',
+                        'funcion2'  => 'inactivar',
+                        'posicion'  => $posicion
+                ]);
+            }else {
+                if( $this->detallegasto[$posicion]['cod_par'] == 3 &&
+                    $this->detallegasto[$posicion]['cod_gen'] == 18 &&
+                    $this->detallegasto[$posicion]['cod_esp'] == 1 &&
+                    $this->detallegasto[$posicion]['cod_sub'] == 0){
+                        $bandera = 0;
+                        $this->emit('swal:alert', [
+                            'tipo'    => 'warning',
+                            'titulo'  => 'Error',
+                            'mensaje' => 'La Partida Presupuestaria [' . $this->detallegasto[$posicion]['partida'] . '] no se puede imputar por la Cuenta de Gasto'
+                        ]);
+                   } else  {
+                        $bandera = 1;
+                  }
+            }
+        }else{
+            if ($this->detallegasto[$posicion]['cod_par'] != 4) {
+                if( $this->detallegasto[$posicion]['cod_par'] == 3 &&
+                    $this->detallegasto[$posicion]['cod_gen'] == 1 &&
+                    $this->detallegasto[$posicion]['cod_esp'] == 1 &&
+                    $this->detallegasto[$posicion]['cod_sub'] == 0){
+                        $bandera = 0;
+                    } else
+                    {
+                        if( $this->detallegasto[$posicion]['cod_par'] == 3 &&
+                            $this->detallegasto[$posicion]['cod_gen'] == 18 &&
+                            $this->detallegasto[$posicion]['cod_esp'] == 1 &&
+                            $this->detallegasto[$posicion]['cod_sub'] == 0){
+                                $bandera = 0;
+                            } else  {
+                                $bandera = 1;
+                                $this->emit('swal:alert', [
+                                    'tipo'    => 'warning',
+                                    'titulo'  => 'Error',
+                                    'mensaje' => 'La Partida Presupuestaria [' . $this->detallegasto[$posicion]['partida'] . '] no se puede imputar por la Cuenta de Activo'
+                                ]);
+                        }
+                    }
+            }else {
+                $bandera = 0;
+            }
+        }
+        if ( $bandera !=3){
+            $this->selectedcheck[$posicion]=$bandera;
+            Arr::set($this->detallegasto, $posicion.'.gasto', $bandera);
+            $this->emit('alert', ['tab' => '#detalle-tab','det' => $this->detallegasto]);
+        }else{
+            $this->emit('alert', ['tab' => '#detalle-tab']);
+        }
+
+    }else{
+        $this->emit('alert', ['tab' => '#detalle-tab']);
+    }
+}
+//-------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 public function render()
 {
     return view('livewire.administrativo.meru-administrativo.otros-pagos.proceso.tab-certificacion');

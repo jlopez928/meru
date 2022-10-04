@@ -7,7 +7,7 @@
         <div class="row mb-2">
             <div class="col-sm-12">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item text-bold"><a href="{{ route('otrospagos.proceso.certificacionservicio.index') }}">Pagina Principal</a></li>
+                    <li class="breadcrumb-item text-bold"><a href="{{ route('otrospagos.proceso.certificacionservicio.index') }}">Página Principal</a></li>
                     <li class="breadcrumb-item active text-bold">Modificar Certificación de Servicios</li>
                 </ol>
             </div>
