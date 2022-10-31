@@ -9,7 +9,7 @@ use App\Traits\WithSorting;
 use Livewire\WithPagination;
 use Livewire\Component;
 
-class TraspasoIndex extends Component
+class CreditoAdicionalIndex extends Component
 {
 
     use WithPagination, WithSorting;
@@ -41,7 +41,7 @@ class TraspasoIndex extends Component
 
     public function render()
     {
-        return view('livewire.administrativo.meru-administrativo.modificaciones.movimientos.traspaso-index',[
+        return view('livewire.administrativo.meru-administrativo.modificaciones.movimientos.credito-adicional-index',[
             'headers' => [
                 ['name' => 'Año', 'align' => 'center', 'sort' => 'ano_pro', 'width' => '8%'],
                 ['name' => 'Código', 'align' => 'center', 'sort' => 'xnro_mod', 'width' => '12%'],
@@ -51,8 +51,8 @@ class TraspasoIndex extends Component
                 ['name' => 'Estado', 'align' => 'center', 'sort' => 'sta_reg', 'width' => '10%'],
                 'Acción'
             ],
-            'traspasos' => Modificacion::query()
-                ->where('tip_ope', TipoModificacion::Traspaso)
+            'creditosAdicionales' => Modificacion::query()
+                ->where('tip_ope', TipoModificacion::Credito_Adicional)
                 ->where(function ($query){
                     $query->where('xnro_mod', 'ilike', '%'.$this->search.'%')
                     ->orWhere('concepto', 'ilike', '%'.$this->search.'%')

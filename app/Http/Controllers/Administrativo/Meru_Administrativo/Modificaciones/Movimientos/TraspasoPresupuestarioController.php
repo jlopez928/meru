@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Administrativo\Meru_Administrativo\Modificaciones
 
 use App\Enums\Administrativo\Meru_Administrativo\Modificaciones\EstadoModificacion;
 use App\Enums\Administrativo\Meru_Administrativo\Modificaciones\EstadoSolicitudTraspaso;
+use App\Exports\FromQueryExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Administrativo\Meru_Administrativo\Modificaciones\Movimientos\TraspasoRequest;
 use App\Models\Administrativo\Meru_Administrativo\Formulacion\CentroCosto;
@@ -14,12 +15,17 @@ use App\Models\Administrativo\Meru_Administrativo\Modificaciones\PartidaCedente;
 use App\Models\Administrativo\Meru_Administrativo\Modificaciones\PartidaReceptora;
 use App\Models\Administrativo\Meru_Administrativo\Modificaciones\PermisoTraspaso;
 use App\Models\Administrativo\Meru_Administrativo\Modificaciones\SolicitudTraspaso;
-use DB;
+use App\Traits\ReportFpdf;
+use App\Support\Fpdf;
+use App\Support\Helper;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TraspasoPresupuestarioController extends Controller
 {
+    use ReportFpdf;
+
     /**
      * Display a listing of the resource.
      *
@@ -870,6 +876,199 @@ class TraspasoPresupuestarioController extends Controller
 
             alert()->error('¡Transacción Fallida!', $msg);
             return redirect()->back()->withInput();
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////// REPORTES ///////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public function listadoModificacionesCreate()
+    {
+		return view(
+			'administrativo.meru_administrativo.modificaciones.reportes.operaciones',
+		);
+    }
+
+    public function listadoModificacionesStore(Request $request)
+    {
+        $operacion = $request->operacion;
+        $fecIni  = \Carbon\Carbon::createFromFormat('Y-m-d', $request->get('fec_ini'));
+        $fecFin  = \Carbon\Carbon::createFromFormat('Y-m-d', $request->get('fec_fin'));
+        $fecInif = $fecIni->format('Y-m-d');
+        $fecFinf = $fecFin->format('Y-m-d');
+        $tipo = $request->tipo_reporte;
+
+        $sqlCed = DB::table('modificaciones AS m')
+                    ->select(
+                        'm.xnro_mod',
+                        DB::raw(
+                            "CASE m.sta_reg 
+                                WHEN '0' THEN 'SOLO CREADO' 
+                                WHEN '1' THEN 'APARTADO' 
+                                WHEN '2' THEN 'APROBADO' 
+                                WHEN '3' THEN 'REV. APROBACION' 
+                                WHEN '4' THEN 'REV. APARTADO' 
+                                WHEN '5' THEN 'MODIFICADO' 
+                                WHEN '6' THEN 'ANULADO' 
+                            END AS sta_reg"
+                        ),
+                        'm.fec_tra', 
+                        'm.justificacion',
+                        'c.cod_com',
+                        DB::raw('(c.mto_tra * -1) AS mto_tra')
+                    )
+                    ->join('mod_partidascedentes AS c', 'm.xnro_mod', '=', 'c.xnro_mod')
+                    ->whereBetween('m.fec_tra', [$fecInif, $fecFinf]);
+
+        $sqlRec = DB::table('modificaciones AS m')
+                    ->select(
+                        'm.xnro_mod',
+                        DB::raw(
+                            "CASE m.sta_reg 
+                                WHEN '0' THEN 'SOLO CREADO' 
+                                WHEN '1' THEN 'APARTADO' 
+                                WHEN '2' THEN 'APROBADO' 
+                                WHEN '3' THEN 'REV. APROBACION' 
+                                WHEN '4' THEN 'REV. APARTADO' 
+                                WHEN '5' THEN 'MODIFICADO' 
+                                WHEN '6' THEN 'ANULADO' 
+                            END AS sta_reg"
+                        ),
+                        'm.fec_tra', 
+                        'm.justificacion',
+                        'r.cod_com',
+                        'r.mto_tra'
+                    )
+                    ->join('mod_partidasreceptoras AS r', 'm.xnro_mod', '=', 'r.xnro_mod')
+                    ->whereBetween('m.fec_tra', [$fecInif, $fecFinf]);
+
+        $orderBy = '3,1,5,6';
+
+        switch ($operacion) {
+            case 'C': // Creditos Adicionales
+                $sqlRec->where('m.tip_ope', 3);
+                $sql    = $sqlRec;
+                $titulo = 'CREDITOS ADICIONALES';
+                break;
+            case 'D': // Disminuciones
+                $sqlCed->where('m.tip_ope', 4);
+                $sql    = $sqlCed;
+                $titulo = 'DISMINUCIONES';
+                break;
+            case 'I': // Insubsistencias
+                $sqlCed->where('m.tip_ope', 5);
+                $sql    = $sqlCed;
+                $titulo = 'INSUBSISTENCIAS';
+                break;
+            default: // Traspasos
+                $sqlCed->where('m.tip_ope', 1);
+                $sqlRec->where('m.tip_ope', 1);
+                $sqlCed->union($sqlRec);
+                $sql     = DB::query()->fromSub($sqlCed, 'a');
+                $orderBy = '3,1,6,5';
+                $titulo  = 'TRASPASOS';
+                break;
+        }
+
+        $sql->orderByRaw($orderBy);
+
+        $archivo = 'Listado_' . \Str::lower($titulo);
+        $subtitulo = 'DEL: ' . $fecIni->format('d/m/Y') . ' AL: ' . $fecFin->format('d/m/Y');
+
+        if ($tipo == 'E') {
+            $data = [
+                'query'      => $sql,
+                'titulo'     => ['PRESUPUESTO HIDROBOLIVAR', $titulo, $subtitulo],
+                'ancho'      => [20,20,20,35,30,20],
+                'alineacion' => ['C','C','C','L','C','R'],
+                'formatos'   => ['T','T','T','T','T','N'],
+                'columnas'   => ['MODIFICACION','ESTATUS','FECHA','JUSTITICACION','ESTRUCTURA DE GASTOS','MONTO']
+            ];
+
+            return (new FromQueryExport($data))->download($archivo . '.xlsx');
+        } else {
+            $res = $sql->get();
+
+            if ($res->count() > 0) {
+                $pdf = new Fpdf;
+				$pdf->AliasNbPages();
+				$pdf->SetLeftMargin(5);
+				$pdf->setTitle(utf8_decode('Resumen Presupuestario'));
+				$pdf->SetAuthor(auth()->user()->name);
+				$pdf->SetAutoPageBreak(true, 5);
+
+				$data['tipo_hoja']           = 'A4';
+				$data['orientacion']         = 'H';
+				$data['cod_normalizacion']   = '';
+				$data['gerencia']            = '';
+				$data['division']            = '';
+				$data['titulo']              = 'HIDROBOLIVAR';
+				$data['subtitulo']           = $titulo . ' - DEL: ' . $fecIni->format('d/m/Y') . ' AL: ' . $fecFin->format('d/m/Y');
+				$data['alineacion_columnas'] = ['C','C','C','L','C','R'];
+				$data['ancho_columnas']      = [30,45,24,95,50,30]; //Ancho de Columnas
+				$data['nombre_columnas']     = ['MODIFICACION','ESTATUS','FECHA','JUSTITICACION','ESTRUCTURA DE GASTOS','MONTO'];
+				$data['funciones_columnas']  = '';
+				$data['fuente']              = 7;
+				$data['registros_mostar']    = [];
+				$data['nombre_documento']    = $archivo . '.pdf'; //Nombre del archivo
+				$data['con_imagen']          = true;
+				$data['vigencia']            = '';
+				$data['revision']            = '';
+				$data['usuario']             = auth()->user()->name;
+				$data['cod_reporte']         = '';
+				$data['registros']           = [];
+
+				$this->pintar_encabezado_pdf($pdf, $data);
+				$this->pintar_cabecera_columnas_pdf($pdf, $data, false);
+
+                $xmod = '';
+
+                foreach ($res as $r) {
+                    $stru = $r->cod_com;
+
+                    if($xmod == '') {
+                        $xmod    = $r->xnro_mod;
+                        $pmod    = $r->xnro_mod;
+                        $sta_reg = $r->sta_reg;
+                        $pfec    = $r->fec_tra;
+                        $pjus    = trim($r->justificacion);
+                    } elseif ($xmod == $r->xnro_mod) {
+                        $pmod    = '';
+                        $sta_reg = '';
+                        $pfec    = '';
+                        $pjus    = '';
+                    } elseif ($xmod != $r->xnro_mod) {
+                        /** Pintar Linea doble una delgada y la otra gruesa **/
+                        //$row = array(true, true, true, true, true, true, true);
+                        //$this->drawRowLine($row, true, false, false);
+                        $pdf->Row(['____________________',
+                        '_______________________________',
+                        '________________',
+                        '___________________________________________________________________',
+                        '__________________________________ ',
+                        '____________________',], 'S');
+                        $xmod = $r->xnro_mod; //Guardar No. de Modificacion
+                        $pmod = $r->xnro_mod;
+                        $sta_reg = $r->sta_reg;
+                        $pfec = $r->fec_tra;
+                        $pjus = trim($r->justificacion);
+                    }
+
+                    $row = [$pmod, $sta_reg, $pfec, $pjus, $stru, Helper::formatNumber($r->mto_tra, 2, ',', '.', '(')];
+                    $pdf->Row($row, 'S');
+
+                    if ($pdf->GetY() >= 175) {
+						$this->pintar_encabezado_pdf($pdf, $data);
+						$this->pintar_cabecera_columnas_pdf($pdf, $data, false);
+					}
+                }
+
+                $pdf->Output('Resumen Presupuestario', 'I');
+				exit;
+            } else {
+                dd('No se encontraron datos');
+            }
         }
     }
 

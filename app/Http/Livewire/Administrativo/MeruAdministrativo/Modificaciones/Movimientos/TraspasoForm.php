@@ -230,7 +230,7 @@ class TraspasoForm extends Component
             unset($this->estructurasCedentes[$key]);
         } else {
             $total -= $this->estructurasReceptoras[$key]['mto_tra'];
-            $this->totCed = number_format($total, 2, ',', '.');
+            $this->totRec = number_format($total, 2, ',', '.');
             unset($this->estructurasReceptoras[$key]);
         }
 
@@ -291,8 +291,7 @@ class TraspasoForm extends Component
                 ->first();
 
             if (!is_null($solicitud)) {
-                if ($solicitud->sta_reg->value != EstadoSolicitudTraspaso::Aprobada) {
-                // if (true == false) {
+                if ($solicitud->sta_reg->value != EstadoSolicitudTraspaso::Aprobada->value) {
                     $this->_alert('Solicitud de Traspaso con status inválido para agregar: <b>' . $solicitud->sta_reg->name . '</b><br>Por favor verifique.');
                 } else {
                     $this->estructurasReceptoras = [];
@@ -303,10 +302,15 @@ class TraspasoForm extends Component
                         $this->totRec += $row['mto_tra'];
                     }
 
+                    $this->concepto = $solicitud->concepto;
+                    $this->justificacion = $solicitud->justificacion;
+
                     $this->inicializar();
                 }
             } else {
                 $this->numDoc = '';
+                $this->concepto = '';
+                $this->justificacion = '';
                 $this->_alert('La Solicitud de Traspaso <b>' . $numDoc . '</b> no existe para el año <b>' . $this->anoPro . '</b>.<br>Por favor verifique.');
             }
         }
