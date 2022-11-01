@@ -1,6 +1,6 @@
 <x-card wire:init="inicializar" x-data="">
 	<x-slot name="header">
-		<h3 class="card-title text-bold">Traspaso Presupuestario</h3>
+		<h3 class="card-title text-bold">Disminución</h3>
 	</x-slot>
 
 	<x-slot name="body">
@@ -25,7 +25,7 @@
         
             <div class="form-group col-2">
                 <x-label for="num_doc">Solicitud</x-label>
-                <x-input type="text" name="num_doc" wire:model.defer="numDoc" x-mask="99999" class="form-control form-control-sm text-center {{ $errors->has('num_doc') ? 'is-invalid' : '' }}" wire:blur="buscarSolicitud" />
+                <x-input type="text" name="num_doc" wire:model.defer="numDoc" x-mask="99999" class="form-control form-control-sm text-center {{ $errors->has('num_doc') ? 'is-invalid' : '' }}" />
 
                 @error('num_doc')
 					<span class="invalid-feedback" role="alert">
@@ -135,7 +135,7 @@
 					</div>
 					<div class="col-1">
 						<x-label for="btnAgregarCed" style="color:#FFF;">_</x-label>
-						<button type="button" name="btnAgregarCed" class="btn btn-sm btn-success text-bold" wire:click="agregarCedente">Agregar</button>
+						<button type="button" name="btnAgregarCed" class="btn btn-sm btn-success text-bold" wire:click="agregarEstructura">Agregar</button>
 					</div>
 				</div>
 
@@ -157,7 +157,7 @@
 								<th style="width:100px;vertical-align:middle;">Monto</th>
 								<th style="width:50px;vertical-align:middle;">
 									@if(!empty($estructurasCedentes))
-										<a href="#" onclick="event.preventDefault()" wire:click="eliminarTodasCedentes">
+										<a href="#" onclick="event.preventDefault()" wire:click="eliminarTodasEstructuras">
 											<i class="far fa-trash-alt text-danger" title="Eliminar Todas"></i>
 										</a>
 									@endif
@@ -204,7 +204,7 @@
 										{{ number_format($item['mto_tra'], 2, ',', '.') }}
 									</td>
 									<td class="text-center" style="vertical-align:middle;">
-										<a href="#" onclick="event.preventDefault()" wire:click="eliminarCedente({{ "'" . $item['cod_com'] . "'" }})">
+										<a href="#" onclick="event.preventDefault()" wire:click="eliminarEstructura({{ "'" . $item['cod_com'] . "'" }})">
 											<i class="far fa-trash-alt text-danger" title="Eliminar"></i>
 										</a>
 									</td>
@@ -244,164 +244,6 @@
 				</div>
 			</div>
 		</div>
-
-		<div class="card card-outline">
-			<div class="card-header">
-				<h3 class="card-title text-bold">Partidas Receptoras</h3>
-			</div>
-		
-			<div class="card-body">
-				<div class="row col-12">
-					<div class="col-1">
-						<x-label for="tip_cod_rec">Tp</x-label>
-						<x-input name="tip_cod_rec" class="text-center" wire:model.defer="receptora.tip_cod" x-mask="99" maxlength="2"/>
-					</div>
-					<div class="col-1">
-						<x-label for="cod_pryacc_rec">P/A</x-label>
-						<x-input name="cod_pryacc_rec" class="text-center" wire:model.defer="receptora.cod_pryacc" x-mask="99" maxlength="2"/>
-					</div>
-					<div class="col-1">
-						<x-label for="cod_obj_rec">Obj</x-label>
-						<x-input name="cod_obj_rec" class="text-center" wire:model.defer="receptora.cod_obj" x-mask="99" maxlength="2"/>
-					</div>
-					<div class="col-1">
-						<x-label for="gerencia_rec">Gcia</x-label>
-						<x-input name="gerencia_rec" class="text-center" wire:model.defer="receptora.gerencia" x-mask="99" maxlength="2"/>
-					</div>
-					<div class="col-1">
-						<x-label for="unidad_rec">U.Ejec.</x-label>
-						<x-input name="unidad_rec" class="text-center" wire:model.defer="receptora.unidad" x-mask="99" maxlength="2"/>
-					</div>
-					<div class="col-1">
-						<x-label for="cod_par_rec">Pa</x-label>
-						<x-input name="cod_par_rec" class="text-center" wire:model.defer="receptora.cod_par" x-mask="99" maxlength="2"/>
-					</div>
-					<div class="col-1">
-						<x-label for="cod_gen_rec">Gn</x-label>
-						<x-input name="cod_gen_rec" class="text-center" wire:model.defer="receptora.cod_gen" x-mask="99" maxlength="2"/>
-					</div>
-					<div class="col-1">
-						<x-label for="cod_esp_rec">Esp.</x-label>
-						<x-input name="cod_esp_rec" class="text-center" wire:model.defer="receptora.cod_esp" x-mask="99" maxlength="2"/>
-					</div>
-					<div class="col-1">
-						<x-label for="cod_sub_rec">Sub.Esp</x-label>
-						<x-input name="cod_sub_rec" class="text-center" wire:model.defer="receptora.cod_sub" x-mask="99" maxlength="2"/>
-					</div>
-					<div class="col-2">
-						<x-label for="monto_rec">Monto</x-label>
-						<x-input name="monto_rec" class="text-right money-mask" x-mask:dynamic="$money($input, ',')" wire:model.defer="montoRec"/>
-					</div>
-					<div class="col-1">
-						<x-label for="btnAgregarRec" style="color:#FFF;">_</x-label>
-						<button type="button" name="btnAgregarRec" class="btn btn-sm btn-success text-bold" wire:click="agregarReceptora">Agregar</button>
-					</div>
-				</div>
-
-				<div class="row col-12" style="margin-top: 10px;">
-					<table class="table table-bordered table-sm text-center" style="font-size:12px;">
-						<thead>
-							<tr class="table-primary">
-								<th style="width:50px;vertical-align:middle;">Tp</th>
-								<th style="width:50px;vertical-align:middle;">P/A</th>
-								<th style="width:50px;vertical-align:middle;">Obj</th>
-								<th style="width:50px;vertical-align:middle;">Gcia</th>
-								<th style="width:50px;vertical-align:middle;">U.Ejec.</th>
-								<th style="width:50px;vertical-align:middle;">Pa</th>
-								<th style="width:50px;vertical-align:middle;">Gn</th>
-								<th style="width:50px;vertical-align:middle;">Esp.</th>
-								<th style="width:50px;vertical-align:middle;">Sub.Esp</th>
-								<th style="width:250px;vertical-align:middle;">Descripción</th>
-								<th style="width:100px;vertical-align:middle;">Monto Disp.</th>
-								<th style="width:100px;vertical-align:middle;">Monto</th>
-								<th style="width:50px;vertical-align:middle;">
-									@if(!empty($estructurasReceptoras))
-										<a href="#" onclick="event.preventDefault()" wire:click="eliminarTodasReceptoras" style="font-size:12px;">
-											<i class="far fa-trash-alt text-danger" title="Eliminar Todas"></i>
-										</a>
-									@endif
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-							@forelse ($estructurasReceptoras as $item)
-								<tr>
-									<td class="text-center"  style="vertical-align:middle;">
-										{{ $item['tip_cod'] }}
-									</td>
-									<td class="text-center"  style="vertical-align:middle;">
-										{{ $item['cod_pryacc'] }}
-									</td>
-									<td class="text-center" style="vertical-align:middle;">
-										{{ $item['cod_obj'] }}
-									</td>
-									<td class="text-center" style="vertical-align:middle;">
-										{{ $item['gerencia'] }}
-									</td>
-									<td class="text-center" style="vertical-align:middle;">
-										{{ $item['unidad'] }}
-									</td>
-									<td class="text-center" style="vertical-align:middle;">
-										{{ $item['cod_par'] }}
-									</td>
-									<td class="text-center" style="vertical-align:middle;">
-										{{ $item['cod_gen'] }}
-									</td>
-									<td class="text-center" style="vertical-align:middle;">
-										{{ $item['cod_esp'] }}
-									</td>
-									<td class="text-center" style="vertical-align:middle;">
-										{{ $item['cod_sub'] }}
-									</td>
-									<td class="text-left" style="vertical-align:middle;">
-										{{ $item['descrip'] }}
-									</td>
-									<td class="text-right" style="vertical-align:middle;padding-right:10px;">
-										{{ number_format($item['mto_dis'], 2, ',', '.') }}
-									</td>
-									<td class="text-right" style="vertical-align:middle;padding-right:10px;">
-										{{ number_format($item['mto_tra'], 2, ',', '.') }}
-									</td>
-									<td class="text-center" style="vertical-align:middle;">
-										<a href="#" onclick="event.preventDefault()" wire:click="eliminarReceptora({{ "'" . $item['cod_com'] . "'" }})">
-											<i class="far fa-trash-alt text-danger" title="Eliminar"></i>
-										</a>
-									</td>
-								</tr>
-							@empty
-								<tr>
-									<td class="text-center" colspan="13">
-										No existen registros
-									</td>
-								</tr>
-							@endforelse
-						</tbody>
-					</table>
-					<input type="text" name="estructurasReceptoras" id="estructurasReceptoras" style="display:none" readonly/>
-				</div>
-
-				<div class="row col-12" style="paddin-right:0px !important;">
-					<div class="form-group row col-12">
-						<x-label for="total_rec" class="col-form-label col-2 offset-8 text-right">Total:</x-label>
-						<div class="col-2">
-							<x-input name="total_rec" class="text-right {{ $errors->has('total_rec') ? 'is-invalid' : '' }}" wire:model.defer="totRec" readonly/>
-
-							@error('total_rec')
-								<span class="invalid-feedback" role="alert">
-									{{ $message }}
-								</span>
-							@enderror
-
-							@error('estructurasReceptoras')
-								<span class="invalid-feedback" role="alert">
-									{{ $message }}
-								</span>
-							@enderror
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 	</x-slot>
 
 	<x-slot name="footer">
@@ -422,13 +264,8 @@
 
 		window.livewire.on('estructura:act', param => {
 			var detalle = JSON.stringify(param['estructuras']);
-
-            if (param['tipo'] == 'c') {
-                $('#estructurasCedentes').val(detalle);
-            } else {
-                $('#estructurasReceptoras').val(detalle);
-            }
-		});
+            $('#estructurasCedentes').val(detalle);
+        });
 
 		window.livewire.on('swal:alert', param => {
 			Swal.fire({
