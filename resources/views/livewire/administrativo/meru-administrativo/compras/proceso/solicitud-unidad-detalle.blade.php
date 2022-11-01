@@ -1,10 +1,12 @@
-<div>
+<div wire:init="cargar_emit">
     <div class="row d-flex justify-content-between">
         <x-field class="col-5">
             <x-label for="cod_prod">Producto</x-label>
             <x-select
                 class="form-control-sm {{ $errors->has('cod_prod') ? 'is-invalid' : 'is-valid' }}"
                 wire:model="cod_prod"
+                style="{{ $accion !== 'nuevo' && $accion !== 'editar' ? 'pointer-events: none' : '' }}"
+                x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{  $accion }}' !== 'editar'"
             >
                 <option value="">Seleccione...</option>
                 @foreach ($productos as $index => $producto)
@@ -28,6 +30,7 @@
                 maxlength="500"
                 cols="40"
                 rows="2"
+                x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
             ></textarea>
             <div class="invalid-feedback">
                 @error('des_prod') {{ $message }} @enderror
@@ -67,35 +70,50 @@
         <x-field class="col-2">
             <x-label for="cantidad">Cantidad</x-label>
             <x-input
-                class="form-control-sm"
+                class="form-control-sm {{ $errors->has('cantidad') ? 'is-invalid' : 'is-valid' }}"
                 title="Indique la cantidad"
                 wire:model.debounce.250ms="cantidad"
+                x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
+                dir="rtl"
             />
+            <div class="invalid-feedback">
+                @error('cantidad') {{ $message }} @enderror
+            </div>
         </x-field>
 
         <x-field class="col-2">
             <x-label for="ult_pre">Precio</x-label>
             <x-input
-                class="form-control-sm"
+                class="form-control-sm {{ $errors->has('ult_pre') ? 'is-invalid' : 'is-valid' }}"
                 title="Indique el Precio Negociado"
-                wire:model.debounce.250ms="ult_pre"
+                {{--  wire:model.debounce.250ms="ult_pre"  --}}
+                wire:model.lazy="ult_pre"
+                x-mask:dynamic="$money($input, ',')"
+                x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
+                dir="rtl"
             />
+            <div class="invalid-feedback">
+                @error('ult_pre') {{ $message }} @enderror
+            </div>
+        </x-field>
+
+        <x-field class="col-2">
+            <x-label for="mon_sub_tot">Total</x-label>
+            <x-input
+                class="form-control-sm {{ $errors->has('mon_sub_tot') ? 'is-invalid' : 'is-valid' }}"
+                title="Indique el Total Negociado"
+                wire:model.lazy="mon_sub_tot"
+                readonly
+            />
+            <div class="invalid-feedback">
+                @error('mon_sub_tot') {{ $message }} @enderror
+            </div>
         </x-field>
     </div>
 
     <div class="row d-flex justify-content-between">
         <x-field class="col-2">
-            <x-label for="mon_sub_tot">Total</x-label>
-            <x-input
-                class="form-control-sm"
-                title="Indique el Total Negociado"
-                wire:model.lazy="mon_sub_tot"
-                readonly
-            />
-        </x-field>
-
-        <x-field class="col-2">
-            <x-label for="cod_par">Pa</x-label>
+            <x-label for="cod_par">Partida</x-label>
             <x-input
                 class="form-control-sm"
                 title="Indique Código de Partida de Gastos"
@@ -103,11 +121,9 @@
                 readonly
             />
         </x-field>
-    </div>
 
-    <div class="row d-flex justify-content-between">
         <x-field class="col-2">
-            <x-label for="cod_gen">Gn</x-label>
+            <x-label for="cod_gen">Genérica</x-label>
             <x-input
                 class="form-control-sm"
                 title="Indique Código de Genérica de Gastos"
@@ -117,7 +133,7 @@
         </x-field>
 
         <x-field class="col-2">
-            <x-label for="cod_esp">Esp</x-label>
+            <x-label for="cod_esp">Específica</x-label>
             <x-input
                 class="form-control-sm"
                 title="Indique Código de Especifica de Gastos"
@@ -125,11 +141,9 @@
                 readonly
             />
         </x-field>
-    </div>
 
-    <div class="row d-flex justify-content-between">
         <x-field class="col-2">
-            <x-label for="cod_sub">Sub</x-label>
+            <x-label for="cod_sub">SubEspecífica</x-label>
             <x-input
                 class="form-control-sm"
                 title="Indique Código de Especifica de Gastos"
@@ -137,18 +151,22 @@
                 readonly
             />
         </x-field>
+    </div>
 
-        <x-field class="col-2">
+    <div class="row d-flex justify-content-between">
+        <x-field class="col-3">
             <x-label for="cod_status">Status</x-label>
             <x-input
-                class="form-control-sm"
+                class="form-control-sm {{ $errors->has('cod_status') ? 'is-invalid' : 'is-valid' }}"
                 wire:model.lazy="cod_status"
                 readonly
             />
+            <span>{{ $des_status }}</span>
+            <div class="invalid-feedback">
+                @error('cod_status') {{ $message }} @enderror
+            </div>
         </x-field>
-    </div>
 
-    <div class="row">
         <x-field class="col-2">
             <x-label for="renglon">Reng. Det.</x-label>
             <x-input
@@ -160,37 +178,104 @@
         </x-field>
     </div>
 
-    <div class="row col-12 d-flex justify-content-end">
-        <button class="btn-primary btn-sm" wire:click.prevent="agregarRenglon">Agregar Renglon</button>
+    <div class="row col-12 d-flex justify-content-center">
+
+        @if (!$mostrar && ($accion == 'nuevo' || $accion == 'editar'))
+            <button class="btn-primary btn-sm" wire:click.prevent="agregarRenglon"><i class="fas fa-plus-circle"></i> Agregar</button>
+        @endif
+        @if ($mostrar && ($accion == 'nuevo' || $accion == 'editar'))
+            <button class="btn-success btn-sm" wire:click.prevent="modificarRenglon"><i class="fas fa-edit"></i> Modificar</button>
+            <button class="btn-danger btn-sm ml-2" wire:click.prevent="eliminarRenglon"><i class="fas fa-trash"></i> Eliminar</button>
+            <button class="btn-secondary btn-sm ml-2" wire:click.prevent="cancelar"><i class="fas fa-window-close"></i> Cancelar</button>
+        @endif
     </div>
 
     <hr>
 
     {{--  Detalle de la Tabla  --}}
-    <div class="mt-4">
-        <table class="table table-bordered table-sm text-center">
-            <thead>
-                <tr class="table-success">
-                    <th style="width:10%">Producto</th>
-                    <th style="width:60%">Descripción</th>
-                    <th style="width:10%">Cod. Unidad</th>
-                    <th style="width:20%">Unidad</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($detalle_productos as $index => $detalle)
-                    <tr>
-                        <td>{{ $detalle['cod_prod'] }}</td>
-                        <td>{{ $detalle['des_prod'] }}</td>
-                        <td>{{ $detalle['cod_uni'] }}</td>
-                        <td>{{ $detalle['des_uni'] }}</td>
+    <div>
+        <div class="mt-4 table-responsive">
+            <table class="table table-bordered table-striped table-sm text-center">
+                <thead>
+                    <tr class="table-success">
+                        <th style="width:10%">Producto</th>
+                        <th style="width:30%">Descripción</th>
+                        <th style="width:5%">Cod. Unidad</th>
+                        <th style="width:5%">Unidad</th>
+                        <th style="width:5%">Cantidad</th>
+                        <th style="width:5%">Precio</th>
+                        <th style="width:10%">Total</th>
+                        <th style="width:5%">Pa</th>
+                        <th style="width:5%">Gn</th>
+                        <th style="width:5%">Esp</th>
+                        <th style="width:5%">Sub</th>
+                        <th style="width:5%">Status</th>
+                        <th style="width:5%">Reng. Det.</th>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="4" class="text-center"></td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @forelse ($detalle_productos as $index => $detalle)
+
+                        @if ($accion == 'mostrar')
+                            <tr>
+                        @else
+                            <tr style="cursor:pointer" wire:key="detalle-{{ $index }}" wire:click.stop="mostrarDetalle({{ $index }})">
+                        @endif
+                            <td>{{ $detalle['fk_cod_mat'] }}</td>
+                            <td>{{ $detalle['descripcion'] }}</td>
+                            <td>{{ $detalle['fk_cod_uni'] }}</td>
+                            <td>{{ $detalle['des_uni_med'] }}</td>
+                            <td>{{ $detalle['cantidad'] }}</td>
+                            <td>{{ $detalle['precio'] }}</td>
+                            <td>{{ $detalle['total'] }}</td>
+                            <td>{{ $detalle['cod_par'] }}</td>
+                            <td>{{ $detalle['cod_gen'] }}</td>
+                            <td>{{ $detalle['cod_esp'] }}</td>
+                            <td>{{ $detalle['cod_sub'] }}</td>
+                            <td>{{ $detalle['sta_reg'] }}</td>
+                            <td>{{ $detalle['nro_ren'] }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="13" class="text-center"></td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
+
+    <div class="row mt-2">
+        <x-field class="col-2">
+            <x-label for="monto_tot">Monto total</x-label>
+            <x-input
+                class="form-control-sm {{ $errors->has('monto_tot') ? 'is-invalid' : 'is-valid' }}"
+                name="monto_tot"
+                wire:model.lazy="monto_tot"
+                title="Indique Monto total de la Solicitud"
+                readonly
+            />
+            <div class="invalid-feedback">
+                @error('monto_tot') {{ $message }} @enderror
+            </div>
+        </x-field>
+    </div>
+
+    {{--  <input type="hidden" name="detalle_productos" id="detalle_productos" value="{{ old('detalle_productos') }}" />  --}}
+    <input type="hidden" name="detalle_productos" id="detalle_productos" />
 </div>
+
+@push('scripts')
+    <script>
+        Livewire.on('cargarDetalle', param => {
+			$("#detalle_productos").val(JSON.stringify(param['detalle_productos']));
+        });
+
+        Livewire.on('swal:alert', param => {
+            Swal.fire({
+                html: param['mensaje'],
+                icon: param['tipo'],
+            })
+        })
+    </script>
+@endpush

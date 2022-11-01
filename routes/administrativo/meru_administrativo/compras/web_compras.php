@@ -105,5 +105,19 @@ Route::controller(SolicitudUnidadController::class)
 
     Route::get('solicitudunidad', 'index')->name('index');
     Route::get('solicitudunidad/create', 'create')->name('create');
-    Route::post('solicitudunidad', 'store')->name('store');
+    Route::post('solicitudunidad', 'crear_solicitud')->name('crear_solicitud');
+    Route::get('solicitudunidad/{ano_pro}/{grupo}/{nro_req}', 'show')->name('show');
+    Route::get('solicitudunidad/{ano_pro}/{grupo}/{nro_req}/anular', 'anular')->name('anular');
+    Route::post('solicitudunidad/anularsolicitud', 'anular_solicitud')->name('anular_solicitud');
+    Route::get('solicitudunidad/{ano_pro}/{grupo}/{nro_req}/activar', 'activar')->name('activar');
+    Route::get('solicitudunidad/{ano_pro}/{grupo}/{nro_req}/aprobar', 'aprobar')->name('aprobar');
+    Route::get('solicitudunidad/{ano_pro}/{grupo}/{nro_req}/reversar', 'reversar')->name('reversar');
+    Route::post('solicitudunidad/reversarsolicitud', 'reversar_solicitud')->name('reversar_solicitud');
+    Route::get('solicitudunidad/{ano_pro}/{grupo}/{nro_req}/copiar', 'copiar')->name('copiar');
+    Route::post('solicitudunidad/copiarsolicitud', 'copiar_solicitud')->name('copiar_solicitud');
+    Route::get('solicitudunidad/{ano_pro}/{grupo}/{nro_req}/precomprometer', 'precomprometer')->name('precomprometer');
+    Route::post('solicitudunidad/precomprometersolicitud', 'precomprometer_solicitud')->name('precomprometer_solicitud');
+    Route::get('solicitudunidad/{ano_pro}/{grupo}/{nro_req}/edit', 'edit')->name('edit');
+    Route::post('solicitudunidad/editarsolicitud', 'editar_solicitud')->name('editar_solicitud');
+    Route::post('solicitudunidad/editaranexos', 'editar_anexos')->name('editar_anexos');
 });

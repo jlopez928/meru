@@ -9,9 +9,9 @@
                 <x-select
                     name="ano_pro"
                     class="form-control-sm ml-1 {{ $errors->has('ano_pro') ? 'is-invalid' : 'is-valid' }}"
-                    style="pointer-events: none"
+                    style="{{ $accion !== 'editar' ? 'pointer-events: none' : '' }}"
                     x-model="ano_pro"
-                    readonly
+                    x-bind:readonly="{{ $accion !== 'editar' }}"
                 >
                     <option value="">Seleccione...</option>
                     @foreach ( $years as $year)
@@ -34,6 +34,8 @@
                     class="form-control-sm {{ $errors->has('grupo') ? 'is-invalid' : 'is-valid' }}"
                     x-model="grupo"
                     x-on:change="updateGrupo"
+                    style="{{ $accion !== 'nuevo' && $accion !== 'editar' ? 'pointer-events: none' : '' }}"
+                    x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                 >
                     <option value="">Seleccione...</option>
                     @foreach (\App\Enums\Administrativo\Meru_Administrativo\Compras\GrupoSolicitud::cases() as $grupoSolicitud)
@@ -50,9 +52,11 @@
             <x-field class="col-3">
                 <x-label for="cla_sol">Clase</x-label>
                 <x-select
-                    x-model="cla_sol"
                     name="cla_sol"
                     class="form-control-sm {{ $errors->has('cla_sol') ? 'is-invalid' : 'is-valid' }}"
+                    x-model="cla_sol"
+                    style="{{ $accion !== 'nuevo' && $accion !== 'editar' ? 'pointer-events: none' : '' }}"
+                    x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                 >
                     <option value="">Seleccione...</option>
                     <template x-for="clase in clases">
@@ -74,7 +78,7 @@
                 <x-input
                     class="form-control-sm"
                     name="nro_req"
-                    value="{{ old('nro_req', $solicitudUnidad->nro_req) }}"
+                    x-model="nro_req"
                     readonly
                 />
             </x-field>
@@ -91,6 +95,7 @@
                     maxlength="1000"
                     cols="50"
                     rows="5"
+                    x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                 >{{ old('jus_sol', $solicitudUnidad->jus_sol) }}</textarea>
                 <div class="invalid-feedback">
                     @error('jus_sol') {{ $message }} @enderror
@@ -105,7 +110,8 @@
                     type="date"
                     class="form-control-sm {{ $errors->has('fec_emi') ? 'is-invalid' : 'is-valid' }}"
                     name="fec_emi"
-                    value="{{ old('fec_emi', $solicitudUnidad?->fec_emi ?? date('Y-m-d')) }}"
+                    value="{{ $accion !== 'nuevo' ? old('fec_emi', $solicitudUnidad->fec_emi) : date('Y-m-d') }}"
+                    x-bind:readonly="'{{ $accion }}' !== 'nuevo'"
                 />
                 <div class="invalid-feedback">
                     @error('fec_emi') {{ $message }} @enderror
@@ -146,12 +152,14 @@
                     type="date"
                     class="form-control-sm {{ $errors->has('fec_anu') ? 'is-invalid' : 'is-valid' }}"
                     name="fec_anu"
-                    value="{{ old('fec_anu', $solicitudUnidad->fec_anu) }}"
-                    readonly
+                    value="{{ $accion !== 'anular' && $accion !== 'reversar' ? old('fec_anu', $solicitudUnidad->fec_anu) : date('Y-m-d') }}"
+                    style="{{ $accion == 'anular' || $accion == 'reversar' ? 'pointer-events: none' : '' }}"
+                    x-bind:readonly="'{{ $accion }}' !== 'anular' && '{{ $accion }}' !== 'reversar'"
                 />
                 <div class="invalid-feedback">
                     @error('fec_anu') {{ $message }} @enderror
                 </div>
+
             </x-field>
             <x-field class="col-4">
                 <x-label for="fec_rec_cont">Rec. Contrataciones</x-label>
@@ -188,8 +196,9 @@
                     type="date"
                     class="form-control-sm {{ $errors->has('fec_pcom') ? 'is-invalid' : 'is-valid' }}"
                     name="fec_pcom"
-                    value="{{ old('fec_pcom', $solicitudUnidad->fec_pcom) }}"
-                    readonly
+                    value="{{ $accion !== 'precomprometer' ? old('fec_pcom', $solicitudUnidad->fec_pcom) : date('Y-m-d') }}"
+                    style="{{ $accion == 'precomprometer' ? 'pointer-events: none' : '' }}"
+                    x-bind:readonly="'{{ $accion }}' !== 'precomprometer'"
                 />
                 <div class="invalid-feedback">
                     @error('fec_pcom') {{ $message }} @enderror
@@ -260,6 +269,8 @@
                     x-model="gru_ram"
                     x-on:change="updateGrupoRamo"
                     class="form-control-sm {{ $errors->has('gru_ram') ? 'is-invalid' : 'is-valid' }}"
+                    style="{{ $accion !== 'nuevo' && $accion !== 'editar' ? 'pointer-events: none' : '' }}"
+                    x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                 >
                     <option value="">Seleccione...</option>
                     @foreach ($ramos as $index => $ramo)
@@ -282,6 +293,8 @@
                     class="form-control-sm {{ $errors->has('fk_cod_ger') ? 'is-invalid' : 'is-valid' }}"
                     x-model="fk_cod_ger"
                     x-on:change="updateGerencia"
+                    style="{{ $accion !== 'nuevo' && $accion !== 'editar' ? 'pointer-events: none' : '' }}"
+                    x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                 >
                     <option value="">Seleccione...</option>
                     @foreach ($gerencias as $index => $gerencia)
@@ -303,6 +316,8 @@
                     name="cod_uni"
                     class="form-control-sm {{ $errors->has('cod_uni') ? 'is-invalid' : 'is-valid' }}"
                     x-model="cod_uni"
+                    style="{{ $accion !== 'nuevo' && $accion !== 'editar' ? 'pointer-events: none' : '' }}"
+                    x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                 >
                     <option value="">Seleccione</option>
                     <template x-for="unidad in unidades">
@@ -310,7 +325,7 @@
                             :key="unidad.cod_uni"
                             :value="unidad.cod_uni"
                             x-text="unidad.des_uni"
-                            x-bind:selected="unidad.cod_uni === cod_uni">
+                            x-bind:selected="unidad.cod_uni == cod_uni">
                         </option>
                     </template>
                 </x-select>
@@ -327,6 +342,8 @@
                     name="pri_sol"
                     class="form-control-sm {{ $errors->has('pri_sol') ? 'is-invalid' : 'is-valid' }}"
                     x-model="pri_sol"
+                    style="{{ $accion !== 'nuevo' && $accion !== 'editar' ? 'pointer-events: none' : '' }}"
+                    x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                 >
                     <option value="">Seleccione...</option>
                     @foreach (\App\Enums\Administrativo\Meru_Administrativo\Compras\PrioridadSolicitud::cases() as $prioridad)
@@ -394,6 +411,7 @@
                     maxlength="500"
                     cols="50"
                     rows="5"
+                    x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar' && '{{ $accion }}' !== 'editar_anexos'"
                 >{{ old('anexos', $solicitudUnidad->anexos) }}</textarea>
                 <div class="invalid-feedback">
                     @error('anexos') {{ $message }} @enderror
@@ -405,7 +423,7 @@
             <x-label>Estatus</x-label>
             <x-input
                 class="form-control-sm"
-                value="{{ $solicitudUnidad->sta_sol ?? '' }}"
+                value="{{ $solicitudUnidad->estado->descripcion ?? '' }}"
                 readonly
             />
         </x-field>
