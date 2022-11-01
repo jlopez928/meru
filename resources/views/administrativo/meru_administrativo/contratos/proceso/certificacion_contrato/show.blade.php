@@ -7,8 +7,13 @@
         <div class="row mb-2">
             <div class="col-sm-12">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item text-bold"><a href="{{ route('contratos.proceso.certificacioncontrato.index') }}">Página Principal</a></li>
-                    <li class="breadcrumb-item active text-bold">Mostrar Certificación de Obras y Servicio</li>
+                    @if($nombreRuta =='contrato')
+                        <li class="breadcrumb-item text-bold"><a href="{{ route('contratos.proceso.certificacioncontrato.index') }}">Página Principal</a></li>
+                        <li class="breadcrumb-item active text-bold">Mostrar Certificación de Obrar y Servicio</li>
+                    @else
+                        <li class="breadcrumb-item text-bold"><a href="{{ route('contratos.proceso.certificacioncontratoaddendum.index') }}">Página Principal</a></li>
+                        <li class="breadcrumb-item active text-bold">Mostrar Certificación de Obrar y Servicio Addendum</li>
+                    @endif
                 </ol>
             </div>
         </div>
@@ -22,7 +27,11 @@
 
                 <x-card>
                     <x-slot name="header">
-                        <h3 class="card-title text-bold">Certificación de Obras y Servicio</h3>
+                        @if($nombreRuta =='contrato')
+                            <h3 class="card-title text-bold">Certificación de Obras y Servicio</h3>
+                        @else
+                            <h3 class="card-title text-bold">Certificación de Obras y Servicio Addendum</h3>
+                        @endif
                     </x-slot>
                     <x-slot name="body">
                         <ul class="nav nav-tabs" id="TabCertificacion" role="tablist">

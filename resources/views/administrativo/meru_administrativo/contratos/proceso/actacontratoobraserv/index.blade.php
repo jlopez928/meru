@@ -23,7 +23,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-                      <livewire:administrativo.meru-administrativo.contratos.procesos.acta-contrato-obra-serv-index />
+                      <livewire:administrativo.meru-administrativo.contratos.proceso.acta-contrato-obra-serv-index />
                 </div>
             </div>
         </div>

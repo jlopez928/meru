@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Administrativo\MeruAdministrativo\Contratos\Procesos;
+namespace App\Http\Livewire\Administrativo\MeruAdministrativo\Contratos\Proceso;
 
 use App\Models\Administrativo\Meru_Administrativo\Compra\EncNotaEntrega;
 use App\Traits\WithSorting;
@@ -33,7 +33,7 @@ class ActaContratoObraServIndex extends Component
 
     public function render()
     {
-        return view('livewire.administrativo.meru-administrativo.contratos.procesos.acta-contrato-obra-serv-index',[
+        return view('livewire.administrativo.meru-administrativo.contratos.proceso.acta-contrato-obra-serv-index',[
             'headers' => [
                 ['name' => 'ID ',             'align' => 'center', 'sort' => 'id'],
                 ['name' => 'Año',             'align' => 'center', 'sort' => 'fk_ano_pro'],

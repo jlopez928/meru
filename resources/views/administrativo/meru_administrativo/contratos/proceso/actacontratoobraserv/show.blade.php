@@ -41,13 +41,13 @@
 
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="acta" role="tabpanel" aria-labelledby="acta-tab">
-                                @include('administrativo/meru_administrativo/contratos/procesos/actacontratoobraserv/partials_show/_acta')
+                                @include('administrativo/meru_administrativo/contratos/proceso/actacontratoobraserv/partials_show/_acta')
                             </div>
                             <div class="tab-pane fade" id="detalle" role="tabpanel" aria-labelledby="detalle-tab">
-                                @include('administrativo/meru_administrativo/contratos/procesos/actacontratoobraserv/partials_show/_detalle')
+                                @include('administrativo/meru_administrativo/contratos/proceso/actacontratoobraserv/partials_show/_detalle')
                             </div>
                             <div class="tab-pane fade" id="comprobante" role="tabpanel" aria-labelledby="comprobante-tab">
-                                @include('administrativo/meru_administrativo/contratos/procesos/actacontratoobraserv/partials_show/_comprobante')
+                                @include('administrativo/meru_administrativo/contratos/proceso/actacontratoobraserv/partials_show/_comprobante')
                             </div>
                         </div>
 

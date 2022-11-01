@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Administrativo\Meru_Administrativo\Contratos\Procesos;
+namespace App\Http\Controllers\Administrativo\Meru_Administrativo\Contratos\Proceso;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -36,7 +36,7 @@ class ActaContratoObraServController extends Controller
     {
         $causar=1;
 
-        return view('administrativo.meru_administrativo.contratos.procesos.actacontratoobraserv.index',compact('causar'));
+        return view('administrativo.meru_administrativo.contratos.proceso.actacontratoobraserv.index',compact('causar'));
 
     }
 
@@ -49,7 +49,7 @@ class ActaContratoObraServController extends Controller
     {
 
         $encnotaentrega = new EncNotaEntrega();
-        return view('administrativo.meru_administrativo.contratos.procesos.actacontratoobraserv.create', compact('encnotaentrega'));
+        return view('administrativo.meru_administrativo.contratos.proceso.actacontratoobraserv.create', compact('encnotaentrega'));
     }
 
 
@@ -454,25 +454,25 @@ class ActaContratoObraServController extends Controller
 
         switch ($valor) {
             case "show":
-                $ruta='administrativo.meru_administrativo.contratos.procesos.actacontratoobraserv.show';
+                $ruta='administrativo.meru_administrativo.contratos.proceso.actacontratoobraserv.show';
                 break;
             case "iniciar":
-                $ruta='administrativo.meru_administrativo.contratos.procesos.actacontratoobraserv.iniciar';
+                $ruta='administrativo.meru_administrativo.contratos.proceso.actacontratoobraserv.iniciar';
                 break;
             case "terminar":
-                $ruta='administrativo.meru_administrativo.contratos.procesos.actacontratoobraserv.terminar';
+                $ruta='administrativo.meru_administrativo.contratos.proceso.actacontratoobraserv.terminar';
                 break;
             case "aceptar":
-                $ruta='administrativo.meru_administrativo.contratos.procesos.actacontratoobraserv.aceptar';
+                $ruta='administrativo.meru_administrativo.contratos.proceso.actacontratoobraserv.aceptar';
                 break;
             case "modificar":
-                $ruta='administrativo.meru_administrativo.contratos.procesos.actacontratoobraserv.edit';
+                $ruta='administrativo.meru_administrativo.contratos.proceso.actacontratoobraserv.edit';
                 break;
             case "anular":
-                $ruta='administrativo.meru_administrativo.contratos.procesos.actacontratoobraserv.anular';
+                $ruta='administrativo.meru_administrativo.contratos.proceso.actacontratoobraserv.anular';
                 break;
             case "reimprimir":
-                    $ruta='administrativo.meru_administrativo.contratos.procesos.actacontratoobraserv.edit';
+                    $ruta='administrativo.meru_administrativo.contratos.proceso.actacontratoobraserv.edit';
                     break;
         }
         return view($ruta,compact('encnotaentrega','beneficiarios','responsablehb','statusent','statcomprob','solservicio','des_con','valor'));
@@ -1217,7 +1217,7 @@ class ActaContratoObraServController extends Controller
                     break;
             };
 
-      
+
             $pdf = new Fpdf('p','mm','letter','true');
             $pdf->SetLeftMargin(2);
             $pdf->SetRightMargin(2);

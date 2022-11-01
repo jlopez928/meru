@@ -14,6 +14,10 @@ use App\Models\Administrativo\Meru_Administrativo\Proveedores\Proveedor;
 use App\Models\Administrativo\Meru_Administrativo\OpCorrsolservicio;
 use App\Http\Requests\Administrativo\Meru_Administrativo\Contratos\Proceso\OpSolContratoRequest;
 use App\Models\Administrativo\Meru_Administrativo\General\DatosEmpresa;
+use App\Models\Administrativo\Meru_Administrativo\CuentasPorPagar\Factura;
+use App\Models\Administrativo\Meru_Administrativo\Compra\EncNotaEntrega;
+use Illuminate\Support\Facades\Route;
+
 use App\Traits\MovimientoPresupuestario;
 use Illuminate\Http\Request;
 use App\Traits\Presupuesto;
@@ -34,19 +38,24 @@ class CertificacionContratoController extends Controller
     //              Funcion que llama al Index
     //-------------------------------------------------------------
     public function index()
-    {
-         return view('administrativo.meru_administrativo.contratos.proceso.certificacion_contrato.index');
+    {    $nombreRuta = Route::currentRouteName();
+
+        Route::currentRouteName()=='contratos.proceso.certificacioncontrato.index'?
+                                    $nombreRuta='contrato':$nombreRuta='addendum';
+        return view('administrativo.meru_administrativo.contratos.proceso.certificacion_contrato.index', [
+            'nombreRuta'     => $nombreRuta
+        ]);
     }
     //--------------------------------------------------------------
     //              Funcion que llama al Crear
     //-------------------------------------------------------------
-    public function crear($accion)
+    public function crear($nombreRuta)
     {
           $opsolservicio= new OpSolservicio();
           return view('administrativo.meru_administrativo.contratos.proceso.certificacion_contrato.create',
           [
-              'opsolservicio'     => $opsolservicio,
-              'accion'            => $accion
+              'opsolservicio'         => $opsolservicio,
+              'nombreRuta'            => $nombreRuta
           ]);
     }
     //-------------------------------------------------------------
@@ -63,6 +72,20 @@ class CertificacionContratoController extends Controller
 		}
 		return $process;
 	}
+    //-------------------------------------------------------------
+    //      Determina el proceso por el cual se está accediendo
+    //-------------------------------------------------------------
+	function ObtenerRuta($xnro_sol){
+		$ruta = '';
+		$tipo = substr_count($xnro_sol , '-' );
+		if($tipo == 1){
+			$ruta = "certificacioncontrato";
+		}
+		else{
+			$ruta = "certificacioncontratoaddendum";
+		}
+		return $ruta;
+	}
     //--------------------------------------------------------------
     //              Funcion que llama al Insertar
     //-------------------------------------------------------------
@@ -71,230 +94,138 @@ class CertificacionContratoController extends Controller
         try {
                 DB::connection('pgsql')->beginTransaction();
 			    $listadoDetalle = json_decode($request->listadoDetalle);
-                //-------------------------------------------------------------------
-                //  Obtener el último correlativo de la tabla tes_corrtransferencias
-                //         esto se debe actualizar por cada año fiscal
-                //--------------------------------------------------------------------
-                $num_reg = OpCorrsolservicio::query()->where('ano_pro', $request->ano_pro)->first()->num_contrato?? 1;
 
-                //----------------------------------------------------------------------------------------------
-                //           Insertar los datos principales de la certificacion en la tabla principal
-                // Toda Certificacion debe ser ingresada para el año fiscal por sistema no puedo ingresar
-                // solictudes de año anteriores
-                //----------------------------------------------------------------------------------------------
-                $opsolservicio=OpSolservicio::create([
-                    'ano_pro'             => $request->ano_pro,
-                    'nro_sol'             => $num_reg,
-                    'fec_emi'             => $request->fec_emi,
-                    'cod_ger'             => $request->cod_ger,
-                    'rif_prov'            => $request->rif_prov,
-                    'fec_serv'            => $request->fec_serv,
-                    'lugar_serv'          => $request->lugar_serv,
-                    'tip_pag'             => $request->tip_pag,
-                    'factura'             => $request->factura,
-                    'fec_pto'             => $request->fec_pto,
-                    'motivo'              => $request->motivo,
-                    'sta_sol'             => '0',
-                    'fec_sta'             =>  now()->format('Y-m-d'),
-                    'usuario'             =>  \Str::replace('@hidrobolivar.com.ve', '', auth()->user()->email),
-                    'fecha'               => $this->fechaGuardar,
-                    'por_anticipo'        => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->por_anticipo)))) ,
-                    'mto_ant'             => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->mto_ant)))) ,
-                    'monto_iva'           => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->monto_iva)))),
-                    'por_iva'             => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->por_iva)))),
-                    'monto_neto'          => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->monto_neto)))),
-                    'monto_total'         => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->monto_total)))),
-                    'base_exenta'         => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->base_exenta)))),
-                    'base_imponible'      => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->base_imponible)))),
-                    'grupo'               => $request->grupo,
-                    'xnro_sol'            => 'CO-'.$num_reg,
-                    'observaciones'       => $request->observaciones,
-                    'num_contrato'       => $request->num_contrato,
-                    'tip_contrat'         => $request->tip_contrat
-
-                ]);
-                //--------------------------------------------------------------
-                //              Insert en la Tabla Detalle
-                //-------------------------------------------------------------
-                OpDetsolservicio::create([
-                    'ano_pro'               => $request->ano_pro,
-                    'nro_sol'               => $num_reg,
-                    'cod_prod'              => $request->codigo,
-                    'por_iva'               => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->por_iva_con)))),
-                    'cantidad'              => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->cantidad)))),
-                    'cos_uni'               => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->cos_uni)))),
-                    'cos_tot'               => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->cos_tot)))),
-                    'grupo'                 => 'CO',
-                    'xnro_sol'              => 'CO-'.$num_reg,
-                    'base_excenta'          => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->cos_excenta)))),
-                    'op_solservicio_id'     => $opsolservicio->id
-                ]);
-                //--------------------------------------------------------------
-                //              Insert en la Tabla Detalle
-                //-------------------------------------------------------------
-                foreach($listadoDetalle as $detalle){
-					//-------------------------------------------------
-                    //-------------------------------------------------
-                    $OpDetgastossolserviciox=    OpDetgastossolservicio::create([
-                            'ano_pro'                    => $request->ano_pro,
-                            'xnro_sol'                   => 'CO-'.$num_reg,
-                            'nro_sol'                    => $num_reg,
-                            'gasto'                      => $detalle->gasto,
-                            'tip_cod'                    => $detalle->tip_cod,
-                            'cod_pryacc'                 => $detalle->cod_pryacc,
-                            'cod_obj'                    => $detalle->cod_obj,
-                            'gerencia'                   => $detalle->gerencia,
-                            'unidad'                     => $detalle->unidad,
-                            'cod_par'                    => $detalle->cod_par,
-                            'cod_gen'                    => $detalle->cod_gen,
-                            'cod_esp'                    => $detalle->cod_esp,
-                            'cod_sub'                    => $detalle->cod_sub,
-                            'descrip'                    => $detalle->descrip,
-                            'mto_tra'                    => floatval(\Str::replace(',', '.', \Str::replace('.','', ($detalle->mto_tra)))),
-                            'cod_cta'                    => $detalle->cod_cta,
-                            'partida_presupuestaria_id'  =>$this->ObtenerIdpartida($detalle->cod_par,$detalle->cod_gen,$detalle->cod_esp,$detalle->cod_sub) ,
-                            'grupo'                      => 'CO',
-                            'cod_com'                    => $this->varmarCodcom($detalle->tip_cod,$detalle->cod_pryacc,
-                                                                                $detalle->cod_obj,$detalle->gerencia,$detalle->unidad,
-                                                                                $detalle->cod_par,$detalle->cod_gen,$detalle->cod_esp,$detalle->cod_sub),
-                            'op_solservicio_id'          =>$opsolservicio->id
-                        ]);
-                }
-                //-------------------------------------------------------------------------------------
-                //            Incrementar o Crear el correlativo si es un nuevo año Fiscal
-                //-------------------------------------------------------------------------------------
-                if ($num_reg ==1) {
-                    OpCorrsolservicio::create([
-                        'ano_pro'               => $request->ano_pro,
-                        'num_contrato'           => $num_reg+1
-                        ]);
+                if (is_null($request->xnro_sol))
+                {
+                    //-------------------------------------------------------------------
+                    //  Obtener el último correlativo de la tabla OpCorrsolservicio
+                    //         esto se debe actualizar por cada año fiscal
+                    //             El proceso viene por contrato de obra
+                    //--------------------------------------------------------------------
+                    $num_reg = OpCorrsolservicio::query()->where('ano_pro', $request->ano_pro)->first()->num_contrato?? 1;
+                    $xnro_sol ='CO-'.$num_reg;
+                    $ult_sol=0;
+                    //-------------------------------------------------------------------------------------
+                    //            Incrementar o Crear el correlativo si es un nuevo año Fiscal
+                    //-------------------------------------------------------------------------------------
+                    if ($num_reg ==1) {
+                        OpCorrsolservicio::create([
+                            'ano_pro'               => $request->ano_pro,
+                            'num_contrato'          => $num_reg+1
+                            ]);
                     }else{
                         OpCorrsolservicio::where('ano_pro', $request->ano_pro)->increment('num_contrato');
 
                     }
-                $process = $this->ObtenerProceso($opsolservicio->xnro_sol);
-                alert()->success('¡Éxito!', $process.' Registrado Sastifactoriamente con el Numero: '.$opsolservicio->ano_pro."-".$opsolservicio->xnro_sol);
-                DB::connection('pgsql')->commit();
-                return redirect()->route('contratos.proceso.certificacioncontrato.index');
-         } catch(\Illuminate\Database\QueryException $e){
-            DB::connection('pgsql')->rollBack();
-            alert()->error('¡Transacción Fallida!', $e->getMessage());
-            return redirect()->back()->withInput();
-         }
-    }
-    public function ingresarAddedum(OpSolContratoRequest $request, OpSolservicio $certificacioncontrato)
-    {
-        try {
-                DB::connection('pgsql')->beginTransaction();
-			    $listadoDetalle = json_decode($request->listadoDetalle);
-                //-------------------------------------------------------------------
-                // Incrementa en uno el número correlativo correspondiente al Addendum,
-				// en la solicitud original
-                //--------------------------------------------------------------------
-                $num_reg = $certificacioncontrato->ult_sol+1;
-                //----------------------------------------------------------------------------------------------
-                //           Insertar los datos principales de la certificacion en la tabla principal
-                // Toda Certificacion debe ser ingresada para el año fiscal por sistema no puedo ingresar
-                // solictudes de año anteriores
-                //----------------------------------------------------------------------------------------------
-                $opsolservicio=OpSolservicio::create([
-                    'ano_pro'             => $request->ano_pro,
-                    'nro_sol'             => $num_reg,
-                    'fec_emi'             => $request->fec_emi,
-                    'cod_ger'             => $request->cod_ger,
-                    'rif_prov'            => $request->rif_prov,
-                    'fec_serv'            => $request->fec_serv,
-                    'lugar_serv'          => $request->lugar_serv,
-                    'tip_pag'             => $request->tip_pag,
-                    'factura'             => $request->factura,
-                    'fec_pto'             => $request->fec_pto,
-                    'motivo'              => $request->motivo,
-                    'sta_sol'             => '0',
-                    'fec_sta'             =>  now()->format('Y-m-d'),
-                    'usuario'             =>  \Str::replace('@hidrobolivar.com.ve', '', auth()->user()->email),
-                    'fecha'               => $this->fechaGuardar,
-                    'por_anticipo'        => $request->por_anticipo,
-                    'mto_ant'             => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->mto_ant)))) ,
-                    'monto_iva'           => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->monto_iva)))),
-                    'por_iva'             => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->por_iva)))),
-                    'monto_neto'          => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->monto_neto)))),
-                    'monto_total'         => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->monto_total)))),
-                    'base_exenta'         => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->base_exenta)))),
-                    'base_imponible'      => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->base_imponible)))),
-                    'grupo'               => $request->grupo,
-                    'xnro_sol'            => $request->xnro_sol.'-'.$num_reg,
-                    'observaciones'       => $request->observaciones,
-                    'tiempo_entrega '     => $request->tiempo_entrega,
-                    'certificados'        => $request->certificados,
-                    'lugar_entrega'       => $request->lugar_entrega,
-                    'forma_pago'          => $request->forma_pago,
-                    'flete'               => $request->flete,
-                    'num_contrato'        => $request->num_contrato,
-                    'provision'           => $request->provision,
-                    'tip_contrat'         => $request->tip_contrat,
-
-                ]);
-                //--------------------------------------------------------------
-                //              Insert en la Tabla Detalle
-                //-------------------------------------------------------------
-                OpDetsolservicio::create([
-                    'ano_pro'               => $request->ano_pro,
-                    'nro_sol'               => $num_reg,
-                    'cod_prod'              => $request->codigo,
-                    'por_iva'               => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->por_iva_con)))),
-                    'cantidad'              => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->cantidad)))),
-                    'cos_uni'               => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->cos_uni)))),
-                    'cos_tot'               => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->cos_tot)))),
-                    'grupo'                 => 'CO',
-                    'xnro_sol'              =>  $request->xnro_sol.'-'.$num_reg,
-                    'base_excenta'          => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->cos_excenta)))),
-                    'op_solservicio_id'     => $opsolservicio->id
-                ]);
-                //--------------------------------------------------------------
-                //              Insert en la Tabla Detalle
-                //-------------------------------------------------------------
-                foreach($listadoDetalle as $detalle){
-					//-------------------------------------------------
-                    //-------------------------------------------------
-                    $OpDetgastossolserviciox=    OpDetgastossolservicio::create([
-                            'ano_pro'                    => $request->ano_pro,
-                            'xnro_sol'                   =>  $request->xnro_sol.'-'.$num_reg,
-                            'nro_sol'                    => $num_reg,
-                            'gasto'                      => $detalle->gasto,
-                            'tip_cod'                    => $detalle->tip_cod,
-                            'cod_pryacc'                 => $detalle->cod_pryacc,
-                            'cod_obj'                    => $detalle->cod_obj,
-                            'gerencia'                   => $detalle->gerencia,
-                            'unidad'                     => $detalle->unidad,
-                            'cod_par'                    => $detalle->cod_par,
-                            'cod_gen'                    => $detalle->cod_gen,
-                            'cod_esp'                    => $detalle->cod_esp,
-                            'cod_sub'                    => $detalle->cod_sub,
-                            'descrip'                    => $detalle->descrip,
-                            'mto_tra'                    => floatval(\Str::replace(',', '.', \Str::replace('.','', ($detalle->mto_tra)))),
-                            'cod_cta'                    => $detalle->cod_cta,
-                            'partida_presupuestaria_id'  =>$this->ObtenerIdpartida($detalle->cod_par,$detalle->cod_gen,$detalle->cod_esp,$detalle->cod_sub) ,
-                            'grupo'                      => 'CO',
-                            'cod_com'                    => $this->varmarCodcom($detalle->tip_cod,$detalle->cod_pryacc,
-                                                                                $detalle->cod_obj,$detalle->gerencia,$detalle->unidad,
-                                                                                $detalle->cod_par,$detalle->cod_gen,$detalle->cod_esp,$detalle->cod_sub),
-                            'op_solservicio_id'          =>$opsolservicio->id
-                        ]);
+                }else{
+                        //-------------------------------------------------------------------
+                        // Incrementa en uno el número correlativo correspondiente al Addendum,
+                        // en la solicitud original
+                        //--------------------------------------------------------------------
+                        OpSolservicio::query()->where('ano_pro', $request->ano_pro)
+                                                                       ->where('xnro_sol', strtoupper($request->xnro_sol))
+                                                                       ->increment('ult_sol');
+                        $num_reg =OpSolservicio::query()->where('ano_pro', $request->ano_pro)
+                                                        ->where('xnro_sol', strtoupper($request->xnro_sol))->first()->ult_sol;
+                        $xnro_sol =strtoupper($request->xnro_sol).'-'.$num_reg;
+                        $ult_sol=-1;
                 }
-                //-------------------------------------------------------------------------------------
-                //            Incrementar o Crear el correlativo si es un nuevo año Fiscal
-                //-------------------------------------------------------------------------------------
-                $certificacioncontrato->update(['ult_sol' => $certificacioncontrato->ult_sol+1]);
+                    //----------------------------------------------------------------------------------------------
+                    //           Insertar los datos principales de la certificacion en la tabla principal
+                    // Toda Certificacion debe ser ingresada para el año fiscal por sistema no puedo ingresar
+                    // solictudes de año anteriores
+                    //----------------------------------------------------------------------------------------------
+                    $opsolservicio=OpSolservicio::create([
+                        'ano_pro'             => $request->ano_pro,
+                        'nro_sol'             => $num_reg,
+                        'fec_emi'             => $request->fec_emi,
+                        'cod_ger'             => $request->cod_ger,
+                        'rif_prov'            => $request->rif_prov,
+                        'fec_serv'            => $request->fec_serv,
+                        'lugar_serv'          => $request->lugar_serv,
+                        'tip_pag'             => $request->tip_pag,
+                        'factura'             => $request->factura,
+                        'fec_pto'             => $request->fec_pto,
+                        'motivo'              => $request->motivo,
+                        'sta_sol'             => '0',
+                        'fec_sta'             =>  now()->format('Y-m-d'),
+                        'usuario'             =>  \Str::replace('@hidrobolivar.com.ve', '', auth()->user()->email),
+                        'fecha'               => $this->fechaGuardar,
+                        'por_anticipo'        => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->por_anticipo)))) ,
+                        'mto_ant'             => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->mto_ant)))) ,
+                        'monto_iva'           => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->monto_iva)))),
+                        'por_iva'             => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->por_iva)))),
+                        'monto_neto'          => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->monto_neto)))),
+                        'monto_total'         => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->monto_total)))),
+                        'base_exenta'         => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->base_exenta)))),
+                        'base_imponible'      => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->base_imponible)))),
+                        'grupo'               => $request->grupo,
+                        'xnro_sol'            =>  $xnro_sol,
+                        'observaciones'       => $request->observaciones,
+                        'num_contrato'        => $request->num_contrato,
+                        'ult_sol'             => $ult_sol,
+                        'tip_contrat'         => $request->tip_contrat
+
+                    ]);
+                    //--------------------------------------------------------------
+                    //              Insert en la Tabla Detalle
+                    //-------------------------------------------------------------
+                    OpDetsolservicio::create([
+                        'ano_pro'               => $request->ano_pro,
+                        'nro_sol'               => $num_reg,
+                        'cod_prod'              => $request->codigo,
+                        'por_iva'               => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->por_iva_con)))),
+                        'cantidad'              => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->cantidad)))),
+                        'cos_uni'               => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->cos_uni)))),
+                        'cos_tot'               => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->cos_tot)))),
+                        'grupo'                 => 'CO',
+                        'xnro_sol'              => $xnro_sol,
+                        'base_excenta'          => floatval(\Str::replace(',', '.', \Str::replace('.','', ($request->cos_excenta)))),
+                        'op_solservicio_id'     => $opsolservicio->id
+                    ]);
+                    //--------------------------------------------------------------
+                    //              Insert en la Tabla Detalle
+                    //-------------------------------------------------------------
+                    foreach($listadoDetalle as $detalle){
+                        //-------------------------------------------------
+                        //-------------------------------------------------
+                        $OpDetgastossolserviciox=    OpDetgastossolservicio::create([
+                                'ano_pro'                    => $request->ano_pro,
+                                'xnro_sol'                   => $xnro_sol,
+                                'nro_sol'                    => $num_reg,
+                                'gasto'                      => $detalle->gasto,
+                                'tip_cod'                    => $detalle->tip_cod,
+                                'cod_pryacc'                 => $detalle->cod_pryacc,
+                                'cod_obj'                    => $detalle->cod_obj,
+                                'gerencia'                   => $detalle->gerencia,
+                                'unidad'                     => $detalle->unidad,
+                                'cod_par'                    => $detalle->cod_par,
+                                'cod_gen'                    => $detalle->cod_gen,
+                                'cod_esp'                    => $detalle->cod_esp,
+                                'cod_sub'                    => $detalle->cod_sub,
+                                'descrip'                    => $detalle->descrip,
+                                'mto_tra'                    => floatval(\Str::replace(',', '.', \Str::replace('.','', ($detalle->mto_tra)))),
+                                'cod_cta'                    => $detalle->cod_cta,
+                                'partida_presupuestaria_id'  =>$this->ObtenerIdpartida($detalle->cod_par,$detalle->cod_gen,$detalle->cod_esp,$detalle->cod_sub) ,
+                                'grupo'                      => 'CO',
+                                'cod_com'                    => $this->varmarCodcom($detalle->tip_cod,$detalle->cod_pryacc,
+                                                                                    $detalle->cod_obj,$detalle->gerencia,$detalle->unidad,
+                                                                                    $detalle->cod_par,$detalle->cod_gen,$detalle->cod_esp,$detalle->cod_sub),
+                                'op_solservicio_id'          =>$opsolservicio->id
+                            ]);
+                    }
+
                 $process = $this->ObtenerProceso($opsolservicio->xnro_sol);
                 alert()->success('¡Éxito!', $process.' Registrado Sastifactoriamente con el Numero: '.$opsolservicio->ano_pro."-".$opsolservicio->xnro_sol);
                 DB::connection('pgsql')->commit();
-                return redirect()->route('contratos.proceso.certificacioncontrato.index');
+                return redirect()->route('contratos.proceso.'.$this->ObtenerRuta($opsolservicio->xnro_sol).'.index');
          } catch(\Illuminate\Database\QueryException $e){
             DB::connection('pgsql')->rollBack();
             alert()->error('¡Transacción Fallida!', $e->getMessage());
             return redirect()->back()->withInput();
          }
     }
+
      //--------------------------------------------------------------
     //        Funcion que llama al Show y dependienco la accion
     //                     llama a las diferenes vista
@@ -337,6 +268,7 @@ class CertificacionContratoController extends Controller
                 $ruta='administrativo.meru_administrativo.contratos.proceso.certificacion_contrato.cierre';
                 break;
         }
+        $this->ObtenerRuta($certificacioncontrato->xnro_sol)=='certificacioncontratoaddendum'? $nombreRuta='addendum':$nombreRuta='contrato';
         return view($ruta,
         [
             'opsolservicio'     => $certificacioncontrato,
@@ -344,6 +276,7 @@ class CertificacionContratoController extends Controller
             'beneficiario'      => $beneficiario,
             'gerencia'          => $gerencia,
             'valor'             => $valor,
+            'nombreRuta'        => $nombreRuta,
         ]);
 
     }
@@ -351,8 +284,8 @@ class CertificacionContratoController extends Controller
     //              Funcion que llama al Edit
     //-------------------------------------------------------------
     public function edit(OpSolservicio $certificacioncontrato)
-    {
-        return view('administrativo.meru_administrativo.contratos.proceso.certificacion_contrato.edit', compact('certificacioncontrato'));
+    {   $this->ObtenerRuta($certificacioncontrato->xnro_sol)=='certificacioncontratoaddendum'? $nombreRuta='addendum':$nombreRuta='contrato';
+        return view('administrativo.meru_administrativo.contratos.proceso.certificacion_contrato.edit', compact('certificacioncontrato','nombreRuta'));
     }
     //--------------------------------------------------------------
     //              Funcion que llama a Actualizar Datos
@@ -423,7 +356,7 @@ class CertificacionContratoController extends Controller
                        if($result_cuenta_contable->cta_provision ==null  ||
                           $result_cuenta_contable->cod_cta!='4.03.18.01.00'){
                             alert()->error('Error!', 'La la Estructura de Gasto, No tiene asociada Cta. de Provisión .Favor Verifique');
-                            return redirect()->route('contratos.proceso.certificacioncontrato.index');
+                           return redirect()->route('contratos.proceso.'.$this->ObtenerRuta($certificacioncontrato->xnro_sol).'.index');
                         }
                     }
 					//-------------------------------------------------
@@ -455,7 +388,7 @@ class CertificacionContratoController extends Controller
             }
             alert()->success('¡Éxito!', $process.' '.$certificacioncontrato->ano_pro."-".$certificacioncontrato->xnro_sol.' Modificada Sastifactoriamente');
             DB::connection('pgsql')->commit();
-            return redirect()->route('contratos.proceso.certificacioncontrato.index');
+           return redirect()->route('contratos.proceso.'.$this->ObtenerRuta($certificacioncontrato->xnro_sol).'.index');
       } catch(\Illuminate\Database\QueryException $e){
          DB::connection('pgsql')->rollBack();
          alert()->error('¡Transacción Fallida!', $e->getMessage());
@@ -475,7 +408,7 @@ class CertificacionContratoController extends Controller
                     //      Valida que la Certificación este solo ingresada para poder anular
                     //----------------------------------------------------------------------------------------------
                     alert()->error('Error!',  $process.' '.$certificacioncontrato->ano_pro."-". $certificacioncontrato->xnro_sol. '. Con Estado Invalidos:'. $this->estado($certificacioncontrato->sta_sol->value));
-                    return redirect()->route('contratos.proceso.certificacioncontrato.index');
+                   return redirect()->route('contratos.proceso.'.$this->ObtenerRuta($certificacioncontrato->xnro_sol).'.index');
             }else{
                 //----------------------------------------------------------------------------------------------
                 //        Actualiza los datos principales de anulación de la certificacion en la tabla principal
@@ -489,7 +422,7 @@ class CertificacionContratoController extends Controller
 
                 alert()->success('¡Éxito!', $process.' '.$certificacioncontrato->ano_pro."-". $certificacioncontrato->xnro_sol. '  Eliminada Sastifactoriamente');
                 DB::connection('pgsql')->commit();
-                return redirect()->route('contratos.proceso.certificacioncontrato.index');
+               return redirect()->route('contratos.proceso.'.$this->ObtenerRuta($certificacioncontrato->xnro_sol).'.index');
             }
 
      } catch(\Illuminate\Database\QueryException $e){
@@ -510,7 +443,7 @@ class CertificacionContratoController extends Controller
                 //      Valida que la Certificación este solo ingresada  o Reversada por el Gerente para poder Aprobar
                 //----------------------------------------------------------------------------------------------
                 alert()->error('Error!', $process.' '.$certificacioncontrato->ano_pro."-". $certificacioncontrato->xnro_sol. '. Con Estado Invalidos: '.$this->estado($certificacioncontrato->sta_sol->value));
-                return redirect()->route('contratos.proceso.certificacioncontrato.index');
+               return redirect()->route('contratos.proceso.'.$this->ObtenerRuta($certificacioncontrato->xnro_sol).'.index');
              }else{
                 DB::connection('pgsql')->beginTransaction();
                 //----------------------------------------------------------------------------------------------
@@ -523,7 +456,7 @@ class CertificacionContratoController extends Controller
                 ]);
                 alert()->success('¡Éxito!',$process .' '.$certificacioncontrato->ano_pro."-". $certificacioncontrato->xnro_sol. '  Aprobada Sastifactoriamente');
                 DB::connection('pgsql')->commit();
-                return redirect()->route('contratos.proceso.certificacioncontrato.index');
+               return redirect()->route('contratos.proceso.'.$this->ObtenerRuta($certificacioncontrato->xnro_sol).'.index');
         }
      } catch(\Illuminate\Database\QueryException $e){
         DB::connection('pgsql')->rollBack();
@@ -543,7 +476,7 @@ class CertificacionContratoController extends Controller
                 //      Valida que la Certificación este solo aprobada para poder reversar
                 //----------------------------------------------------------------------------------------------
                 alert()->error('Error!', $process .' '.$certificacioncontrato->ano_pro."-". $certificacioncontrato->xnro_sol. '. Con Estado Invalidos: '.$this->estado($certificacioncontrato->sta_sol->value));
-                return redirect()->route('contratos.proceso.certificacioncontrato.index');
+               return redirect()->route('contratos.proceso.'.$this->ObtenerRuta($certificacioncontrato->xnro_sol).'.index');
              }else{
                 DB::connection('pgsql')->beginTransaction();
                 //----------------------------------------------------------------------------------------------
@@ -556,7 +489,7 @@ class CertificacionContratoController extends Controller
                 ]);
                 alert()->success('¡Éxito!', $process .' '.$certificacioncontrato->ano_pro."-". $certificacioncontrato->xnro_sol. 'Reversada Sastifactoriamente');
                 DB::connection('pgsql')->commit();
-                return redirect()->route('contratos.proceso.certificacioncontrato.index');
+               return redirect()->route('contratos.proceso.'.$this->ObtenerRuta($certificacioncontrato->xnro_sol).'.index');
            }
      } catch(\Illuminate\Database\QueryException $e){
         DB::connection('pgsql')->rollBack();
@@ -576,7 +509,7 @@ class CertificacionContratoController extends Controller
                 //      Valida que la Certificación este solo Aprobada para poder comprometer
                 //----------------------------------------------------------------------------------------------
                 alert()->error('Error!', $process .' '.$certificacioncontrato->ano_pro."-". $certificacioncontrato->xnro_sol. '. Con Estado Invalidos: '.$this->estado($certificacioncontrato->sta_sol->value));
-                return redirect()->route('contratos.proceso.certificacioncontrato.index');
+               return redirect()->route('contratos.proceso.'.$this->ObtenerRuta($certificacioncontrato->xnro_sol).'.index');
             }else{
                         DB::connection('pgsql')->beginTransaction();
                         //-------------------------------------------------------------------------------------------------
@@ -634,7 +567,7 @@ class CertificacionContratoController extends Controller
                         $reporte .= "&amp;url={$this->urlapp}";*/
                         alert()->success('¡Éxito!', $msj );
                         DB::connection('pgsql')->commit();
-                        return redirect()->route('contratos.proceso.certificacioncontrato.index');
+                       return redirect()->route('contratos.proceso.'.$this->ObtenerRuta($certificacioncontrato->xnro_sol).'.index');
                 }
         }catch(\Illuminate\Database\QueryException $e){
             DB::connection('pgsql')->rollBack();
@@ -654,9 +587,32 @@ class CertificacionContratoController extends Controller
                 //      Valida que la Certificación este solo Aprobada para poder comprometer
                 //----------------------------------------------------------------------------------------------
                 alert()->error('Error!', $process.''.$certificacioncontrato->ano_pro."-". $certificacioncontrato->xnro_sol. '. Con Estado Invalidos: '.$this->estado($certificacioncontrato->sta_sol->value));
-                return redirect()->route('contratos.proceso.certificacioncontrato.index');
+               return redirect()->route('contratos.proceso.'.$this->ObtenerRuta($certificacioncontrato->xnro_sol).'.index');
             }else{
-
+                //------------------------------------------------------------------------------
+                //Se debe Validar que no Exista Facturas asociadas a la Contrato
+                //En este caso se debe eliminar primero, para luego reversar la Contrato
+                //-------------------------------------------------------------------------------
+                $factura=Factura::where('ano_pro','=',$certificacioncontrato->ano_pro)
+                ->where('nro_doc','=',$certificacioncontrato->xnro_sol)
+                ->where('tipo_doc','=','5')
+                ->where('rif_prov','=',$certificacioncontrato->rif_prov)->first();
+               if(!is_null($factura)){
+                    alert()->error('Warning!','Existen Facturas Asociadas al Contrato.Favor Reverse las Facturas.');
+                    return redirect()->back()->withInput();
+               }
+                //------------------------------------------------------------------------------
+                //Se debe Validar que no Exista Actas asociadas a la Contrato
+                //En este caso se debe eliminar primero, para luego reversar la Contrato
+                //-------------------------------------------------------------------------------
+                $com_encnotaentrega=EncNotaEntrega::where('ano_ord_com','=',$certificacioncontrato->ano_pro)
+                                                    ->where('xnro_ord','=',$certificacioncontrato->xnro_sol)
+                                                    ->whereNotIn('sta_ent',['5','8'])
+                                                    ->where('fk_rif_con','=',$certificacioncontrato->rif_prov)->first();
+                if(!is_null($com_encnotaentrega)){
+                    alert()->error('Warning!','Existen Actas Asociadas al Contrato.Debe Reversarlas o Anularlas para poder Reversar el Compromiso del Contrato.');
+                    return redirect()->back()->withInput();
+                }
                 DB::connection('pgsql')->beginTransaction();
                 //-------------------------------------------------------------------------------------------------
                 //  Actualizar el status de la certificacion
@@ -708,7 +664,7 @@ class CertificacionContratoController extends Controller
                 }
                 alert()->success('¡Éxito!',  $process .' '.$certificacioncontrato->ano_pro."-". $certificacioncontrato->xnro_sol. 'Reversada Sastifactoriamente');
                 DB::connection('pgsql')->commit();
-                return redirect()->route('contratos.proceso.certificacioncontrato.index');
+               return redirect()->route('contratos.proceso.'.$this->ObtenerRuta($certificacioncontrato->xnro_sol).'.index');
             } //if($certificacioncontrato->sta_sol->value!='4')
         } catch(\Illuminate\Database\QueryException $e){
             DB::connection('pgsql')->rollBack();
@@ -728,7 +684,7 @@ public function  cierre_compromiso_certificacion(OpSolservicio $certificacioncon
             //      Valida que la Certificación no este comprometida
             //----------------------------------------------------------------------------------------------
             alert()->error('Error!', $process.''.$certificacioncontrato->ano_pro."-". $certificacioncontrato->xnro_sol. '. Con Estado Invalidos: '.$this->estado($certificacioncontrato->sta_sol->value));
-            return redirect()->route('contratos.proceso.certificacioncontrato.index');
+           return redirect()->route('contratos.proceso.'.$this->ObtenerRuta($certificacioncontrato->xnro_sol).'.index');
         }else{
 
             DB::connection('pgsql')->beginTransaction();
@@ -771,7 +727,7 @@ public function  cierre_compromiso_certificacion(OpSolservicio $certificacioncon
                         alert()->error('¡Transacción Fallida!','Ocurrio error al Generar centro de Costo');
 
                         DB::connection('pgsql')->rollBack();
-                        return redirect()->route('contratos.proceso.certificacioncontrato.index');
+                       return redirect()->route('contratos.proceso.'.$this->ObtenerRuta($certificacioncontrato->xnro_sol).'.index');
                     }
                 }
                 $causado = $this->VerificarCausado($certificacioncontrato->ano_pro,$certificacioncontrato->xnro_sol,$cod_com,$cod_com_viejo,$detalle->cod_par,$detalle->cod_gen,$detalle->cod_esp,$detalle->cod_sub);
@@ -793,7 +749,7 @@ public function  cierre_compromiso_certificacion(OpSolservicio $certificacioncon
             }
             alert()->success('¡Éxito!',  $process .' '.$certificacioncontrato->ano_pro."-". $certificacioncontrato->xnro_sol. 'Cerrada Sastifactoriamente');
             DB::connection('pgsql')->commit();
-            return redirect()->route('contratos.proceso.certificacioncontrato.index');
+           return redirect()->route('contratos.proceso.'.$this->ObtenerRuta($certificacioncontrato->xnro_sol).'.index');
         }
     } catch(\Illuminate\Database\QueryException $e){
         DB::connection('pgsql')->rollBack();
@@ -884,7 +840,7 @@ public function print_certificacionobras(Request $request)
         //-------------------------------------------------------------------------------------------
         //                       Encabezado de La Certificacion de Pagos Directos
         //-------------------------------------------------------------------------------------------
-       //
+
         $datos_sol = OpSolservicio::with('gerencias:cod_ger,des_ger','beneficiario:rif_ben,nom_ben,direccion,telf')
                                    ->where('ano_pro',$request->ano_pro)
                                    ->where('xnro_sol',$request->xnro_sol)
@@ -899,7 +855,7 @@ public function print_certificacionobras(Request $request)
         //-------------------------------------------------------------------------------------------
         //                       Detalle de La Certificacion de Pagos Directos
         //-------------------------------------------------------------------------------------------
-        $detalle_sol =  DB::Select("SELECT DISTINCT des_con,cantidad,cos_uni,cos_tot,sal_cau,
+       $detalle_sol =  DB::Select("SELECT DISTINCT des_con,cantidad,cos_uni,cos_tot,sal_cau,
                     to_char(op_detgastossolservicio.cod_par,'FM00') as cod_partida,
                         to_char(op_detgastossolservicio.cod_gen,'FM00') as cod_generica,
                         to_char(op_detgastossolservicio.cod_esp,'FM00') as cod_especifica,
@@ -908,7 +864,7 @@ public function print_certificacionobras(Request $request)
                         INNER JOIN op_detsolservicio ON(op_solservicio.ano_pro=op_detsolservicio.ano_pro and
                                                         op_solservicio.xnro_sol=op_detsolservicio.xnro_sol and
                                                         op_solservicio.nro_sol=op_detsolservicio.nro_sol)
-                        INNER JOIN op_conceptos ON(op_conceptos.cod_con=op_detsolservicio.cod_prod)
+                        INNER JOIN op_conceptos_contrato ON(op_conceptos_contrato.cod_con=op_detsolservicio.cod_prod)
                         INNER JOIN op_detgastossolservicio ON(op_solservicio.ano_pro=op_detgastossolservicio.ano_pro and
                                                                 op_solservicio.xnro_sol=op_detgastossolservicio.xnro_sol and
                                                                 op_solservicio.nro_sol=op_detgastossolservicio.nro_sol)
@@ -919,7 +875,6 @@ public function print_certificacionobras(Request $request)
                         (SELECT to_char(cod_pari, '99') || to_char(cod_geni, '99') || to_char(cod_espi, '99') || to_char(cod_subi, '99')
                         FROM registrocontrol WHERE ano_pro = ". $request->ano_pro.")
                         ");
-
 
         $cont_det=count($detalle_sol);
 
@@ -941,8 +896,8 @@ public function print_certificacionobras(Request $request)
                         ->where('ano_pro',$request->ano_pro)
                         ->where('xnro_sol',$request->xnro_sol)
                         ->select('usuarios.nombre')
-                        ->get();
-
+                        ->first();
+        if(is_null($detalle_aprobar)){$nombre_aprobar='';}else{$nombre_aprobar=$detalle_aprobar->nombre;}
         //-------------------------------------------------------------
         // Nombre de la persona que Compromete la soilcitud
         //-------------------------------------------------------------
@@ -951,9 +906,9 @@ public function print_certificacionobras(Request $request)
                         ->where('ano_pro',$request->ano_pro)
                         ->where('xnro_sol',$request->xnro_sol)
                         ->select('usuarios.nombre')
-                        ->get();
-
-        //--------------------------------------------------------------------------------------------
+                        ->first();
+        if(is_null($detalle_compromete)){$nombre_comprometer='';}else{$nombre_comprometer=$detalle_compromete->nombre;}
+       //--------------------------------------------------------------------------------------------
         //                                Datos de la Empresa
         //--------------------------------------------------------------------------------------------
         $datos_empresa = DatosEmpresa::query()
@@ -962,7 +917,7 @@ public function print_certificacionobras(Request $request)
 
         if ($cont_enc > 0 &&  $cont_det >0)
         {
-            // dd($c);
+
             $pdf = new Fpdf('p','mm','letter','true');
             $pdf->SetLeftMargin(5);
             $pdf->SetRightMargin(5);
@@ -977,10 +932,7 @@ public function print_certificacionobras(Request $request)
             $pdf->Image('img/logo_inferior_izquierdo.png', 5,190,15,15,'PNG');
             $pdf->Image('img/logo_inferior_centro.png',130,186,30,8,'PNG');
             $pdf->Image('img/logo_inferior_derecho.png', 260,190,10,15,'PNG');
-
-
-                $titulo='CONTRATO DE OBRAS / SERVICIOS';
-
+            $this->ObtenerRuta($request->xnro_sol)=='certificacioncontratoaddendum'?$titulo='ADDENDUM DE OBRAS / SERVICIOS':$titulo='CONTRATO DE OBRAS / SERVICIOS';
 
             $pdf->SetFont('Arial','B',15);
             $pdf->SetY(15);
@@ -1267,9 +1219,10 @@ public function print_certificacionobras(Request $request)
                 $pdf->Cell(90,7,'Nombre: '.utf8_decode($detalle_crear[0]->nombre),1,0,'L',1);
                 $pdf->SetX(2);
                 $pdf->SetX(92);
-                $pdf->Cell(90,7,'Nombre: '.utf8_decode($detalle_aprobar[0]->nombre),1,0,'L',1);
+
+                $pdf->Cell(90,7,'Nombre: '.utf8_decode($nombre_aprobar),1,0,'L',1);
                 $pdf->SetX(182);
-                $pdf->Cell(96,7,'Nombre: '.utf8_decode($detalle_compromete[0]->nombre),1,0,'L',1);
+                $pdf->Cell(96,7,'Nombre: '.utf8_decode($nombre_comprometer),1,0,'L',1);
                 //******************************************************************/
                 /*******************Direccion Hidrobolivar**************************/
                 //******************************************************************/
@@ -1302,9 +1255,38 @@ public function print_certificacionobras(Request $request)
     //-----------------------------------------------------------------------
     //    Funcion que lista todas las certificaciones Ingresadas en Sistema
     //-----------------------------------------------------------------------
-    public function print_certificacion_contrato()
+    public function print_certificacion_contrato($accion)
     {
 
+
+       if ($accion=='addendum'){
+                $query = OpSolservicio::query()
+                ->select(
+                    DB::raw("ano_pro"),
+                    DB::raw("xnro_sol"),
+                    DB::raw("des_ger"),
+                    DB::raw("nom_prov"),
+                    DB::raw("monto_total"),
+                    DB::raw( "fec_emi"))
+                    ->where('grupo','=','CO')
+                    ->where('ult_sol','=','-1')
+                    ->join('gerencias AS g', 'g.cod_ger', '=', 'op_solservicio.cod_ger')
+                    ->join('proveedores AS p', 'p.rif_prov', '=', 'op_solservicio.rif_prov')
+                    ->orderby('ano_pro','desc')->orderby('xnro_sol','desc')->get();
+       }else{
+                $query =OpSolservicio::query()
+                                    ->select(
+                                        DB::raw("ano_pro"),
+                                        DB::raw("xnro_sol"),
+                                        DB::raw("des_ger"),
+                                        DB::raw("nom_prov"),
+                                        DB::raw("monto_total"),
+                                        DB::raw( "fec_emi"))
+                                        ->where('grupo','=','CO')
+                                        ->join('gerencias AS g', 'g.cod_ger', '=', 'op_solservicio.cod_ger')
+                                        ->join('proveedores AS p', 'p.rif_prov', '=', 'op_solservicio.rif_prov')
+                                        ->orderby('ano_pro','desc')->orderby('xnro_sol','desc')->get();
+        }
         $data['tipo_hoja']                  = 'C'; // C carta
         $data['orientacion']                = 'V'; // V Vertical
         $data['cod_normalizacion']          = '';
@@ -1324,19 +1306,7 @@ public function print_certificacionobras(Request $request)
         $data['revision']			        = '';
         $data['usuario']			        = auth()->user()->name;
         $data['cod_reporte']			    = '';
-        $data['registros']                  = OpSolservicio::query()
-                                                        ->select(
-                                                            DB::raw("ano_pro"),
-                                                            DB::raw("xnro_sol"),
-                                                            DB::raw("des_ger"),
-                                                            DB::raw("nom_prov"),
-                                                            DB::raw("monto_total"),
-                                                            DB::raw( "fec_emi"))
-                                                            ->where('grupo','=','CO')
-                                                            ->join('gerencias AS g', 'g.cod_ger', '=', 'op_solservicio.cod_ger')
-                                                            ->join('proveedores AS p', 'p.rif_prov', '=', 'op_solservicio.rif_prov')
-                                                            ->orderby('ano_pro','desc')->orderby('xnro_sol','desc')->get();
-
+        $data['registros']                  = $query;
         $pdf = new Fpdf;
         $pdf->setTitle(utf8_decode('Listado de Certificación'));
         $this->pintar_listado_pdf($pdf,$data);

@@ -168,17 +168,6 @@
                     @error('factura') {{ $message }} @enderror
                 </div>
             </x-field>
-            <x-field class="text-center col-2 ">
-                <x-label for="mod">Tipo de Addendum</x-label>
-                <x-select  id="mod" name="mod" wire:model.defer="mod" class="form-control-sm {{ $errors->has('mod') ? 'is-invalid' : '' }}">
-                    <option value="">Seleccione</option>
-                    <option value="0">Aumenta</option>
-                    <option value="S">Disminuye</option tion>
-                </x-select>
-                <div class="invalid-feedback">
-                    @error('mod') {{ $message }} @enderror
-                </div>
-            </x-field>
         </div>
 
 

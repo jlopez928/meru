@@ -23,8 +23,8 @@ class Beneficiario extends Model
 
 
 
-    protected $casts = [
-        'sta_reg' => Estado::class
-    ];
+    // protected $casts = [
+    //     'sta_reg' => Estado::class
+    // ];
 
 }

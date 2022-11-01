@@ -18,7 +18,7 @@ class OpSolservicio extends BaseModel
     protected $table = 'op_solservicio';
 
     protected $dates = [
-        'fec_emi', 'fec_pto', 'fec_serv'
+        'fec_emi', 'fec_pto', 'fec_serv','fecha'
     ];
 
     public $timestamps = false;
@@ -115,7 +115,8 @@ class OpSolservicio extends BaseModel
 	public function opdetsolservicio()
 	{
 		return $this->hasMany(OpDetsolservicio::class, 'ano_pro', 'ano_pro')
-                                           ->where('xnro_sol', $this->xnro_sol);
+                                              ->where('xnro_sol', $this->xnro_sol)
+                                              ->where('nro_sol', $this->nro_sol);
 	}
 
 	public function opdetgastossolservicio()
@@ -140,7 +141,7 @@ class OpSolservicio extends BaseModel
 		return number_format($this->{$attr}, 2, ',', '.');
 	}
 
-    
+
     public static function getEstSol($est_sol)
 	{
 		$desc = '';

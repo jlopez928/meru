@@ -7,8 +7,13 @@
         <div class="row mb-2">
             <div class="col-sm-12">
                 <ol class="breadcrumb float-sm-right">
+                  @if($nombreRuta =='contrato')
                     <li class="breadcrumb-item text-bold"><a href="{{ route('contratos.proceso.certificacioncontrato.index') }}">Página Principal</a></li>
-                    <li class="breadcrumb-item active text-bold">Comprometer Certificación de Obras y Servicios</li>
+                    <li class="breadcrumb-item active text-bold">Comprometer Certificación de Obrar y Servicio</li>
+                  @else
+                     <li class="breadcrumb-item text-bold"><a href="{{ route('contratos.proceso.certificacioncontratoaddendum.index') }}">Página Principal</a></li>
+                     <li class="breadcrumb-item active text-bold">Comprometer Certificación de Obrar y Servicio Addendum</li>
+                  @endif
                 </ol>
             </div>
         </div>

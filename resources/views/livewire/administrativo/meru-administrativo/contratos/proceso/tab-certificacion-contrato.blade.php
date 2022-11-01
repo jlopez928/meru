@@ -2,7 +2,11 @@
     <x-form method="{{ $accion =='create' ?  'post' : 'put'   }}" action="{{ $accion == 'create' ? route('contratos.proceso.certificacioncontrato.store') : route('contratos.proceso.certificacioncontrato.update', $certificacionservicio->id) }}">
      <x-card>
           <x-slot name="header">
+            @if($nombreRuta =='contrato')
               <h3 class="card-title text-bold">Certificación de Contratos</h3>
+            @else
+                <h3 class="card-title text-bold">Certificación de Contratos Addendum</h3>
+            @endif
           </x-slot>
           <x-slot name="body">
               <ul class="nav nav-tabs" id="TabCertificacion" role="tablist">
@@ -19,19 +23,25 @@
 
               <div class="tab-content">
                   <div class="tab-pane container active" id="identificacion" role="tabpanel" aria-labelledby="identificacion-tab">
+                    @if($nombreRuta =='contrato')
                       @include('administrativo/meru_administrativo/contratos/proceso/certificacion_contrato/partials/_identificacion')
+                    @else
+                      @include('administrativo/meru_administrativo/contratos/proceso/certificacion_contrato/partials/_identificacionAddendum')
+                    @endif
                   </div>
                   <div  class="tab-pane container fade" id="detalle" role="tabpanel" aria-labelledby="detalle-tab">
-                      @include('administrativo/meru_administrativo/contratos/proceso/certificacion_contrato/partials/_detalle')
-                  </div>
+                        @include('administrativo/meru_administrativo/contratos/proceso/certificacion_contrato/partials/_detalle')
+                   </div>
                   <div   class="tab-pane container fade" id="condiciones" role="tabpanel" aria-labelledby="condiciones-tab">
                       @include('administrativo/meru_administrativo/contratos/proceso/certificacion_contrato/partials/_condiciones')
                   </div>
               </div>
           </x-slot>
           <x-slot name="footer">
+            @if($nombreRuta =='contrato'||  $habilitar==true)
               <x-input type="submit" class="btn btn-sm btn-primary text-bold float-right"  value="Guardar" />
-          </x-slot>
+            @endif
+            </x-slot>
       </x-card>
   </x-form>
 
@@ -46,6 +56,7 @@
                   }
               });
           });
+
           $(function () {
               $('.select2bs4').select2({
                   theme: 'bootstrap4',
@@ -62,19 +73,22 @@
                   Livewire.emit('changeSelect', $(this).val(), event.target.id)
               });
           })
+
           window.livewire.on('alert', param => {
             $(param['tab']).tab('show');
             $(param['onfocus']).focus();
             var detalle = JSON.stringify(param['det']);
             if (typeof detalle !== 'undefined') {
                 $("#hiddenDetalle").val(detalle);
-              }
+            }
+
           });
           window.livewire.on('swal:alert', param => {
               Swal.fire({title:param['titulo'],
               text:param['mensaje'],
               icon:param['tipo']
               })
+              $(param['onfocus']).focus();
           });
           Livewire.on('swal:confirm', param => {
               Swal.fire({

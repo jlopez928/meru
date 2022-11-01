@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\OtrosPagos\Proceso\CertificacionServicioController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\OtrosPagos\Configuracion\OpConceptosController;
+
 Route::middleware(['auth', 'periodo-fiscal'])
 	->prefix('otrospagos')
 	->as('otrospagos.')
@@ -31,5 +32,8 @@ Route::middleware(['auth', 'periodo-fiscal'])
 			->group(function () {
                 Route::post('print_certificacion_contrato', [CertificacionServicioController::class, 'print_certificacion_contrato'])->name('print_certificacion_contrato');
                 Route::get('show_certificacion_contrato', [CertificacionServicioController::class, 'show_certificacion_contrato'])->name('show_certificacion_contrato');
+                Route::post('print_listado_guarderia', [CertificacionServicioController::class, 'print_listado_guarderia'])->name('print_listado_guarderia');
+                Route::get('show_listado_guarderia',   [CertificacionServicioController::class, 'show_listado_guarderia'])->name('show_listado_guarderia');
+
 	        });
     });

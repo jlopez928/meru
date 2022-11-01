@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Models\Administrativo\Meru_Administrativo\CuentasPorPagar;
+namespace  App\Models\Administrativo\Meru_Administrativo\CuentasPorPagar;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 use Illuminate\Database\Eloquent\Model;
 
-class CxpDetGastosSolpago extends Model
+class CxpDetGastosSolpago  extends Model
 {
-    use HasFactory;
 
     protected $table = 'cxp_detgastossolpago';
-
+    public $timestamps = false;
+    protected $guarded = [];
     protected $fillable = [
         'ano_pro',
         'ord_pag',
@@ -29,8 +29,6 @@ class CxpDetGastosSolpago extends Model
         'status_presu'
     ];
 
-    public $timestamps = false;
-
-    protected $guarded = [];
 
 }
+
