@@ -63,8 +63,7 @@
             </div>
 
             <hr>
-
-            <livewire:administrativo.meru-administrativo.compras.proceso.solicitud-unidad-detalle />
+            <livewire:administrativo.meru-administrativo.compras.proceso.solicitud-unidad-detalle :solicitudUnidad="$solicitudUnidad" :accion="$accion" />
 
         </x-slot>
     </x-card>

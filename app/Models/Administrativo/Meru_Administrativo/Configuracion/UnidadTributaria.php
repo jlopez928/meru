@@ -23,7 +23,7 @@ class UnidadTributaria extends Model
 
     public static function getUltimaUnidadTributaria()
     {
-        return UnidadTributaria::query()->orderByDesc('fec_ut')->limit(1)->get(['fec_ut','bs_ut']);
+        return UnidadTributaria::query()->orderByDesc('fec_ut')->first(['fec_ut','bs_ut']);
     }
 
 }

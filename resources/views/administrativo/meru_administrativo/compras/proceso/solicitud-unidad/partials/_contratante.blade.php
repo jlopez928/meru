@@ -6,7 +6,11 @@
                 <x-select
                     name="contratante"
                     class="form-control-sm"
+                    {{--  style="{{ $accion !== 'anular' ? 'pointer-events: none' : '' }}"  --}}
+                    {{--  x-bind:readonly="'{{ $accion }}' !== 'anular'"  --}}
                     x-model="contratante"
+                    style="pointer-events: none"
+                    readonly
                 >
                     @foreach (\App\Enums\Administrativo\Meru_Administrativo\Compras\UnidadContratante::cases() as $unidadContratante)
                         <option value="{{ $unidadContratante->value }}">
@@ -23,6 +27,8 @@
                     name="fk_cod_com"
                     class="form-control-sm ml-1 {{ $errors->has('fk_cod_com') ? 'is-invalid' : 'is-valid' }}"
                     x-model="fk_cod_com"
+                    style="pointer-events: none"
+                    readonly
                 >
                     <option value=""></option>
                     @foreach ( $compradores as $index => $comprador)
@@ -46,6 +52,8 @@
                     class="form-control-sm {{ $errors->has('licita') ? 'is-invalid' : 'is-valid' }}"
                     x-model="licita"
                     x-on:change="evaluarTipoCompra"
+                    style="pointer-events: none"
+                    readonly
                 >
                     <option value=""></option>
                     @foreach ( $tipoDeCompras as $index => $tipoDeCompra)

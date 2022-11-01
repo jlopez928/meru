@@ -23,11 +23,11 @@ class ProveedorController extends Controller
         return view('administrativo.meru_administrativo.proveedores.proceso.proveedor.create', compact('proveedor'));
     }
 
-    public function store(ProveedorRequest $request)
-    // public function store(Request $request)
+    // public function store(ProveedorRequest $request)
+    public function store(Request $request)
     {
         dd($request->all());
-        
+
         // return $request->all();
     }
 
@@ -49,7 +49,7 @@ class ProveedorController extends Controller
     public function getEstados($ubicacion = null)
     {
         return UbicacionGeografica::query()
-                                    ->when($ubicacion === 'E', 
+                                    ->when($ubicacion === 'E',
                                         fn($q) => $q->where('cod_edo', 50)
                                     )
                                     ->where('cod_mun', '0')

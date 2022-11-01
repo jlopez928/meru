@@ -2,25 +2,19 @@
 
 namespace App\Models\Administrativo\Meru_Administrativo\Compras;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class Bien extends Model
+class Estatus extends Model
 {
     use HasFactory;
 
-    protected $table        = 'bienes';
-
-    protected $dateFormat   = 'd/m/Y H:i:s';
+    protected $table = 'com_estatus';
 
     protected $guarded = [];
-
-    protected $primaryKey = 'cod_corr';
-
-    protected $keyType = 'string';
 
     public $incrementing    = false;
 
     public $timestamps      = false;
-
 }
+

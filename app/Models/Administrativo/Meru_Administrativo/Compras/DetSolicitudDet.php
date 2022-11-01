@@ -2,25 +2,21 @@
 
 namespace App\Models\Administrativo\Meru_Administrativo\Compras;
 
-use Illuminate\Database\Eloquent\Model;
+use Awobaz\Compoships\Compoships;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class Bien extends Model
+class DetSolicitudDet extends Model
 {
-    use HasFactory;
+    use HasFactory, Compoships;
 
-    protected $table        = 'bienes';
+    protected $table        = 'com_detsolicitud_det';
 
     protected $dateFormat   = 'd/m/Y H:i:s';
 
-    protected $guarded = [];
-
-    protected $primaryKey = 'cod_corr';
-
-    protected $keyType = 'string';
+    protected $guarded      = [];
 
     public $incrementing    = false;
 
     public $timestamps      = false;
-
 }

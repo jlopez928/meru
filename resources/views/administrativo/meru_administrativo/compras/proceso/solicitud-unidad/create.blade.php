@@ -19,7 +19,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-                    <x-form method="post" action="{{ route('compras.proceso.solicitud_unidad.store') }}">
+                    <x-form name="formulario" method="post" action="{{ route('compras.proceso.solicitud_unidad.crear_solicitud') }}">
                         @include('administrativo/meru_administrativo/compras/proceso/solicitud-unidad/partials/_form')
                     </x-form>
                 </div>

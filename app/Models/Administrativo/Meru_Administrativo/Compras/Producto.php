@@ -95,4 +95,44 @@ class Producto extends Model
     {
         return $this->belongsTo(UnidadMedida::class, 'cod_uni');
     }
+
+    public static function generarCodPartida($codPar, $codGen, $codEsp, $codSub)
+	{
+		return implode('.', [
+			\Str::padLeft($codPar, 2, '0'),
+			\Str::padLeft($codGen, 2, '0'),
+			\Str::padLeft($codEsp, 2, '0'),
+			\Str::padLeft($codSub, 2, '0'),
+		]);
+	}
+
+    public static function getProductos($grupo_ram, $grupo)
+    {
+        return Producto::query()
+                            ->where('gru_ram', $grupo_ram)
+                            ->when($grupo == 'BM', function($query){
+                                $query->where(function($q) {
+                                    $q->where('tip_prod', 'B')->orWhere('tip_prod', 'P');
+                                });
+                            })
+                            ->when($grupo == 'SG', function($query){
+                                $query->where(function($q) {
+                                    $q->where('tip_prod', 'G')->orWhere('tip_prod', 'O');
+                                });
+                            })
+                            ->when($grupo == 'SV', function($query){
+                                $query->where(function($q) {
+                                    $q->where('tip_prod', 'G')->orWhere('tip_prod', 'V');
+                                });
+                            })
+                            ->orderBy('des_prod')
+                            ->pluck('des_prod','cod_prod');
+    }
+
+    public static function getProducto($fk_cod_mat)
+    {
+        return Producto::query()
+                            ->where('cod_prod', $fk_cod_mat)
+                            ->first();
+    }
 }
