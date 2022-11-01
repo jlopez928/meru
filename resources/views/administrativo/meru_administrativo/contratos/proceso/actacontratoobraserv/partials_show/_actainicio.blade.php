@@ -230,6 +230,6 @@
         </div>
     </div>
  {{--  se incluyen los combos que actualizan el código a traves de un componente  --}}
- <livewire:administrativo.meru-administrativo.contratos.procesos.inicio-tab-acta-contrato-obra-serv :encnotaentrega="$encnotaentrega" :valor="$valor"/>
+ <livewire:administrativo.meru-administrativo.contratos.proceso.inicio-tab-acta-contrato-obra-serv :encnotaentrega="$encnotaentrega" :valor="$valor"/>
 
 </div>

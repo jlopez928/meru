@@ -9,6 +9,7 @@ use App\Models\Administrativo\Meru_Administrativo\Formulacion\CentroCosto;
 use App\Models\Administrativo\Meru_Administrativo\Formulacion\PartidaPresupuestaria;
 use App\Models\Administrativo\Meru_Administrativo\Modificaciones\SolicitudTraspaso;
 
+
 class Gerencia extends Model
 {
 	use HasFactory;

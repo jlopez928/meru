@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Administrativo\Meru_Administrativo\OtrosPagos\Proceso;
+use App\Exports\FromQueryExport;
 
 use App\Http\Controllers\Controller;
 use App\Models\Administrativo\Meru_Administrativo\Compras\ComprobanteOpen;
@@ -2265,7 +2266,7 @@ public function print_certificacion(Request $request)
         $proveedores = Proveedor::where('cod_edo','1')
                                     ->select('rif_prov','nom_prov')
                                     ->orderBy('nom_prov')
-                                     ->get();                             
+                                     ->get();
          //return($proveedor);
         $estados = DB::select("select '0' as valor, 'Ingresada en Sistema' descripcion
                               union
@@ -2294,13 +2295,14 @@ public function print_certificacion(Request $request)
     //-----------------------------------------------------------------------
     public function print_certificacion_contrato(Request $request)
     {
+
         if ($request->inicio != null || $request->fin != null){
             if ($request->inicio >  $request->fin){
                 $msj = 'La fecha de inicio debe ser menor o igual a la fecha final.\\n Por Favor Intente de Nuevo.';
                 alert()->Error('Transacci&oacute;n Fallida<br>'.$msj);
                 return redirect()->back()->withInput();
             }
-        }    
+        }
         if ($request->tipo==null){
             $msj = 'Debe seleccionar el tipo de salida.\\n Por Favor Intente de Nuevo.';
             alert()->Error('Transacci&oacute;n Fallida<br>'.$msj);
@@ -2315,17 +2317,17 @@ public function print_certificacion(Request $request)
 
         if ($request->grupo!=''){
             if ($request->grupo=='PD') {
-                $titulo = "LISTADO DE CERTIFICACIONES"; 
+                $titulo = "LISTADO DE CERTIFICACIONES";
             }
-            if ($request->grupo=='CO') { 
-                $titulo = "LISTADO DE CONTRATOS"; 
+            if ($request->grupo=='CO') {
+                $titulo = "LISTADO DE CONTRATOS";
             }
-        }else{ 
-            $titulo = "LISTADO DE CERTIFICACIONES Y CONTRATOS"; 
+        }else{
+            $titulo = "LISTADO DE CERTIFICACIONES Y CONTRATOS";
          }
 
 
-     
+
         $data = OpSolservicio::where('cod_ger', $request->gerencia);
 
         if  ($request->grupo != null){
@@ -2350,14 +2352,14 @@ public function print_certificacion(Request $request)
             $data = $data->whereBetween('fecha',[$request->inicio, $request->fin]);
         }
 
-        $data =$data->get();  
+        $data =$data->get();
 
         $detalle_proveedor =  $data;
         //return $detalle_proveedor;
         $num_regis_det_prov = count($detalle_proveedor);//Total de Registros que arrojo la consulta
 
-        
-	
+
+
 		$pdf->SetFont('Arial','B',12);
 		$pdf->SetY(10);
 		$pdf->Cell(0,5,$titulo,0,1,'C',0);
@@ -2365,7 +2367,7 @@ public function print_certificacion(Request $request)
 			$pdf->SetFont('Arial','B',10);
 			$pdf->Cell(0,5,'DESDE EL '.\Carbon\Carbon::parse($request->inicio)->format('d/m/Y').' HASTA EL '.\Carbon\Carbon::parse($request->fin)->format('d/m/Y'),0,0,'C',0);
 		}
-		
+
 		$pdf->Image('img/hidrobolivar.jpg',5,5,45,15,'JPG');
 		$Y=5;
 		$x=320;
@@ -2383,7 +2385,7 @@ public function print_certificacion(Request $request)
         $pdf->AliasNbPages();
 		$pdf->Cell(21,5,$pdf->PageNo().' de '.'{nb}',0,0,'L');
 		$pdf->Ln(5);$pdf->Ln(5);$pdf->Ln(5);
-		
+
 		$pdf->SetFont('Arial','B',8);
 		$pdf->SetFillColor(235,235,235);
 		$pdf->SetAligns(array('C','C','C','C','C','C','C','C','C'));
@@ -2392,18 +2394,18 @@ public function print_certificacion(Request $request)
 		$pdf->SetAligns(array('C','L','L','L','L','C','C','C','C'));
 
 
- 
+
 
         if ($num_regis_det_prov >0)
         {
             for($i=0; $i<$num_regis_det_prov; $i++){
 
                 $datos2 = OpDetgastossolservicio::query()
-                                                ->select('cod_com')   
+                                                ->select('cod_com')
                                                 ->where('xnro_sol',$detalle_proveedor[$i]->xnro_sol)
                                                 ->where('ano_pro',$detalle_proveedor[$i]->ano_pro)
                                                 ->get();
-                                     
+
 
                 $cont_det = count($datos2);
 
@@ -2412,43 +2414,301 @@ public function print_certificacion(Request $request)
                 for($q=0; $q<$cont_det; $q++)
                 {
                     $estructgast .= $datos2[$q]->cod_com;
-                    if ($q<$cont_det) 
+                    if ($q<$cont_det)
                         $estructgast .="\r\n";
                 }
-                
+
                 $pdf->SetFillColor(255,255,255);
                 $pdf->SetFont('Arial','',7);
                 $pdf->SetAligns(array('C','L','L','L','L','C','C','C','C'));
-                $pdf->SetWidths(array(20,65,60,20,60,35,18,27,35)); 
-                
+                $pdf->SetWidths(array(20,65,60,20,60,35,18,27,35));
+
                 if ( $detalle_proveedor[$i]->provision == 'S' )
                     $num =$detalle_proveedor[$i]->xnro_sol."-".$detalle_proveedor[$i]->ano_pro." (Provision)";
-                else 
+                else
                     $num =$detalle_proveedor[$i]->xnro_sol."-".$detalle_proveedor[$i]->ano_pro;
 
                 $pdf->Row(array(
-                                $num, 
-                                utf8_decode($detalle_proveedor[$i]->motivo).' - Estatus: '.utf8_decode($detalle_proveedor[$i]->getEstSol($detalle_proveedor[$i]->sta_sol->value)), 
-                                utf8_decode($detalle_proveedor[$i]->gerencias->des_ger).' - '.$detalle_proveedor[$i]->usuario, 
-                                $detalle_proveedor[$i]->rif_prov, 
-                                utf8_decode($detalle_proveedor[$i]->beneficiario->nom_ben), 
-                                utf8_decode($detalle_proveedor[$i]->observaciones), 
+                                $num,
+                                utf8_decode($detalle_proveedor[$i]->motivo).' - Estatus: '.utf8_decode($detalle_proveedor[$i]->getEstSol($detalle_proveedor[$i]->sta_sol->value)),
+                                utf8_decode($detalle_proveedor[$i]->gerencias->des_ger).' - '.$detalle_proveedor[$i]->usuario,
+                                $detalle_proveedor[$i]->rif_prov,
+                                utf8_decode($detalle_proveedor[$i]->beneficiario->nom_ben),
+                                utf8_decode($detalle_proveedor[$i]->observaciones),
                                 \Carbon\Carbon::parse($detalle_proveedor[$i]->fecha)->format('d/m/Y'),
                                 number_format($detalle_proveedor[$i]->monto_total, 2, ',', '.'),
                                 $estructgast
                             ),5);
                 $pdf->SetAligns(array('C','L','L','L','L','C','C','C','C'));
             };
-            
+
             $pdf->Ln(5);
             $pdf->Cell(0,5,'TOTAL DE REGISTROS: '.$num_regis_det_prov,0,0,'L',0);
-            
-            header("Content-type: application/pdf"); 
+
+            header("Content-type: application/pdf");
             $pdf->Output();
             exit();
         }
     }
+    //-----------------------------------------------------------------------
+    //    Funcion que llama pantalla de parametros para reporte de guarderias
+    //-----------------------------------------------------------------------
+    public function show_listado_guarderia()
+    {
+
+       return view('administrativo.meru_administrativo.otrospagos.reporte.listado_guarderia.show');
+    }
+
+    //-----------------------------------------------------------------------
+    //    Funcion para generar reporte de certificación/contratos
+    //-----------------------------------------------------------------------
+    public function print_listado_guarderia(Request $request)
+    {
+        //-----------------------------------------------------------------------
+        //   Se debe incluir el correlativo
+        //-----------------------------------------------------------------------
+        if ($request->correlativo == null){
+                $msj = 'Debe ingresar el correlativo correspondiente. Por Favor Intente de Nuevo.';
+                alert()->Error('Transacci&oacute;n Fallida<br>'.$msj);
+                return redirect()->back()->withInput();
+        }
+
+        //-----------------------------------------------------------------------
+        //     Se valida rango de fecha valido
+        //-----------------------------------------------------------------------
+        if ($request->inicio != null || $request->fin != null){
+            if ($request->inicio >  $request->fin){
+                $msj = 'La fecha de inicio debe ser menor o igual a la fecha final. Por Favor Intente de Nuevo.';
+                alert()->Error('Transacci&oacute;n Fallida<br>'.$msj);
+                return redirect()->back()->withInput();
+            }
+        }
+
+        //-----------------------------------------------------------------------
+        //     Se garantiza que selecciones el tipo de salida del reporte
+        //-----------------------------------------------------------------------
+        if ($request->tipo==null){
+            $msj = 'Debe seleccionar el tipo de salida. Por Favor Intente de Nuevo.';
+            alert()->Error('Transacci&oacute;n Fallida<br>'.$msj);
+            return redirect()->back()->withInput();
+        }
+
+        //-----------------------------------------------------------------------
+        //     Datos del Gerente de RRHH
+        //-----------------------------------------------------------------------
+        $topGER =  Gerencia::query()
+                           ->selectRaw("LOWER(nom_jefe) AS nom_jefe")
+                           ->where('cod_ger','4')
+                           ->get();
+
+        //-----------------------------------------------------------------------
+        //    Datos del Gerente de Administración
+        //-----------------------------------------------------------------------
+        $topGERA =  Gerencia::query()
+                           ->selectRaw("LOWER(nom_jefe) AS nom_jefe")
+                           ->where('cod_ger','10')
+                           ->get();
+
+        //-----------------------------------------------------------------------
+        //    Listado de Certificaciones
+        //-----------------------------------------------------------------------
+        $res_cert = OpSolservicio::query()
+                                 ->where('op_solservicio.cod_ger','4')
+                                 ->where('op_solservicio.sta_sol','2')
+                                 ->whereBetween('fec_apr',[$request->inicio, $request->fin])
+                                  ->leftJoin('op_detsolservicio AS b', function ($join) {
+                                        $join->on('b.ano_pro', '=', 'op_solservicio.ano_pro')
+                                             ->on('b.xnro_sol', '=', 'op_solservicio.xnro_sol');
+                                  })
+                                  ->where('cod_prod', '=', '18')
+                                 ->leftJoin('tes_beneficiarios  AS c', 'c.rif_ben', '=', 'op_solservicio.rif_prov')
+                                 ->selectRaw("UPPER(op_solservicio.motivo) AS motivo")// UPPER(op_solservicio.observaciones) AS factura, op_solservicio.rif_prov AS rif, c.nom_ben AS proveedor,
+                                              //op_solservicio.ano_pro||' / '||op_solservicio.xnro_sol AS certificacion, op_solservicio.monto_total AS monto, TO_CHAR(op_solservicio.fec_apr, 'DD/MM/YYYY') AS fec_apr, b.cod_prod")
+                                ->orderby('op_solservicio.ano_pro','desc');
+                                //->get();
+
+        //-----------------------------------------------------------------------
+        //    Listado de Certificaciones
+        //-----------------------------------------------------------------------
+        if ($request->tipo=='EXCEL'){
+            $this->reporteexcel($res_cert,$topGERA,$topGER, $request);
+        }else{
+            $this->reportepdf($res_cert,$topGERA,$topGER, $request);
+        }
+    }
 
 
+    //-----------------------------------------------------------------------
+    //    Funcion para generar reporte de certificación/contratos
+    //-----------------------------------------------------------------------
+    public function reporteexcel($res_cert, $topGERA, $topGER,$request)
+    {
+        $titulo    = 'PRESUPUESTO: ' ;
+        $subtitulo = 'PERIODO: ' ;
+        $archivo   = 'Diferencias_Prespuestarias';
+
+
+     $query_cert = DB::table('pre_cierremensual AS b')
+     ->select(
+         'b.cod_com')
+        ->where([
+        ['b.ano_pro', '=','2016'],
+        ['b.mes_pro', '=', '11']
+    ]);
+    $query_cert->orderByRaw('1');
+            $data = [
+                'query'      => $query_cert,
+                'titulo'     => [$titulo, $subtitulo],
+                'ancho'      => [30],
+                'alineacion' => ['C'],
+                'formatos'   => ['T'],
+                'columnas'   => ['ESTRUCTURA']
+            ];
+
+            return (new FromQueryExport($data))->download($archivo . '.xlsx');
+    }
+
+
+
+    //-----------------------------------------------------------------------
+    //    Funcion para generar reporte de certificación/contratos
+    //-----------------------------------------------------------------------
+    public function reportepdf($res_cert, $topGERA, $topGER,$request)
+    {
+        $corr =$request->correlativo;
+        $fecha = date('d/m/Y');
+        $cont_cert = count($res_cert);
+
+        $pdf = new Fpdf('P','mm','letter','true');
+        $pdf->SetLeftMargin(5);
+        $pdf->SetRightMargin(5);
+        $pdf->AddPage("P");
+
+        //-----------------------------------------------------------------------------------------------
+        //   Deben existir Certificaciones de Guarderías Aprobadas 	 * en el rango de fecha solicitado.
+        //-------------------------------------------------------------------------------------------------
+		if ($res_cert){
+			$pdf->SetFont('Arial', 'B', 9);
+			$pdf->SetY(10);
+			$pdf->SetX(20);
+			// $pdf->Image('img/hidrobolivar.png', 10, 15, 40, 13, 'PNG');
+            $pdf->Image('img/hidrobolivar.jpg',10,15,40,13,'JPG');
+			$pdf->Image('img/fondonorma.png', 180, 15, 15, 13, 'PNG');
+			$pdf->SetY(30);
+			$pdf->Ln(7);
+			$pdf->SetFillColor(255, 255, 255);
+			$pdf->SetFont('Arial', 'B', 8);
+			$pdf->SetX(165);
+			$pdf->Cell(30, 5, $corr, 0, 0, 'R', 1);
+			$pdf->Ln();
+			$pdf->SetFillColor(205, 205, 205);
+			$pdf->SetFont('Arial', 'B', 10);
+			$pdf->SetX(10);
+			$pdf->Cell(200, 5, utf8_decode('COMUNICACIÓN'), 0, 0, 'C', 1);
+			$pdf->Ln();
+            $pdf->SetX(10);
+			$pdf->Cell(25, 9, 'Para:  ', 0, 0, 'L', 1);
+			$pdf->SetX(36);
+			$pdf->SetFont('Arial', '', 10);
+			$pdf->SetFillColor(255, 255, 255);
+			$pdf->Cell(50,5,ucwords(utf8_decode($topGERA[0]->nom_jefe)),0,0,'L',0);
+			$pdf->Ln();
+			$pdf->SetX(36);
+			$pdf->Cell(50, 4, utf8_decode('Gerente (E) de Administración y Finanzas'), 0, 0, 'L', 0);
+			$pdf->Ln(4);
+            $pdf->SetX(10);
+			$pdf->SetFillColor(205, 205, 205);
+			$pdf->SetFont('Arial', 'B', 10);
+			$pdf->Cell(25, 9,'De:  ', 0, 0, 'L', 1);
+			$pdf->SetFont('Arial', '', 10);
+			$pdf->SetFillColor(255, 255, 255);
+			$pdf->SetX(36);
+			$pdf->Cell(50, 5, ucwords(utf8_decode($topGER[0]->nom_jefe)), 0, 0, 'L', 0);
+			$pdf->Ln();
+			$pdf->SetX(36);
+			$pdf->Cell(50, 4, utf8_decode('Gerente de Recursos Humanos'), 0, 0, 'L', 0);
+			$pdf->Ln(4);
+            $pdf->SetX(10);
+			$pdf->SetFillColor(205, 205, 205);
+			$pdf->SetFont('Arial', 'B', 10);
+			$pdf->Cell(25, 5, 'Fecha:  ', 0, 0, 'L', 1);
+			$pdf->SetFont('Arial', '', 10);
+			$pdf->SetFillColor(255, 255, 255);
+			$pdf->SetX(36);
+			$pdf->Cell(50, 5, $fecha, 0, 0, 'L', 0);
+			$pdf->Ln(5);
+            $pdf->SetX(10);
+			$pdf->SetFillColor(205, 205, 205);
+			$pdf->SetFont('Arial', 'B', 10);
+			$pdf->Cell(25, 5, 'Asunto:  ', 0, 0, 'L', 1);
+			$pdf->SetFont('Arial','',10);
+			$pdf->SetFillColor(255, 255, 255);
+			$pdf->SetX(36);
+			$pdf->Cell(50, 5, utf8_decode('Pago de Guardería'), 0, 0, 'L', 0);
+			$pdf->Ln(10);
+			$pdf->SetX(10);
+
+
+        //-----------------------------------------------------------------------------------------------
+        //  Cuerpo de Reporte
+        //-------------------------------------------------------------------------------------------------
+			$pdf->MultiCell(187, 5, utf8_decode('Reciba un cordial saludo, la presente es con la finalidad de solicitar ' .
+												' la emisión de cheque a las guarderías  que se mencionan a continuación:'));
+			$pdf->Ln(5);
+			$pdf->SetX(10);
+            $pdf->SetFillColor(205, 205, 205, 205, 205, 205, 205);
+            $pdf->SetFillColor(120, 120, 120);
+			$pdf->SetFont('Arial', 'B', 6);
+			$pdf->SetAligns(array('C', 'C', 'C', 'C', 'C', 'C', 'C'));
+			$pdf->SetWidths(array(70, 20, 20, 30, 20, 20, 20));
+			$pdf->Row(array( utf8_decode('DESCRIPCIÓN'), 'FACTURA', 'RIF', 'PROVEEDOR', 'NRO. CERT', 'MONTO',  utf8_decode('FECHA APROBACIÓN')), 5);
+			$total = 0;
+
+			/** Detalle de Facturas Registradas **/
+			for ($i = 0; $i < $cont_cert; $i++)	{
+				$pdf->SetX(10);
+				$pdf->SetFont('Arial', '', 6);
+				$pdf->SetFillColor(255, 255, 255, 255, 255, 255, 255);
+				$pdf->SetAligns(array('J', 'C', 'C', 'J', 'C', 'R', 'C'));
+				$pdf->SetWidths(array(70, 20, 20, 30, 20, 20, 20));
+				$pdf->Row(array($res_cert[$i]->motivo,
+								$res_cert[$i]->factura,
+								$res_cert[$i]->rif,
+								$res_cert[$i]->proveedor,
+								$res_cert[$i]->certificacion,
+					            number_format($res_cert[$i]->monto, 2, ',', '.'),
+					            $res_cert[$i]->fec_apr), 5);
+
+				$total += $res_cert[$i]->monto;
+			}
+
+		    $pdf->SetFont('Arial','B',8);
+			$pdf->SetFillColor(255, 255, 255);
+			$pdf->SetX(10);
+			$pdf->Cell(160, 5 ,'Total en Bs.', 1, 0, 'R', 0);
+			$pdf->Cell(20, 5, number_format($total, 2, ',', '.'), 1, 0, 'R', 0);
+
+	        $pdf->Ln(5);
+            $pdf->SetX(10);
+	        $pdf->SetFont('Arial', '', 10);
+	        $pdf->SetFillColor(255, 255, 255);
+
+			$pdf->Cell(50, 5, 'Sin otro particular a que hacer referencia, se despide.', 0, 0, 'L', 0);
+			$pdf->Ln(20);
+			$pdf->SetX(85);
+			$pdf->Cell(50, 5, ucwords(utf8_decode($topGER[0]->nom_jefe)), 0, 0, 'C', 0);
+			$pdf->Ln();
+			$pdf->SetX(85);
+			$pdf->Cell(50, 5, utf8_decode('Gerente de Recursos Humanos'), 0, 0, 'C', 0);
+
+			// header('Content-type: application/pdf');
+			// $pdf->Output('Listado_Guarderias.pdf', 'D');
+
+            header("Content-type: application/pdf");
+            $pdf->Output();
+
+			exit();
+        }
+    }
 }
 

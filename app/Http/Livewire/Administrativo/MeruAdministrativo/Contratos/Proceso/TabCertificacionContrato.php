@@ -8,9 +8,11 @@ use App\Models\Administrativo\Meru_Administrativo\Configuracion\Gerencia;
 use App\Models\Administrativo\Meru_Administrativo\OtrosPagos\ConceptosContratoDet;
 use App\Models\Administrativo\Meru_Administrativo\OtrosPagos\ConceptoContrato;
 use App\Models\Administrativo\Meru_Administrativo\Configuracion\RegistroControl;
+use App\Models\Administrativo\Meru_Administrativo\OtrosPagos\OpSolservicio;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use App\Traits\Presupuesto;
+
 
 class TabCertificacionContrato extends Component
 {use Presupuesto;
@@ -79,21 +81,39 @@ class TabCertificacionContrato extends Component
     public $onfocus;
     public $detallegasto= [];
     public $comprobante= [];
-    protected $listeners =['changeSelect','registrar','inactivar'];
+    protected $listeners =['changeSelect'];
     public $EstructuraPresupuestaria ;
     public $listadoDetalle;
     public $accion;
     public $cau_anu;
-
+    public $nombreRuta;
+    public $habilitar =false;
     public function changeSelect($valor,$id)
     {   ($id == 'rif_prov') ?  $this->rif_prov= $valor : $this->cod_ger= $valor;    }
-
+   //-------------------------------------------------------------
+    //      Determina el proceso por el cual se está accediendo
+    //-------------------------------------------------------------
+	function ObtenerRuta($xnro_sol){
+		$ruta = '';
+		$tipo = substr_count($xnro_sol , '-' );
+		if($tipo == 1){
+			$ruta = "certificacioncontrato";
+		}
+		else{
+			$ruta = "certificacioncontratoaddendum";
+		}
+		return $ruta;
+	}
     public function mount()
     {
+
         if( $this->certificacionservicio->id){
             //----------------------------------------------------
             //------------    Opcion Modificar---------------------
             //----------------------------------------------------
+            if($this->ObtenerRuta($this->xnro_sol=='certificacioncontratoaddendum')){
+                $this->habilitar=true;
+            }
             //Modificar la cabecera
             $valor = json_decode($this->certificacionservicio);
             foreach($valor as $key => $value) {
@@ -140,7 +160,7 @@ class TabCertificacionContrato extends Component
                     'cod_cta'        => $estructura['cod_cta'],
                 ];
             }
-          }else{ss
+          }else{
             $this->opdetsolservicio = new OpDetsolservicio();
             $this->certificacionservicio    = $this->certificacionservicio;
             $this->fec_emi= now()->format('Y-m-d');
@@ -158,7 +178,7 @@ class TabCertificacionContrato extends Component
         }
         $valor = json_encode(session()->getOldInput());
         $valor = json_decode($valor);
-        dd($valor);
+
         if ($valor) {
             foreach($valor as $key => $value) {
                 $this->$key = $value;
@@ -185,7 +205,7 @@ class TabCertificacionContrato extends Component
  }
  public function cargar_emit()
   {
-    $this->emit('alert', ['det' => $this->detallegasto]);
+    $this->emit('alert', ['det' => $this->detallegasto,'nombreRuta' => $this->nombreRuta]);
 
   }
 public function limpiar()
@@ -240,8 +260,7 @@ public function calcularAnticipo($tabfocus){
     $this->emit('alert', ['tab' => $tabfocus,'onfocus' => $this->onfocus]);
 }
 public function calculaCostoTotal ($valor){
-    $this->selectedcheck=[];
-    $this->showDropdown=[];
+
     if (!empty($this->codigo)){
         if (!empty($this->cod_ger)) {
             // LLenar el campo Descripción validando que el concepto exista
@@ -299,8 +318,7 @@ public function calculaCostoTotal ($valor){
                             'partida'       => $this->varmarpartida($estructura->cod_par,$estructura->cod_gen,$estructura->cod_esp,$estructura->cod_sub),
                             'cod_cta'       => $estructura->cta_gasto,
                         ];
-                        $this->selectedcheck[]=$estructura->gasto ?: false;
-                        $this->showDropdown[] =false;
+
                     }
                     //Recorrer la Grilla
                     for ($i = 1; $i < 5; $i++){
@@ -388,8 +406,7 @@ public function calculaCostoTotal ($valor){
                             'partida'       => $this->varmarpartida($row_iva[0]->cod_pari,$row_iva[0]->cod_geni,$row_iva[0]->cod_espi,$row_iva[0]->cod_subi),
                             'cod_cta'       => '',
                         ];
-                        $this->selectedcheck[]=$row_iva[0]->gasto?:false;
-                        $this->showDropdown[] =false;
+
                     }
                     $this->emit('alert', ['tab' => '#detalle-tab','det' => $this->detallegasto]);
                 }else{
@@ -477,87 +494,136 @@ public function validar_monto_Iva(){
       $this->emit('alert', ['tab' => '#detalle-tab']);
 
 }
+//--------------------------------------------------------------
+//-------------------------------------------------------------
+    public function  estado($valor)
+    {
+        switch ($valor) {
+            case "0":
+                $descrip_estado = "Ingresada en Sistema";;
+                break;
+            case "1":
+                $descrip_estado = "Anulada";;
+                break;
+            case "2":
+                $descrip_estado = "Aprobada por Gerente de la Unidad Solicitante";;
+                break;
+            case "3":
+                $descrip_estado = "Reversada por Gerente de la Unidad Solicitante";;
+                break;
+            case "4":
+                $descrip_estado = "Comprometida Presupuestariamente";;
+                break;
+            case "5":
+                $descrip_estado = "Reversada Presupuestariamente";;
+                break;
+            case "6":
+                $descrip_estado = "Con Orden Impresa";;
+                break;
+            case "C":
+                $descrip_estado="Cerrada Presupuestariamente";
+                break;
+        }
+        return $descrip_estado;
+}
+//-------------------------------------------------------------------------
+//-------------------------------------------------------------------------
+public function buscar_contrato(){
 
-public function registrar($pos)
-{
-    Arr::set($this->detallegasto, $pos.'.gasto', 1);
-    $this->emit('alert', ['tab' => '#detalle-tab','det' => $this->detallegasto]);
-}
-public function inactivar($pos)
-{
-    $this->selectedcheck[$pos]=0;
-    $this->emit('alert', ['tab' => '#detalle-tab']);
-}
-public function habilitar_checkbox($posicion){
-    if($posicion!='N'){
-        $valor=$this->selectedcheck[$posicion]==false?0:1;
-        if ($valor==1){
-            if (($this->detallegasto[$posicion]['cod_par'] == 4) ||
-                ($this->detallegasto[$posicion]['cod_par'] == 3 &&
-                 $this->detallegasto[$posicion]['cod_gen'] == 1 &&
-                 $this->detallegasto[$posicion]['cod_esp'] == 1 &&
-                 $this->detallegasto[$posicion]['cod_sub'] == 0)) {
-                 $bandera = 3;
-                 $this->emit('swal:confirm', [
-                        'tipo'      => 'warning',
-                        'titulo'    => 'Estructura de Gasto',
-                        'mensaje'   => 'Esta Seguro de Asignar una Cuenta de Gasto a la Partida Presupuestaria[' . $this->detallegasto[$posicion]['partida'] . '] ?',
-                        'funcion'   => 'registrar',
-                        'funcion2'  => 'inactivar',
-                        'posicion'  => $posicion
+    if ($this->ano_pro!= ''){
+        if ($this->xnro_sol!= '' ){
+          if( strtoupper(substr($this->xnro_sol, 0 ,2))=='CO' ){
+            $Opsolservicio=OpSolservicio::where('ano_pro','=',$this->ano_pro)
+                                   ->where('xnro_sol','=',strtoupper($this->xnro_sol))->first();
+             if(!is_null($Opsolservicio)){
+               if($Opsolservicio->sta_sol->value=='4'){
+                foreach($Opsolservicio->toArray() as $key => $value) {
+                    $this->$key = $value;
+
+                }
+                $this->fec_emi =$Opsolservicio->fec_emi->format('Y-m-d');
+                if (!is_null($Opsolservicio->fec_pto)){
+                    $this->fec_pto =$Opsolservicio->fec_pto->format('Y-m-d');
+                }
+                $this->xnro_sol        = strtoupper($this->xnro_sol);
+                $this->base_imponible  = number_format($this->base_imponible, 2, ',', '.');
+                $this->base_exenta     = number_format($this->base_exenta, 2, ',', '.');
+                $this->monto_neto      = number_format($this->monto_neto, 2, ',', '.');
+                $this->monto_iva       = number_format($this->monto_iva, 2, ',', '.');
+                $this->monto_total       = number_format($this->monto_total, 2, ',', '.');
+                $this->por_iva         = number_format($this->por_iva, 2, ',', '.');
+                //Modificar el detalle
+               foreach($Opsolservicio->opdetsolservicio  as $index => $detalle) {
+                    $this->codigo       = $detalle['cod_prod'];
+                    $this->des_con      = $detalle->opconceptos->des_con;
+                    $this->por_iva_con  = number_format($detalle['por_iva'], 2, ',', '.');
+                    $this->cantidad     = number_format($detalle['cantidad'], 2, ',', '.');
+                    $this->cos_uni      = number_format($detalle['cos_uni'], 2, ',', '.');
+                    $this->cos_excenta  = number_format($detalle['base_excenta'], 2, ',', '.');
+                    $this->cos_tot      = number_format($detalle['cos_tot'], 2, ',', '.');
+                }
+                foreach($Opsolservicio->opdetgastossolservicio as $index => $estructura){
+                    $this->detallegasto[] = [
+                        'gasto'         => $estructura['gasto'],
+                        'tip_cod'       => $estructura['tip_cod'],
+                        'cod_pryacc'    => $estructura['cod_pryacc'],
+                        'cod_obj'       => $estructura['cod_obj'],
+                        'gerencia'      => $estructura['gerencia'],
+                        'unidad'        => $estructura['unidad'],
+                        'cod_par'       => $estructura['cod_par'],
+                        'cod_gen'       => $estructura['cod_gen'],
+                        'cod_esp'       => $estructura['cod_esp'],
+                        'cod_sub'       => $estructura['cod_sub'],
+                        'descrip'       => $estructura->partidapresupuestaria->des_con,
+                        'mto_tra'       =>  number_format( $estructura['mto_tra'], 2, ',', '.'),
+                        'partida'       => $this->varmarpartida($estructura->cod_par,$estructura->cod_gen,$estructura->cod_esp,$estructura->cod_sub),
+                        'cod_cta'        => $estructura['cod_cta'],
+                    ];
+                }
+                $this->habilitar=true;
+                $this->emit('alert', ['det' => $this->detallegasto,'nombreRuta' => $this->nombreRuta]);
+
+               }else{
+                    $this->emit('swal:alert', [
+                        'tipo'    => 'warning',
+                        'titulo'  => 'Warning',
+                        'mensaje' => 'Contrato con Status Invalido ['.$this->estado($Opsolservicio->sta_sol->value).'] .Debe estar Comprometido. Favor Verifique...',
+                        'xnro_sol' => 'xnro_sol',
+                    ]);
+               }
+             }else{
+                $this->emit('swal:alert', [
+                    'tipo'    => 'warning',
+                    'titulo'  => 'Warning',
+                    'mensaje' => 'Contarto NO Existe. Favor Verifique...',
+                    'xnro_sol' => 'xnro_sol',
                 ]);
-            }else {
-                if( $this->detallegasto[$posicion]['cod_par'] == 3 &&
-                    $this->detallegasto[$posicion]['cod_gen'] == 18 &&
-                    $this->detallegasto[$posicion]['cod_esp'] == 1 &&
-                    $this->detallegasto[$posicion]['cod_sub'] == 0){
-                        $bandera = 0;
-                        $this->emit('swal:alert', [
-                            'tipo'    => 'warning',
-                            'titulo'  => 'Error',
-                            'mensaje' => 'La Partida Presupuestaria [' . $this->detallegasto[$posicion]['partida'] . '] no se puede imputar por la Cuenta de Gasto'
-                        ]);
-                   } else  {
-                        $bandera = 1;
-                  }
-            }
-        }else{
-            if ($this->detallegasto[$posicion]['cod_par'] != 4) {
-                if( $this->detallegasto[$posicion]['cod_par'] == 3 &&
-                    $this->detallegasto[$posicion]['cod_gen'] == 1 &&
-                    $this->detallegasto[$posicion]['cod_esp'] == 1 &&
-                    $this->detallegasto[$posicion]['cod_sub'] == 0){
-                        $bandera = 0;
-                    } else
-                    {
-                        if( $this->detallegasto[$posicion]['cod_par'] == 3 &&
-                            $this->detallegasto[$posicion]['cod_gen'] == 18 &&
-                            $this->detallegasto[$posicion]['cod_esp'] == 1 &&
-                            $this->detallegasto[$posicion]['cod_sub'] == 0){
-                                $bandera = 0;
-                            } else  {
-                                $bandera = 1;
-                                $this->emit('swal:alert', [
-                                    'tipo'    => 'warning',
-                                    'titulo'  => 'Error',
-                                    'mensaje' => 'La Partida Presupuestaria [' . $this->detallegasto[$posicion]['partida'] . '] no se puede imputar por la Cuenta de Activo'
-                                ]);
-                        }
-                    }
-            }else {
-                $bandera = 0;
-            }
-        }
-        if ( $bandera !=3){
-            $this->selectedcheck[$posicion]=$bandera;
-            Arr::set($this->detallegasto, $posicion.'.gasto', $bandera);
-            $this->emit('alert', ['tab' => '#detalle-tab','det' => $this->detallegasto]);
-        }else{
-            $this->emit('alert', ['tab' => '#detalle-tab']);
-        }
+             }
 
+          }else{
+            $this->emit('swal:alert', [
+                'tipo'    => 'warning',
+                'titulo'  => 'Warning',
+                'mensaje' => 'Este Modulo es solo para Contratos de Obras o Servicios.',
+                'xnro_sol' => 'xnro_sol',
+            ]);
+          }
+
+        }else{
+            $this->emit('swal:alert', [
+                'tipo'    => 'warning',
+                'titulo'  => 'Warning',
+                'mensaje' => 'Debe Ingresar el  Número de Contrato',
+                'xnro_sol' => 'xnro_sol',
+            ]);
+        }
     }else{
-        $this->emit('alert', ['tab' => '#detalle-tab']);
+        $this->emit('swal:alert', [
+            'tipo'    => 'warning',
+            'titulo'  => 'Warning',
+            'mensaje' => 'Debe Ingresar año del Proceso',
+            'onfocus' => 'ano_pro',
+        ]);
     }
 }
 //-------------------------------------------------------------------------

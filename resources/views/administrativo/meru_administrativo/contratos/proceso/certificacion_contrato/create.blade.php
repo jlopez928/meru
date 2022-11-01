@@ -7,9 +7,14 @@
         <div class="row mb-2">
             <div class="col-sm-12">
                 <ol class="breadcrumb float-sm-right">
+                  @if($nombreRuta =='contrato')
                     <li class="breadcrumb-item text-bold"><a href="{{ route('contratos.proceso.certificacioncontrato.index') }}">Página Principal</a></li>
                     <li class="breadcrumb-item active text-bold">Registrar Certificación de Obrar y Servicio</li>
-                </ol>
+                  @else
+                     <li class="breadcrumb-item text-bold"><a href="{{ route('contratos.proceso.certificacioncontratoaddendum.index') }}">Página Principal</a></li>
+                      <li class="breadcrumb-item active text-bold">Registrar Certificación de Obrar y Servicio Addendum</li>
+                  @endif
+                            </ol>
             </div>
         </div>
     </div>
@@ -19,7 +24,7 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-12">
-                <livewire:administrativo.meru-administrativo.contratos.proceso.tab-certificacion-contrato :certificacionservicio="$opsolservicio" :accion="'create'"  />
+                <livewire:administrativo.meru-administrativo.contratos.proceso.tab-certificacion-contrato :certificacionservicio="$opsolservicio" :accion="'create'"  :nombreRuta="$nombreRuta" />
 			</div>
 		</div>
 	</div>

@@ -78,7 +78,6 @@
                     <th style="width:50px">Sub.Esp</th>
                     <th style="width:350px">Descripción</th>
                     <th style="width:50px">Monto</th>
-                    <th style="width:90px">Cod. Cuenta</th>
                 </tr>
             </thead >
             <tbody>
@@ -119,9 +118,6 @@
                     </td>
                     <td class="text-center">
                         {{  $detallegasto['mto_tra'] }}
-                    </td>
-                    <td class="text-center">
-                        {{  $detallegasto['cod_cta'] }}
                     </td>
                 </tr>
             @empty

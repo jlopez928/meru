@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Administrativo\MeruAdministrativo\Contratos\Procesos;
+namespace App\Http\Livewire\Administrativo\MeruAdministrativo\Contratos\Proceso;
 
 use App\Models\Administrativo\Meru_Administrativo\Tesoreria\Beneficiario;
 use App\Models\Administrativo\Meru_Administrativo\Configuracion\Gerencia;
@@ -425,6 +425,6 @@ class TabActaContratoObraServ extends Component
 
     public function render()
     {
-        return view('livewire.administrativo.meru-administrativo.contratos.procesos.tab-acta-contrato-obra-serv');
+        return view('livewire.administrativo.meru-administrativo.contratos.proceso.tab-acta-contrato-obra-serv');
     }
 }

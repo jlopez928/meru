@@ -2,12 +2,12 @@
 
 namespace App\Models\Administrativo\Meru_Administrativo\CuentasPorPagar;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Administrativo\Meru_Administrativo\Contabilidad\PlanContable;
 use Illuminate\Database\Eloquent\Model;
 
 class CxpDetContableSolpago extends Model
 {
-    use HasFactory;
+
 
     protected $table = 'cxp_detcontablesolpago';
 
@@ -22,5 +22,9 @@ class CxpDetContableSolpago extends Model
     public $timestamps = false;
 
     protected $guarded = [];
+    public function plancontable()
+	{
+		return $this->belongsTo(PlanContable::class, 'cod_cta', 'cod_cta')->withDefault();
 
+	}
 }

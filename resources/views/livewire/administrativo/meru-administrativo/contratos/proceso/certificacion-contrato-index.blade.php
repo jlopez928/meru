@@ -52,9 +52,11 @@
                                 <a href="{{ route('contratos.proceso.print_certificacionobras','xnro_sol='.$certificacionItem->xnro_sol.'&ano_pro='.$certificacionItem->ano_pro) }}" type="button" class="btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Imprimir Certificación">
                                     <span class="fas fa-print" aria-hidden="true"></span>
                                 </a>
-                                <a href="{{ route('contratos.proceso.certificacioncontrato.show', [ $certificacionItem->id ,'cierre'] ) }}" type="button" class="btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Cierre de Compromiso">
-                                    <span class="fas fa-briefcase text-danger" aria-hidden="true"></span>
-                                </a>
+                                @if($certificacionItem->ult_sol !='-1')
+                                    <a href="{{ route('contratos.proceso.certificacioncontrato.show', [ $certificacionItem->id ,'cierre'] ) }}" type="button" class="btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Cierre de Compromiso">
+                                        <span class="fas fa-briefcase text-danger" aria-hidden="true"></span>
+                                    </a>
+                                @endif
                             @endif
                             @if($certificacionItem->sta_sol->value =='C')
                                 <a href="{{ route('contratos.proceso.print_certificacionobras','xnro_sol='.$certificacionItem->xnro_sol.'&ano_pro='.$certificacionItem->ano_pro) }}" type="button" class="btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Imprimir Certificación">

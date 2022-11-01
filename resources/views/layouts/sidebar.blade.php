@@ -4,8 +4,8 @@
         <div class="text-center">
             <img src="{{ asset('img/HB_Logo.png') }}" alt="logo sm" style="height:88px; width:88px; margin-bottom:10px; border-radius:50%;">
         </div>
-        
-        @include('layouts/periodo-fiscal')
+
+       @include('layouts/periodo-fiscal')
     </div>
     <div class="sidebar">
         <!-- Sidebar user -->

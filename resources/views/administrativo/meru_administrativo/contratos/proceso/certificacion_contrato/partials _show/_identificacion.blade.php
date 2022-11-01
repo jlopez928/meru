@@ -165,17 +165,17 @@
                     @error('factura') {{ $message }} @enderror
                 </div>
             </x-field>
-            <x-field class="text-center col-2 offset-2">
-                <x-label for="mod">Tipo de Addendum</x-label>
-                <x-select  id="mod" name="mod" wire:model.defer="mod" class="form-control-sm {{ $errors->has('mod') ? 'is-invalid' : '' }}">
-                    <option value="">Seleccione</option>
-                    <option value="0">Aumenta</option>
-                    <option value="S">Disminuye</option tion>
-                </x-select>
-                <div class="invalid-feedback">
-                    @error('mod') {{ $message }} @enderror
-                </div>
-            </x-field>
+            @if($nombreRuta =='addendum')
+                <x-field class="text-center col-2 ">
+                    <x-label for="mod">Tipo de Addendum</x-label>
+                    <x-select style="pointer-events:none"  readonly  id="mod" name="mod" wire:model.defer="mod" class="form-control-sm {{ $errors->has('mod') ? 'is-invalid' : '' }}">
+                        <option value="{{$opsolservicio->mod=='0'?'0':'S'}}">{{$opsolservicio->mod=='0'?'Aumenta':'Disminuye'}}</option>
+                    </x-select>
+                    <div class="invalid-feedback">
+                        @error('mod') {{ $message }} @enderror
+                    </div>
+                </x-field>
+            @endif
         </div>
 
 

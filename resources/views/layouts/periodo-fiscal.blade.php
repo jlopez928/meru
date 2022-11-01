@@ -1,5 +1,5 @@
 <div class="text-center">
-    <form id="periodo-form" action="{{ route('configuracion.control.registrocontrol.periodo_actual') }}" method="POST" 
+    <form id="periodo-form" action="{{ route('configuracion.control.registrocontrol.periodo_actual') }}" method="POST"
     style="font-size:12px !important;">
         @csrf
         <label for="ano_pro" class="text-white">Periodo Fiscal:&nbsp;</label>

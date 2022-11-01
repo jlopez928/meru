@@ -5,7 +5,7 @@ use App\Models\Administrativo\Meru_Administrativo\OtrosPagos\OpSolservicio;
 use App\Traits\WithSorting;
 use Livewire\WithPagination;
 use Livewire\Component;
-
+use Illuminate\Support\Facades\Route;
 
 class CertificacionContratoIndex extends Component
 {   use WithPagination, WithSorting;
@@ -31,7 +31,27 @@ class CertificacionContratoIndex extends Component
     }
     public function render()
     {
-
+       if ( Route::currentRouteName()=='contratos.proceso.certificacioncontrato.index'){
+                $query= OpSolservicio::query()
+                ->where('grupo', '=', 'CO')
+                ->where('ult_sol', '>=', 0)
+                ->where('ano_pro', 'like', '%'.$this->search.'%')
+                ->Where('xnro_sol', 'like', '%'.$this->search.'%')
+                ->where('rif_prov', 'like', '%'.$this->search.'%')
+                ->orderBy($this->sort2, $this->direction)
+                ->orderBy($this->sort, $this->direction)
+                ->paginate($this->paginate);
+       }else{
+                $query= OpSolservicio::query()
+                ->where('grupo', '=', 'CO')
+                ->where('ult_sol', '=', -1)
+                ->where('ano_pro', 'like', '%'.$this->search.'%')
+                ->Where('xnro_sol', 'like', '%'.$this->search.'%')
+                ->where('rif_prov', 'like', '%'.$this->search.'%')
+                ->orderBy($this->sort2, $this->direction)
+                ->orderBy($this->sort, $this->direction)
+                ->paginate($this->paginate);
+       }
         return view('livewire.administrativo.meru-administrativo.contratos.proceso.certificacion-contrato-index', [
             'headers' => [
                 ['name' => 'Id',              'align' => 'center', 'sort' => 'id'],
@@ -44,14 +64,7 @@ class CertificacionContratoIndex extends Component
                 ['name' => 'Estado',          'align' => 'center', 'sort' => 'sta_sol'],
                 'Acción'
             ],
-            'certificacion' => OpSolservicio::query()
-                    ->where('grupo', '=', 'CO')
-                    ->where('ano_pro', 'like', '%'.$this->search.'%')
-                    ->Where('xnro_sol', 'like', '%'.$this->search.'%')
-                    ->where('rif_prov', 'like', '%'.$this->search.'%')
-                    ->orderBy($this->sort2, $this->direction)
-                    ->orderBy($this->sort, $this->direction)
-                    ->paginate($this->paginate)
+            'certificacion' =>$query
                     ]);
 
 

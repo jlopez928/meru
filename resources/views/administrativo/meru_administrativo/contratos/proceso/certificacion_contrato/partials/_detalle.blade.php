@@ -3,7 +3,7 @@
     <div class="row col-12">
         <x-field class="text-center col-4 offset-2">
             <x-label for="Ano">Motivo</x-label>
-            <textarea wire:model.defer ="motivo"   id="motivo" name="motivo" class="form-control {{ $errors->has('motivo') ? 'is-invalid' : '' }}" rows="3"></textarea>
+            <textarea   style="{{ $nombreRuta =='contrato'||  $habilitar==true ? '' : 'pointer-events: none' }}" wire:model.defer ="motivo"  id="motivo" name="motivo" class="form-control {{ $errors->has('motivo') ? 'is-invalid' : '' }}" rows="3"></textarea>
             <div class="invalid-feedback">
                 @error('motivo') {{ $message }} @enderror
             </div>
@@ -11,7 +11,7 @@
 
         <x-field class="text-center col-4 ">
             <x-label for="observaciones">Observaciones</x-label>
-            <textarea wire:model.defer ="observaciones"   id="observaciones" name="observaciones" class="form-control {{ $errors->has('observaciones') ? 'is-invalid' : '' }}" rows="3"></textarea>
+            <textarea  style="{{ $nombreRuta =='contrato'||  $habilitar==true ? '' : 'pointer-events: none' }}" wire:model.defer ="observaciones"   id="observaciones" name="observaciones" class="form-control {{ $errors->has('observaciones') ? 'is-invalid' : '' }}" rows="3"></textarea>
             <div class="invalid-feedback">
                 @error('observaciones') {{ $message }} @enderror
             </div>
@@ -22,7 +22,7 @@
     </div>
     <div class="dropdown-divider col-12" style="border-color:#84b7e0 !important; padding-bottom: 20px !important;"></div>
     <div class="mb-2">
-        <table  class="table table-bordered table-sm text-center " >
+        <table   style="{{ $nombreRuta =='contrato'||  $habilitar==true ? '' : 'pointer-events: none' }}" class="table table-bordered table-sm text-center " >
             <thead class="">
                 <tr class="table-primary">
                     <th style="width:150px">Código</th>
@@ -67,7 +67,8 @@
     <div class="dropdown-divider col-12" style="border-color:#84b7e0 !important; padding-bottom: 20px !important;"></div>
     <div class="mb-2"  x-data="{  open: @entangle('showDropdown')}">
         <input id="hiddenDetalle" type="hidden"   name="listadoDetalle">
-        <table  class="table table-bordered table-sm text-center " >
+        <input id="habilitar" type="hidden"  wire:model.defer="habilitar"  name="habilitar">
+        <table  style='pointer-events: none' class="table table-bordered table-sm text-center " >
             <thead class="">
                 <tr class="table-primary">
                     <th style="width:50px">Gasto</th>
@@ -82,16 +83,13 @@
                     <th style="width:50px">Sub.Esp</th>
                     <th style="width:350px">Descripción</th>
                     <th style="width:50px">Monto</th>
-                    <th style="width:90px">Cod. Cuenta</th>
                 </tr>
             </thead >
             <tbody>
                 @forelse ($this->detallegasto as $index => $detalle)
                     <tr>
                         <td  class="text-center">
-                            <span   wire:click="habilitar_checkbox('N')" x-show="!open[{{ $index }}]" x-on:click="open[{{ $index }}]=!open[{{ $index }}]" style="cursor:pointer"  >{{ $detalle['gasto']=='1'?'Si':'No' }}</span>
-                            <input  wire:click="habilitar_checkbox({{ $index }})"  name="chk-{{ $index }}" x-show="open[{{ $index }}]" x-on:click="open[{{ $index }}]=!open[{{ $index }}]" wire:model.defer="selectedcheck.{{ $index }}" type="checkbox" value="1" >
-                        </td>
+                            {{ $detalle['gasto']=='1'?'Si':'No' }}     </td>
                         <td class="text-center">
                             {{ $detalle['tip_cod'] }}
                         </td>
@@ -124,9 +122,6 @@
                         </td>
                         <td class="text-center">
                             {{  $detalle['mto_tra'] }}
-                        </td>
-                        <td class="text-center">
-                            {{  $detalle['cod_cta'] }}
                         </td>
                     </tr>
                 @empty
@@ -167,9 +162,13 @@
     <div class="row col-12">
         <div class="text-center  form-group col-2 offset-3">
             <x-label for="monto_iva">Monto Iva</x-label>
-            <x-input style="{{ $factura =='N' ? 'pointer-events: none' : '' }}" wire:keydown.tab.prevent="validar_monto_Iva()" name="monto_iva" id="monto_iva"  wire:model.defer="monto_iva" x-mask:dynamic="$money($input, ',')" class="money-mask text-center form-control-sm {{ $errors->has('monto_iva') ? 'is-invalid' : '' }}" />
+            @if($nombreRuta =='contrato')
+              <x-input style="{{ $factura =='N' ? 'pointer-events: none' : '' }}" wire:keydown.tab.prevent="validar_monto_Iva()" name="monto_iva" id="monto_iva"  wire:model.defer="monto_iva" x-mask:dynamic="$money($input, ',')" class="money-mask text-center form-control-sm {{ $errors->has('monto_iva') ? 'is-invalid' : '' }}" />
+            @else
+                <x-input readonly wire:keydown.tab.prevent="validar_monto_Iva()" name="monto_iva" id="monto_iva"  wire:model.defer="monto_iva" x-mask:dynamic="$money($input, ',')" class="money-mask text-center form-control-sm {{ $errors->has('monto_iva') ? 'is-invalid' : '' }}" />
+            @endif
             <div class="invalid-feedback">
-                @error('monto_iva') {{ $message }} @enderror
+            @error('monto_iva') {{ $message }} @enderror
             </div>
          </div>
          <div class="text-center  form-group col-2">

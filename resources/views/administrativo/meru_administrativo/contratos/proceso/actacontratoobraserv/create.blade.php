@@ -20,7 +20,7 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-12">
-                <livewire:administrativo.meru-administrativo.contratos.procesos.tab-acta-contrato-obra-serv :actaencnotaentrega="$encnotaentrega" :accion="'create'"/>
+                <livewire:administrativo.meru-administrativo.contratos.proceso.tab-acta-contrato-obra-serv :actaencnotaentrega="$encnotaentrega" :accion="'create'"/>
 			</div>
 		</div>
 	</div>
