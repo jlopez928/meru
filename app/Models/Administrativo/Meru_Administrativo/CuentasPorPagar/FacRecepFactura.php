@@ -18,7 +18,7 @@ class FacRecepFactura extends Model
     protected $table = 'fac_recepfacturas';
     protected $primaryKey = 'id';
     protected $dates = [
-        'fec_fac','fec_rec','fec_entrega','fec_dev'
+        'fec_fac','fec_rec','fec_entrega','fec_dev', 'fec_apr'
     ];
     public $timestamps = false;
     protected $fillable = [
@@ -39,6 +39,7 @@ class FacRecepFactura extends Model
         'fec_sta',
         'ano_sol',
         'recibo',
+        'ano_ing_factura'
     ];
 
     public function proveedor()
