@@ -90,7 +90,7 @@ class RecepFacturaController extends Controller
             DB::connection('pgsql')->beginTransaction();
 
             $msj = "Error al Ingresar la Recepcion de Factura.";
-
+         //   return $recepfactura->ano_pro;
            FacRecepFactura::create([
                 'ano_pro'            => $recepfactura->ano_pro,
                 'nro_reng'           => $nro_reng,
@@ -98,7 +98,7 @@ class RecepFacturaController extends Controller
                 'num_fac'            => $recepfactura->num_fac,
                 'fec_fac'            => $recepfactura->fec_fac,
                 'fec_rec'            => $recepfactura->fec_rec,
-                'hor_rec'            => $recepfactura->hor_rec,
+                'hor_rec'            => now()->format('H:i:s'),
                 'mto_fac'            => $recepfactura->mto_fac,
                 'concepto'           => $recepfactura->concepto,
                 'sta_fac'            => '0',
@@ -108,6 +108,7 @@ class RecepFacturaController extends Controller
                 'nro_doc'            => $recepfactura->nro_doc,
                 'ano_sol'            => $recepfactura->ano_sol,
                 'recibo'             => $recepfactura->recibo,
+                'ano_ing_factura'    => $recepfactura->ano_pro
             ]);
 
 

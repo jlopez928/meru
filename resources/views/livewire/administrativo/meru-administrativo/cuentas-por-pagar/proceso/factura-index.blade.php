@@ -1,5 +1,4 @@
 <x-datatable :list="$factura">
-
     @if (count($factura))
         <div class="table-responsive">
             <x-table-headers class="py-2" :sortby="$sort" :order="$direction" :headers="$headers">
@@ -31,43 +30,41 @@
                                             @endswitch
                         </td>
                         <td align="center" >
-                            {{--  @if ($facturaItem->sta_fac!=2 && $facturaItem->sta_fac!=3)
-                                <a href="{{route('cuentasxpagar.proceso.factura.show',[$facturaItem,'devolver']) }}" type="button" class="btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Devolver Factura">
-                                    <span class="fas fa-undo"></span>
+                            @if ($facturaItem->sta_fac == 2 || $facturaItem->sta_fac == 0)
+                                <a href="{{route('cuentasxpagar.proceso.factura.show',[$facturaItem,'cambiar']) }}" type="button" class="btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Cambiar Factura">
+                                    <span class="fas fa-edit"></span>
+                                </a>
+                            @endif
+
+                            @if ($facturaItem->sta_fac == 2 || $facturaItem->sta_fac == 0)
+                                <a href="{{route('cuentasxpagar.proceso.factura.show', [$facturaItem->id,'anular']) }}" type="button" class="btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Anular Factura">
+                                    <span class="fas fa-expand-arrows-alt" style="color: #0b7ff3" ></span>
+                                </a>
+                            @endif
+
+                            @if ($facturaItem->sta_fac == 0 )
+                                <a href="{{route('cuentasxpagar.proceso.factura.show', [$facturaItem->id,'aprobar']) }}" type="button" class="btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Aprobar Factura">
+                                    <span class="fas fa-check" style="color: #f3aa0b" ></span>
 
                                 </a>
                             @endif
 
-                            @if ($facturaItem->sta_fac==2 )
-                                <a href="{{route('cuentasxpagar.proceso.factura.show', [$facturaItem->id,'entregar']) }}" type="button" class="btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Entregar Factura">
-                                    <span class="fas fa-table" style="color: #0b7ff3" ></span>
+                            @if ($facturaItem->sta_fac == 1 )
+                                <a href="{{route('cuentasxpagar.proceso.factura.show', [$facturaItem->id,'reversar']) }}" type="button" class="btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Reversar Factura">
+                                    <span class="fas fa-undo" style="color: #044b1d" ></span>
+                                </a>
+                            @endif
+                            @if ($facturaItem->sta_fac == 1 || $facturaItem->sta_fac == 2)
+                                <a href="{{route('cuentasxpagar.proceso.factura.show', [$facturaItem->id,'modificar']) }}" type="button" class="btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Modificar Asiento">
+                                    <span class="fas fa-tasks" style="color: #f30b54" ></span>
                                 </a>
                             @endif
 
-                            @if ($facturaItem->sta_fac==3 )
-                                <a href="{{route('cuentasxpagar.proceso.factura.show', [$facturaItem->id,'reactivar']) }}" type="button" class="btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Reactivar Factura">
-                                    <span class="fas fa-sort-amount-up" style="color: #f3aa0b" ></span>
-                                </a>
-                            @endif
-
-                            @if ( $facturaItem->sta_fac==0 || $facturaItem->sta_fac==2 )
-                                <a href="{{route('cuentasxpagar.proceso.factura.show', [$facturaItem->id,'modificar']) }}" type="button" class="btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Modificar Factura">
-                                    <span class="fas fa-retweet" style="color: #044b1d" ></span>
-
-                                </a>
-                             @endif
-
-                             @if ( $facturaItem->sta_fac==0 )
-                                <a href="{{route('cuentasxpagar.proceso.factura.show', [$facturaItem->id,'eliminar']) }}" type="button" class="btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Eliminar Factura">
-                                    <span class="fas fa-trash" style="color: #f30b54" ></span>
-                                </a>
-                            @endif
-
-                            @if ( $facturaItem->sta_fac==3 )
+                           {{-- @if ( $facturaItem->sta_fac==3 )
                                 <a href="{{route('cuentasxpagar.reporte.print_devolver_fact_recibida', $facturaItem) }}" target="_blank" type="button" class="btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Devolver Factura Recibida">
                                     <span class="fas fa-print" style="color: #f30b54" ></span>
                                 </a>
-                            @endif  --}}
+                          {{--  @endif  --}}
 
                         </td>
                     </tr>

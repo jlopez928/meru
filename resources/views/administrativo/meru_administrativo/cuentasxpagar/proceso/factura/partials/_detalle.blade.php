@@ -10,12 +10,13 @@
 
     <div class="row col-12 offset-2">
         <div class="form-group col-2">
-            <x-label for="lbase_imponible">Base Imponible</x-label>
+            <x-label for="base_imponible">Monto Neto</x-label>
             <x-input name="base_imponible" wire:model.defer="base_imponible" class="form-control-sm text-sm-center {{ $errors->has('base_imponible') ? 'is-invalid' : '' }}"   value="{{ $factura->base_imponible }}"  readonly/>
             <div class="invalid-feedback">
                 @error('base_imponible') {{ $message }} @enderror
             </div>
         </div>
+
         <div class="form-group col-2">
             <x-label for="base_excenta">Base exenta</x-label>
             <x-input name="base_excenta" wire:model.defer="base_excenta" class="form-control-sm text-sm-center {{ $errors->has('base_excenta') ? 'is-invalid' : '' }}"   value="{{ $factura->base_excenta }}" readonly />
@@ -127,8 +128,8 @@
         <div class="dropdown-divider col-12" style="border-color:#84b7e0 !important; padding-bottom: 20px !important;"></div>
     </div>
     <div class="row col-12 offset-2">
-        {{--  <input id="hiddenDetalle" type="hidden" wire:model.defer ="listadoDetalle" name="listadoDetalle">
-        <input id="hiddengastos"  type="hidden" wire:model.defer ="listadoGastos"  name="listadoGastos">  --}}
+        <input id="hiddenDetalle" type="hidden" wire:model.defer ="listadoDetalle" name="listadoDetalle">
+        <input id="hiddengastos"  type="hidden" wire:model.defer ="listadoGastos"  name="listadoGastos">
         <table  class="table table-bordered table-striped table-hover text-nowrap table-responsive">
             <thead>
                 <tr align="center" style="background: rgba(128, 255, 0, 0.3); border: 1px solid rgba(100, 200, 0, 0.3);">
@@ -138,13 +139,13 @@
                     <th>NE Proveedor</th>
                     <th>Imponible</th>
                     <th>Exenta</th>
-                    <th>Monto IVA/th>
+                    <th>Monto IVA</th>
                     <th>Monto</th>
                 </tr>
             </thead>
             <tbody>
 
-                @foreach ($factura->cxpdetnotasfacturas as $index => $detalle )
+                {{--  @foreach ($factura->cxpdetnotasfacturas as $index => $detalle )
                 <tr>
                     <td class="text-center">
                         {{ 'Si' }}
@@ -159,19 +160,23 @@
                         {{  $detalle['nota_entrega'] }}
                     </td>
                     <td class="text-center">
-                        {{  $detalle['base_imponible'] }}
+                        <x-input wire:model.defer="base_imponible_n"  id="base_imponible_n" name="base_imponible_n" style="border: 1px solid rgba(95, 96, 95, 0.3);" class="form-control-sm text-sm-right border-0 "  x-mask="999.99" value="{{ $detalle['base_imponible']? $detalle['base_imponible']: 0.00 }}" />
+
                     </td>
                     <td class="text-center">
-                        {{  $detalle['base_excenta'] }}
+                        <x-input wire:model.defer="base_excenta_n"  id="base_excenta_n" name="base_excenta_n" style="border: 1px solid rgba(95, 96, 95, 0.3);" class="form-control-sm text-sm-right border-0 "  x-mask="999.99" value="{{   $detalle['base_excenta']?   $detalle['base_excenta']: 0.00 }}" />
+
                     </td>
                     <td class="text-center">
-                        {{  $detalle['mto_iva'] }}
+                        <x-input wire:model.defer="mto_iva_n"  id="mto_iva_n" name="mto_iva_n" style="border: 1px solid rgba(95, 96, 95, 0.3);" class="form-control-sm text-sm-right border-0 "  x-mask="999.99" value="{{   $detalle['mto_iva']?   $detalle['mto_iva']: 0.00 }}" />
+
                     </td>
                     <td class="text-center">
-                        {{  $detalle['mto_ord'] }}
+                        <x-input wire:model.defer="mto_ord"  id="mto_ord" name="mto_ord" style="border: 1px solid rgba(95, 96, 95, 0.3);" class="form-control-sm text-sm-right border-0 "  x-mask="999.99" value="{{   $detalle['mto_ord']?   $detalle['mto_ord']: 0.00 }}" />
+
                     </td>
                 </tr>
-                @endforeach
+                @endforeach  --}}
             </tbody>
         </table>
     </div>

@@ -30,7 +30,7 @@ class FacturaRequest extends FormRequest
             'recibo'            => 'required',
             'provisionada'      => 'required',
             'servicio'          => 'required',
-           // 'id'                => 'required',
+            //'id'                => 'required',
             // 'num_ctrl',
             // 'fec_fac',
             // 'tipo_doc',
@@ -106,7 +106,7 @@ class FacturaRequest extends FormRequest
             'recibo'             => 'Recibo',
             'provisionada'       => 'Provisionada',
             'servicio'           => 'Servicio',
-          // 'id'                 => 'Identificador sistema',
+            'id'                 => 'Identificador sistema',
 
 
         ];

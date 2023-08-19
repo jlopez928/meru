@@ -38,7 +38,8 @@
         </div>
         <div class="form-group col-3">
             <x-label for="ano_pro">Año Doc.</x-label>
-            <x-input name="ano_pro" wire:model.defer="ano_pro" class="form-control-sm text-sm-center {{ $errors->has('ano_pro') ? 'is-invalid' : '' }}"   value="{{ $factura->ano_pro }}"  />
+            <x-input name="ano_pro" wire:model.defer="ano_pro" class="form-control-sm text-sm-center  {{ $errors->has('ano_pro') ? 'is-invalid' : '' }}"   value="{{ $factura->ano_pro }}"  />
+        {{--  <x-input id="ano_pro" name="ano_pro" wire:model.defer="ano_pro" class="form-control-sm text-sm-center {{ $errors->has('ano_pro') ? 'is-invalid' : '' }}"   value="{{ $factura->ano_pro }}"   />--}}
             <div class="invalid-feedback">
                 @error('ano_pro') {{ $message }} @enderror
             </div>
@@ -83,8 +84,8 @@
             </div>
         </div>
         <div class="form-group col-3">
-            <x-label for="lnum_ctrl">Nro. Control</x-label>
-            <x-input name="num_ctrl" wire:model.defer="num_ctrl" class="form-control-sm text-sm-center {{ $errors->has('num_ctrl') ? 'is-invalid' : '' }}"   value="{{ $factura->num_ctrl }}" readonly />
+            <x-label for="num_ctrl">Nro. Control</x-label>
+            <x-input id="num_ctrl" name="num_ctrl" wire:model.defer="num_ctrl" class="form-control-sm text-sm-center {{ $errors->has('num_ctrl') ? 'is-invalid' : '' }}"   value="{{ $factura->num_ctrl }}" readonly />
             <div class="invalid-feedback">
                 @error('num_ctrl') {{ $message }} @enderror
             </div>
@@ -100,11 +101,20 @@
         </div>
         <div class="form-group col-2">
             <x-label for="recibo">Tipo</x-label>
-            <x-select  id="recibo" name="recibo" wire:model.defer="recibo"  wire:keydown.tab.prevent="datosFactura()" class="form-control text-center form-control-sm {{ $errors->has('recibo') ? 'is-invalid' : '' }}" >
-                <option value="">-- Seleccione Beneficiario --</option>
-                <option value="{{'F'}}" @if($factura->recibo=='F') selected @endif> {{'Factura'}}</option>
-                <option value="{{'R'}}" @if($factura->recibo=='F') selected @endif> {{'Recibo'}}</option>
-            </x-select>
+            @if ($accion=='create')
+                <x-select  id="recibo" name="recibo" wire:model.defer="recibo"   wire:keydown.tab.prevent="nuevaFactura()" class="form-control text-center form-control-sm {{ $errors->has('recibo') ? 'is-invalid' : '' }}" >
+                    <option value="">-- Seleccione Beneficiario --</option>
+                    <option value="{{'F'}}" @if($factura->recibo=='F') selected @endif> {{'Factura'}}</option>
+                    <option value="{{'R'}}" @if($factura->recibo=='R') selected @endif> {{'Recibo'}}</option>
+                </x-select>
+            @else ($accion=='cambiar')
+                <x-select  id="recibo" name="recibo" wire:model.defer="recibo"  class="form-control text-center form-control-sm {{ $errors->has('recibo') ? 'is-invalid' : '' }}" >
+                    <option value="">-- Seleccione Beneficiario --</option>
+                    <option value="{{'F'}}" @if($factura->recibo=='F') selected @endif> {{'Factura'}}</option>
+                    <option value="{{'R'}}" @if($factura->recibo=='R') selected @endif> {{'Recibo'}}</option>
+                </x-select>
+
+            @endif
             <div class="invalid-feedback">
                 @error('recibo') {{ $message }} @enderror
             </div>
@@ -232,8 +242,8 @@
         <div class="form-group col-2">
             <x-label for="mto_amortizacion">Monto de Amortización</x-label>
             <x-input name="mto_amortizacion" wire:model.defer="mto_amortizacion" class="form-control-sm text-sm-center {{ $errors->has('mto_amortizacion') ? 'is-invalid' : '' }}"   value="{{ $factura->mto_amortizacion }}"  readonly />
-                <x-input name="servicio" wire:model.defer="servicio" style="visibility: hidden" class="form-control-sm text-sm-center"   value="'O'"  readonly />
-                <x-input name="id" wire:model.defer="id" style="visibility: hidden" class="form-control-sm text-sm-center"   value="1"  readonly />
+            <x-input name="servicio" wire:model.defer="servicio" style="visibility: hidden" class="form-control-sm text-sm-center"   value="'O'"  readonly />
+            <x-input name="id" wire:model.defer="id" style="visibility: hidden" class="form-control-sm text-sm-center"   value="1"  readonly />
 
                 <div class="invalid-feedback">
                 @error('mto_amortizacion') {{ $message }} @enderror
