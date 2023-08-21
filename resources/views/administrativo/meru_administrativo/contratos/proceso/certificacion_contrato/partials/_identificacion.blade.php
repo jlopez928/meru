@@ -88,6 +88,7 @@
                     @error('pto_cta') {{ $message }} @enderror
                 </div>
                 </x-field>
+
             <x-field class="text-center col-2 ">
                 <x-label for="lfec_pto">Fecha del Punto</x-label>
                  <x-input  wire:model.defer="fec_pto" id="fec_pto" name="fec_pto" type="date" class="form-control-sm {{ $errors->has('fec_pto') ? 'is-invalid' : '' }}"/>
