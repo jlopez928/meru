@@ -230,7 +230,7 @@ trait ReportFpdf
      * @param $alineacion_columnas= Arreglo q contiene la alineacion de las columnas
      * @param $ancho_columnas= Arreglo de contiene el ancho de las columnas
      * @param $campos= Arreglo con los datos a colocar en las columnas
-     *****************************************************************/
+     **********************************************************************/
 	function pintar_registros_pdf($pdf,$data,$campos,$setX = true)
 	{
 		$y1 = $pdf->GetY();

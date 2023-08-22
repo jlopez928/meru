@@ -143,7 +143,7 @@
     </div>
 
     <div class="row col-12  offset-2">
-        <table  class="table table-bordered table-striped table-hover text-nowrap table-responsive">   
+        <table  class="table table-bordered table-striped table-hover text-nowrap table-responsive">
             <thead>
                 <tr align="center" style="background: rgba(128, 255, 0, 0.3); border: 1px solid rgba(100, 200, 0, 0.3);">
                     <th>TP</th>
