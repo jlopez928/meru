@@ -25,7 +25,10 @@ class ProveedorRequest extends FormRequest
     {
         return [
             'tip_emp'       => 'required',
-            'rif_prov'      => 'required',
+            // 'user_name' => 'required|unique:users_table,user_name,'.$id.',user_id'
+            // 'rif_prov'      => 'required|min:12|unique:'.'pgsql.proveedores,rif_prov',
+            // TODO verificar que el rif_prov no exista
+            'rif_prov'      => 'required|min:12|unique:'.'pgsql.proveedores,rif_prov,'.$this->rif_prov.',rif_prov',
             'cod_prov'      => 'sometimes',
             'tip_reg'       => 'sometimes',
             'nom_prov'      => 'required|max:90',
@@ -62,7 +65,6 @@ class ProveedorRequest extends FormRequest
             'fec_laboral'   => 'sometimes',
             'sol_agua'      => 'sometimes',
             'fec_agua'      => 'sometimes',
-
         ];
     }
 
@@ -84,6 +86,22 @@ class ProveedorRequest extends FormRequest
             'sol_laboral'   => strtoupper($this->sol_laboral ?? ''),
             'sol_agua'      => strtoupper($this->sol_agua ?? ''),
         ]);
+    }
+
+    public function attributes()
+    {
+        return [
+            'rif_prov'  => 'rif',
+            'tip_emp'   => 'tipo',
+            'nom_prov'  => 'nombre',
+            'dir_prov'  => 'dirección',
+            'ced_res'   => 'cédula',
+            'nom_res'   => 'nombre',
+            'car_res'   => 'cargo',
+            'ubi_pro'   => 'ubicación',
+            'cod_edo'   => 'estado',
+            'cod_mun'   => 'municipio',
+        ];
     }
 
 }

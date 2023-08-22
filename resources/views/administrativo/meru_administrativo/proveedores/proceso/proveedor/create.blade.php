@@ -19,8 +19,13 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-                    <x-form method="post" action="{{ route('proveedores.proceso.proveedor.store') }}">
-                        @include('administrativo/meru_administrativo/proveedores/proceso/proveedor/partials/_form')
+                    <x-form name="formulario" method="post" action="{{ route('proveedores.proceso.proveedor.store') }}">
+                        @include('administrativo/meru_administrativo/proveedores/proceso/proveedor/partials/_form',
+                        [
+                            'message'  => '¿Está seguro de Crear este Proveedor',
+                            'btnTitle' => 'Guardar Datos del Proveedor',
+                            'btnName'  => 'Guardar'
+                        ])
                     </x-form>
                 </div>
             </div>

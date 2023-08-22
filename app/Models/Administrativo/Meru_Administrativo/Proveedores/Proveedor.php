@@ -3,6 +3,7 @@
 namespace  App\Models\Administrativo\Meru_Administrativo\Proveedores;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Administrativo\Meru_Administrativo\Proveedores\Ramo;
 use App\Enums\Administrativo\Meru_Administrativo\Proveedores\TipoEmpresa;
@@ -39,5 +40,17 @@ class Proveedor extends Model
     public function ramos(){
         return $this->belongsToMany(Ramo::class, 'pro_ramosproveedores','rif_prov', 'cod_ram')
                                     ->withPivot(['usuario']);
+    }
+
+    protected function capital() : Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => number_format($value, 2, ',', '.'),
+            set: fn($value) => str_replace(",", ".", str_replace(".", "", $value)),
+        );
+    }
+
+    public static function  formatear($valor,$cantidad) {
+        return \Str::padLeft($valor, $cantidad, '0');
     }
 }

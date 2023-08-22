@@ -28,6 +28,11 @@ Route::controller(ProveedorController::class)
 		Route::get('proveedores/{proveedor}/edit', 'edit')->name('edit');
 		Route::get('proveedores/{proveedor}', 'show')->name('show');
 		Route::put('proveedores/{proveedor}', 'update')->name('update');
+		Route::get('proveedores/{proveedor}/suspender', 'suspender')->name('suspender');
+		Route::put('proveedores/{proveedor}/suspender', 'suspender_proveedor')->name('suspender');
+		Route::get('proveedores/{proveedor}/reactivar', 'reactivar')->name('reactivar');
+		Route::put('proveedores/{proveedor}/reactivar', 'reactivar_proveedor')->name('reactivar');
+		Route::delete('proveedores/{proveedor}', 'destroy')->name('destroy');
 	});
 
 // Ramos
@@ -67,7 +72,9 @@ Route::controller(ReporteProveedorController::class)
 	->group(function () {
 
 		Route::get('proveedoressuspendidos', 'proveedoressuspendidos')->name('proveedoressuspendidos');
+        Route::get('proveedores', 'proveedores')->name('proveedores');
 	});
+
 Route::middleware(['auth', 'periodo-fiscal'])
     ->prefix('proveedores')
     ->as('proveedores.')

@@ -9,8 +9,9 @@
                     id="decimal-input"
                     name="capital"
                     value="{{ old('capital', $proveedor->capital) }}"
-                    {{--  maxlength="23"  --}}
                     maxlength="11"
+                    title="Indique Capital Suscrito de la Empresa"
+                    x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                 />
                 <div class="invalid-feedback">
                     @error('capital') {{ $message }} @enderror
@@ -25,6 +26,8 @@
                     style="text-transform: uppercase"
                     value="{{ old('nivel_cont', $proveedor->nivel_cont) }}"
                     maxlength="10"
+                    title="Indique Nivel de Contratación de la Empresa"
+                    x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                 />
                 <div class="invalid-feedback">
                     @error('nivel_cont') {{ $message }} @enderror
@@ -41,6 +44,8 @@
                     name="num_fem"
                     value="{{ old('num_fem', $proveedor->num_fem ?? 0) }}"
                     dir="rtl"
+                    title="Indique Numero de Mujeres que trabajan en la Cooperativa"
+                    x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                 />
                 <div class="invalid-feedback">
                     @error('num_fem') {{ $message }} @enderror
@@ -55,6 +60,8 @@
                     name="num_mas"
                     value="{{ old('num_mas', $proveedor->num_mas ?? 0) }}"
                     dir="rtl"
+                    title="Indique Numero de Hombres que trabajan en la Cooperativa"
+                    x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                 />
                 <div class="invalid-feedback">
                     @error('num_mas') {{ $message }} @enderror
@@ -76,6 +83,8 @@
                         name="sol_ivss"
                         value="{{ old('sol_ivss', $proveedor->sol_ivss) }}"
                         maxlength="10"
+                        title="Indique Número de Solvencia de I.V.S.S de la Empresa"
+                        x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                     />
                     <div class="invalid-feedback">
                         @error('sol_ivss') {{ $message }} @enderror
@@ -89,6 +98,8 @@
                         name="fec_ivss"
                         class="form-control-sm {{ $errors->has('fec_ivss') ? 'is-invalid' : 'is-valid' }}"
                         value="{{ old('fec_ivss', $proveedor->fec_ivss) }}"
+                        title="Indique Fecha de Solvencia de I.V.S.S de la Empresa"
+                        x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                     />
                     <div class="invalid-feedback">
                         @error('fec_ivss') {{ $message }} @enderror
@@ -105,6 +116,8 @@
                         name="sol_ince"
                         value="{{ old('sol_ince', $proveedor->sol_ince) }}"
                         maxlength="10"
+                        title="Indique Número de Solvencia de I.N.C.E de la Empresa"
+                        x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                     />
                     <div class="invalid-feedback">
                         @error('sol_ince') {{ $message }} @enderror
@@ -118,6 +131,8 @@
                         name="fec_ince"
                         class="form-control-sm {{ $errors->has('fec_ince') ? 'is-invalid' : 'is-valid' }}"
                         value="{{ old('fec_ince', $proveedor->fec_ince) }}"
+                        title="Indique Fecha de Solvencia de I.N.C.E de la Empresa"
+                        x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                     />
                     <div class="invalid-feedback">
                         @error('fec_ince') {{ $message }} @enderror
@@ -136,6 +151,8 @@
                         name="sol_laboral"
                         value="{{ old('sol_laboral', $proveedor->sol_laboral) }}"
                         maxlength="10"
+                        title="Indique Número de Solvencia Laboral de la Empresa"
+                        x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                     />
                     <div class="invalid-feedback">
                         @error('sol_laboral') {{ $message }} @enderror
@@ -149,6 +166,8 @@
                         name="fec_laboral"
                         class="form-control-sm {{ $errors->has('fec_laboral') ? 'is-invalid' : 'is-valid' }}"
                         value="{{ old('fec_laboral', $proveedor->fec_laboral) }}"
+                        title="Indique Fecha de Solvencia Laboral de la Empresa"
+                        x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                     />
                     <div class="invalid-feedback">
                         @error('fec_laboral') {{ $message }} @enderror
@@ -165,6 +184,8 @@
                         name="sol_agua"
                         value="{{ old('sol_agua', $proveedor->sol_agua) }}"
                         maxlength="10"
+                        title="Indique Número de Solvencia de Agua de la Empresa"
+                        x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                     />
                     <div class="invalid-feedback">
                         @error('sol_agua') {{ $message }} @enderror
@@ -178,6 +199,8 @@
                         name="fec_agua"
                         class="form-control-sm {{ $errors->has('fec_agua') ? 'is-invalid' : 'is-valid' }}"
                         value="{{ old('fec_agua', $proveedor->fec_agua) }}"
+                        title="Indique Fecha de Solvencia de Agua de la Empresa"
+                        x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                     />
                     <div class="invalid-feedback">
                         @error('fec_agua') {{ $message }} @enderror
@@ -196,7 +219,8 @@
                 <x-input
                     class="form-control-sm"
                     name="num_con"
-                    value="{{ $proveedor->num_con ?? ''}}"
+                    value="{{ $proveedor->num_con ?? '0'}}"
+                    dir="rtl"
                     readonly
                 />
             </x-field>
@@ -205,7 +229,8 @@
                 <x-input
                     class="form-control-sm"
                     name="mon_acu"
-                    value="{{ $proveedor->mon_acu ?? ''}}"
+                    value="{{ $proveedor->mon_acu ?? '0'}}"
+                    dir="rtl"
                     readonly
                 />
             </x-field>
@@ -214,7 +239,8 @@
                 <x-input
                     class="form-control-sm"
                     name="nro_oc"
-                    value="{{ $proveedor->nro_oc ?? ''}}"
+                    value="{{ $proveedor->nro_oc ?? '0'}}"
+                    dir="rtl"
                     readonly
                 />
             </x-field>
@@ -223,7 +249,8 @@
                 <x-input
                     class="form-control-sm"
                     name="mon_oc"
-                    value="{{ $proveedor->mon_oc ?? ''}}"
+                    value="{{ $proveedor->mon_oc ?? '0'}}"
+                    dir="rtl"
                     readonly
                 />
             </x-field>
