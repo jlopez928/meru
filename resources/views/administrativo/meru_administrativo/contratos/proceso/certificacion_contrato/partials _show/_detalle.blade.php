@@ -1,5 +1,5 @@
 
-    <br>    <br>
+    <br> <br>
     <div class="row col-12">
         <x-field class="text-center col-4 offset-2">
             <x-label for="motivo">Motivo</x-label>
