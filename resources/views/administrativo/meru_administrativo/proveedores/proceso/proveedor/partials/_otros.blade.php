@@ -4,7 +4,12 @@
             <div class="row d-flex justify-content-between">
                 <x-field class="col-3">
                     <x-label for="inscrito_rnc">Inscrito R.N.C.</x-label>
-                    <x-select name="inscrito_rnc" class="form-control-sm {{ $errors->has('inscrito_rnc') ? 'is-invalid' : 'is-valid' }}">
+                    <x-select
+                        name="inscrito_rnc"
+                        class="form-control-sm {{ $errors->has('inscrito_rnc') ? 'is-invalid' : 'is-valid' }}"
+                        style="{{ $accion !== 'nuevo' ? 'pointer-events: none' : '' }}"
+                        x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
+                    >
                         <option value="0" @selected(old('inscrito_rnc', $proveedor->inscrito_rnc) === '0')>
                             No
                         </option>
@@ -24,6 +29,8 @@
                         name="nro_rnc"
                         value="{{ old('nro_rnc', $proveedor->nro_rnc) }}"
                         maxlength="40"
+                        title="Indique Numero de R.N.C de la Empresa"
+                        x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                     />
                     <div class="invalid-feedback">
                         @error('nro_rnc') {{ $message }} @enderror
@@ -36,7 +43,9 @@
                         type="date"
                         class="form-control-sm {{ $errors->has('fec_susp') ? 'is-invalid' : 'is-valid' }}"
                         name="fec_susp"
+                        title="Indique Fecha de Vencimiento de la Empresa"
                         value="{{ old('fec_susp', $proveedor->fec_susp) }}"
+                        x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                     />
                     <div class="invalid-feedback">
                         @error('fec_susp') {{ $message }} @enderror
@@ -52,7 +61,8 @@
                         name="nro_sunacoop"
                         value="{{ old('nro_sunacoop', $proveedor->nro_sunacoop) }}"
                         maxlength="30"
-                        x-bind:readonly="tip_emp !== 'P'"
+                        title="Indique Numero de SUNACOOP de la Empresa"
+                        x-bind:readonly="tip_emp !== 'P' || ('{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar')"
                     />
                     <div class="invalid-feedback">
                         @error('nro_sunacoop') {{ $message }} @enderror
@@ -70,6 +80,8 @@
                         maxlength="500"
                         cols="50"
                         rows="5"
+                        title="Indique Objetivo de la Empresa"
+                        x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                     >{{ old('objetivo', $proveedor->objetivo) }}</textarea>
                     <div class="invalid-feedback">
                         @error('objetivo') {{ $message }} @enderror
@@ -85,6 +97,8 @@
                         maxlength="300"
                         cols="50"
                         rows="5"
+                        title="Indique Objetivo General de la Empresa"
+                        x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                     >{{ old('objetivo_gral', $proveedor->objetivo_gral) }}</textarea>
                     <div class="invalid-feedback">
                         @error('objetivo_gral') {{ $message }} @enderror
@@ -105,6 +119,8 @@
                             name="ced_res"
                             x-mask="99999999"
                             value="{{ old('ced_res', $proveedor->ced_res) }}"
+                            title="Indique Cédula de Responsable de la Empresa"
+                            x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                         />
                         <div class="invalid-feedback">
                             @error('ced_res') {{ $message }} @enderror
@@ -118,6 +134,8 @@
                         class="form-control-sm {{ $errors->has('nom_res') ? 'is-invalid' : 'is-valid' }}"
                         name="nom_res"
                         value="{{ old('nom_res', $proveedor->nom_res) }}"
+                        title="Indique Nombre de Responsable de la Empresa"
+                        x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                     />
                     <div class="invalid-feedback">
                         @error('nom_res') {{ $message }} @enderror
@@ -130,6 +148,8 @@
                         class="form-control-sm {{ $errors->has('car_res') ? 'is-invalid' : 'is-valid' }}"
                         name="car_res"
                         value="{{ old('car_res', $proveedor->car_res) }}"
+                        title="Indique Cargo de Responsable de la Empresa"
+                        x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                     />
                     <div class="invalid-feedback">
                         @error('car_res') {{ $message }} @enderror
@@ -144,11 +164,13 @@
             <div class="row d-flex justify-content-between" x-data="otros()">
                 <x-field class="col-3">
                     <x-label for="ubi_pro">Ubicación</x-label>
-                    <x-select 
-                        name="ubi_pro" 
+                    <x-select
+                        name="ubi_pro"
                         class="form-control-sm {{ $errors->has('ubi_pro') ? 'is-invalid' : 'is-valid' }}"
                         x-model="selectedUbicacion"
                         x-on:change="updateUbicacion"
+                        style="{{ $accion !== 'nuevo' ? 'pointer-events: none' : '' }}"
+                        x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                     >
                         <option value="">Seleccione...</option>
                         @foreach (\App\Enums\Administrativo\Meru_Administrativo\Proveedores\UbicacionProveedor::cases() as $ubicacionProveedor)
@@ -169,6 +191,8 @@
                         x-on:change="updateEstado"
                         name="cod_edo"
                         class="form-control-sm {{ $errors->has('cod_edo') ? 'is-invalid' : 'is-valid' }}"
+                        style="{{ $accion !== 'nuevo' ? 'pointer-events: none' : '' }}"
+                        x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                     >
                         <option value="">Seleccione</option>
                         <template x-for="estado in estados">
@@ -176,7 +200,7 @@
                                 :key="estado.cod_edo"
                                 :value="estado.cod_edo"
                                 x-text="estado.des_ubi"
-                                x-bind:selected="estado.cod_edo === selectedEstado">
+                                x-bind:selected="estado.cod_edo == selectedEstado">
                             </option>
                         </template>
                     </x-select>
@@ -191,6 +215,8 @@
                         x-model="selectedMunicipio"
                         name="cod_mun"
                         class="form-control-sm {{ $errors->has('cod_mun') ? 'is-invalid' : 'is-valid' }}"
+                        style="{{ $accion !== 'nuevo' ? 'pointer-events: none' : '' }}"
+                        x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                     >
                         <option value="">Seleccione</option>
                         <template x-for="municipio in municipios">
@@ -198,7 +224,7 @@
                                 :key="municipio.cod_mun"
                                 :value="municipio.cod_mun"
                                 x-text="municipio.des_ubi"
-                                x-bind:selected="municipio.cod_mun === selectedMunicipio"
+                                x-bind:selected="municipio.cod_mun == selectedMunicipio"
                                 >
                             </option>
                         </template>
@@ -215,33 +241,42 @@
     <script>
         function otros(){
             return {
-                selectedEstado:'',
                 selectedUbicacion:'',
-                estados: [],
+                selectedEstado:'',
                 selectedMunicipio:'',
+                estados: [],
                 municipios: [],
 
+                init(){
+                    this.selectedUbicacion = "{{ old('ubi_pro', $proveedor->ubi_pro?->value ?? '') }}"
+                    this.selectedEstado = "{{ old('cod_edo', $proveedor->cod_edo ?? '') }}"
+                    this.selectedMunicipio = "{{ old('cod_mun', $proveedor->cod_mun ?? '') }}"
+                    this.getEstados()
+                    this.getMunicipios()
+                },
+
                 getMunicipios(){
-                    this.selectedMunicipio = ''
                     fetch('{{ env('APP_URL') }}/api/proveedores/municipios/'+ this.selectedEstado)
                     .then(response => response.json())
                     .then(data => {
                         this.municipios = data
                     })
                 },
+
                 getEstados(){
-                    this.selectedEstado = ''
                     fetch('{{ env('APP_URL') }}/api/proveedores/estados/'+ this.selectedUbicacion)
                     .then(response => response.json())
                     .then(data => {
                         this.estados = data
                     })
                 },
+
                 updateEstado(){
                     this.getMunicipios()
                 },
+
                 updateUbicacion(){
-                    this.selectedMunicipio = ''
+                    this.municipios = []
                     this.getEstados()
                 }
             }
