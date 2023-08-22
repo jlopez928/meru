@@ -1,5 +1,5 @@
 
-        <br> <br>
+        <br><br>
         <div class="row col-12">
             <x-field class="text-center col-1 offset-2">
                 <x-label for="ano_pro">{{ __('Año') }}</x-label>
