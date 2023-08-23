@@ -29,6 +29,6 @@ class CorrSolCompras extends Model
         return CorrSolCompras::query()
                                 ->where('ano_pro', $ano_fiscal)
                                 ->where('grupo', $grupo)
-                                ->increment('nro_req', $valor);
+                                ->update(['nro_req' => $valor]);
     }
 }

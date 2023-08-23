@@ -27,7 +27,7 @@ class DetOrdenCompra extends Model
                                 ->where('com_detordencompra.nro_req', $nro_req)
                                 ->whereNotIn('b.sta_ord', ['A','3'])
                                 ->orderBy('orden')
-                                ->get();
+                                ->pluck('orden');
     }
 
 }

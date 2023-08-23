@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Administrativo\Meru_Administrativo\Formulacion;
+namespace App\Models\Administrativo\Meru_Administrativo\Presupuesto;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -11,8 +11,8 @@ use App\Models\Administrativo\Meru_Administrativo\Configuracion\Gerencia;
 class CentroCosto extends Model
 {
 	use HasFactory;
-    public $timestamps = false;
-	protected $table    = 'pre_centrocosto';
+
+    protected $table    = 'pre_centrocosto';
 	protected $fillable = [
 		'ano_pro',
 		'tip_cod',
@@ -30,6 +30,8 @@ class CentroCosto extends Model
 		'nivel',
 	];
 
+    public $incrementing = false;
+    public $timestamps = false;
 	////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////// ACCESORS Y MUTATORS /////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////

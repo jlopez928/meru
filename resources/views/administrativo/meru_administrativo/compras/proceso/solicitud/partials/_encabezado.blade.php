@@ -7,16 +7,16 @@
             <x-field class="col-2">
                 <x-label for="ano_pro">Año</x-label>
                 <x-select
-                    name="ano_pro"
+                    wire:model.lazy="ano_pro"
                     class="form-control-sm ml-1 {{ $errors->has('ano_pro') ? 'is-invalid' : 'is-valid' }}"
                     style="{{ $accion !== 'editar' ? 'pointer-events: none' : '' }}"
-                    x-model="ano_pro"
-                    x-bind:readonly="{{ $accion !== 'editar' }}"
+                    x-bind:readonly="'{{ $accion }}' !== 'editar'"
                 >
                     <option value="">Seleccione...</option>
-                    @foreach ( $years as $year)
+                    @foreach ($this->years as $year)
                         <option
                             value="{{ $year }}"
+                            @selected($ano_pro == $year)
                         >
                             {{ $year }}
                         </option>
@@ -30,16 +30,16 @@
             <x-field class="col-3">
                 <x-label for="grupo">Grupo</x-label>
                 <x-select
-                    name="grupo"
+                    wire:model.lazy="grupo"
                     class="form-control-sm {{ $errors->has('grupo') ? 'is-invalid' : 'is-valid' }}"
-                    x-model="grupo"
-                    x-on:change="updateGrupo"
                     style="{{ $accion !== 'nuevo' && $accion !== 'editar' ? 'pointer-events: none' : '' }}"
                     x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                 >
                     <option value="">Seleccione...</option>
                     @foreach (\App\Enums\Administrativo\Meru_Administrativo\Compras\GrupoSolicitud::cases() as $grupoSolicitud)
-                        <option value="{{ $grupoSolicitud->value }}">
+                        <option
+                            value="{{ $grupoSolicitud->value }}"
+                        >
                             ({{ $grupoSolicitud->value }}) {{ $grupoSolicitud->name }}
                         </option>
                     @endforeach
@@ -52,21 +52,20 @@
             <x-field class="col-3">
                 <x-label for="cla_sol">Clase</x-label>
                 <x-select
-                    name="cla_sol"
+                    wire:model.defer="cla_sol"
                     class="form-control-sm {{ $errors->has('cla_sol') ? 'is-invalid' : 'is-valid' }}"
-                    x-model="cla_sol"
-                    style="{{ $accion !== 'nuevo' && $accion !== 'editar' ? 'pointer-events: none' : '' }}"
-                    x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
+                    style="{{ $accion !== 'nuevo' ? 'pointer-events: none' : '' }}"
+                    x-bind:readonly="'{{ $accion }}' !== 'nuevo'"
                 >
                     <option value="">Seleccione...</option>
-                    <template x-for="clase in clases">
+                    @foreach ($clases as $clase)
                         <option
-                            :key="clase.cod_cla"
-                            :value="clase.cod_cla"
-                            x-text="clase.des_cla"
-                            x-bind:selected="clase.cod_cla === cla_sol">
+                            value="{{ $clase['cod_cla'] }}"
+                        >
+                            {{ $clase['des_cla'] }}
                         </option>
-                    </template>
+                    @endforeach
+
                 </x-select>
                 <div class="invalid-feedback">
                     @error('cla_sol') {{ $message }} @enderror
@@ -77,8 +76,7 @@
                 <x-label for="nro_req">Solicitud</x-label>
                 <x-input
                     class="form-control-sm"
-                    name="nro_req"
-                    x-model="nro_req"
+                    wire:model.defer="nro_req"
                     readonly
                 />
             </x-field>
@@ -91,12 +89,12 @@
                     style="text-transform: uppercase"
                     title="Indique la Justificación de la Solicitud"
                     class="form-control {{ $errors->has('jus_sol') ? 'is-invalid' : 'is-valid' }}"
-                    name="jus_sol"
+                    wire:model.lazy="jus_sol"
                     maxlength="1000"
                     cols="50"
                     rows="5"
                     x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
-                >{{ old('jus_sol', $solicitudUnidad->jus_sol) }}</textarea>
+                ></textarea>
                 <div class="invalid-feedback">
                     @error('jus_sol') {{ $message }} @enderror
                 </div>
@@ -109,9 +107,9 @@
                 <x-input
                     type="date"
                     class="form-control-sm {{ $errors->has('fec_emi') ? 'is-invalid' : 'is-valid' }}"
-                    name="fec_emi"
-                    value="{{ $accion !== 'nuevo' ? old('fec_emi', $solicitudUnidad->fec_emi) : date('Y-m-d') }}"
-                    x-bind:readonly="'{{ $accion }}' !== 'nuevo'"
+                    wire:model.defer="fec_emi"
+                    x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
+                    style="{{ $accion == 'nuevo' || $accion == 'editar' ? 'pointer-events: none' : '' }}"
                 />
                 <div class="invalid-feedback">
                     @error('fec_emi') {{ $message }} @enderror
@@ -122,9 +120,9 @@
                 <x-input
                     type="date"
                     class="form-control-sm {{ $errors->has('fec_rec') ? 'is-invalid' : 'is-valid' }}"
-                    name="fec_rec"
-                    value="{{ old('fec_rec', $solicitudUnidad->fec_rec) }}"
-                    readonly
+                    wire:model.defer="fec_rec"
+                    x-bind:readonly="'{{ $accion }}' !== 'recepcionar'"
+                    style="{{ $accion == 'recepcionar' ? 'pointer-events: none' : '' }}"
                 />
                 <div class="invalid-feedback">
                     @error('fec_rec') {{ $message }} @enderror
@@ -135,9 +133,9 @@
                 <x-input
                     type="date"
                     class="form-control-sm {{ $errors->has('fec_com_cont') ? 'is-invalid' : 'is-valid' }}"
-                    name="fec_com_cont"
-                    value="{{ old('fec_com_cont', $solicitudUnidad->fec_com_cont) }}"
-                    readonly
+                    wire:model.defer="fec_com_cont"
+                    x-bind:readonly="'{{ $accion }}' !== 'contratacion_comprador'"
+                    style="{{ $accion == 'contratacion_comprador' ? 'pointer-events: none' : '' }}"
                 />
                 <div class="invalid-feedback">
                     @error('fec_com_cont') {{ $message }} @enderror
@@ -151,10 +149,9 @@
                 <x-input
                     type="date"
                     class="form-control-sm {{ $errors->has('fec_anu') ? 'is-invalid' : 'is-valid' }}"
-                    name="fec_anu"
-                    value="{{ $accion !== 'anular' && $accion !== 'reversar' ? old('fec_anu', $solicitudUnidad->fec_anu) : date('Y-m-d') }}"
-                    style="{{ $accion == 'anular' || $accion == 'reversar' ? 'pointer-events: none' : '' }}"
-                    x-bind:readonly="'{{ $accion }}' !== 'anular' && '{{ $accion }}' !== 'reversar'"
+                    wire:model.defer="fec_anu"
+                    style="{{ $accion == 'anular' || $accion == 'reversar' || $accion == 'presupuesto_reversar' ? 'pointer-events: none' : '' }}"
+                    x-bind:readonly="'{{ $accion }}' !== 'anular' && '{{ $accion }}' !== 'reversar' && '{{ $accion }}' !== 'presupuesto_reversar'"
                 />
                 <div class="invalid-feedback">
                     @error('fec_anu') {{ $message }} @enderror
@@ -166,9 +163,9 @@
                 <x-input
                     type="date"
                     class="form-control-sm {{ $errors->has('fec_rec_cont') ? 'is-invalid' : 'is-valid' }}"
-                    name="fec_rec_cont"
-                    value="{{ old('fec_rec_cont', $solicitudUnidad->fec_rec_cont) }}"
-                    readonly
+                    wire:model.defer="fec_rec_cont"
+                    style="{{ $accion == 'contratacion_recepcionar' ? 'pointer-events: none' : '' }}"
+                    x-bind:readonly="'{{ $accion }}' !== 'contratacion_recepcionar'"
                 />
                 <div class="invalid-feedback">
                     @error('fec_rec_cont') {{ $message }} @enderror
@@ -179,9 +176,9 @@
                 <x-input
                     type="date"
                     class="form-control-sm {{ $errors->has('fec_dev_com') ? 'is-invalid' : 'is-valid' }}"
-                    name="fec_dev_com"
-                    value="{{ old('fec_dev_com', $solicitudUnidad->fec_dev_com) }}"
-                    readonly
+                    wire:model.defer="fec_dev_com"
+                    style="{{ $accion == 'devolver' ? 'pointer-events: none' : '' }}"
+                    x-bind:readonly="'{{ $accion }}' !== 'devolver'"
                 />
                 <div class="invalid-feedback">
                     @error('fec_dev_com') {{ $message }} @enderror
@@ -195,8 +192,7 @@
                 <x-input
                     type="date"
                     class="form-control-sm {{ $errors->has('fec_pcom') ? 'is-invalid' : 'is-valid' }}"
-                    name="fec_pcom"
-                    value="{{ $accion !== 'precomprometer' ? old('fec_pcom', $solicitudUnidad->fec_pcom) : date('Y-m-d') }}"
+                    wire:model.defer="fec_pcom"
                     style="{{ $accion == 'precomprometer' ? 'pointer-events: none' : '' }}"
                     x-bind:readonly="'{{ $accion }}' !== 'precomprometer'"
                 />
@@ -209,9 +205,9 @@
                 <x-input
                     type="date"
                     class="form-control-sm {{ $errors->has('fec_com') ? 'is-invalid' : 'is-valid' }}"
-                    name="fec_com"
-                    value="{{ old('fec_com', $solicitudUnidad->fec_com) }}"
-                    readonly
+                    wire:model.defer="fec_com"
+                    style="{{ $accion == 'compra_comprador' ? 'pointer-events: none' : '' }}"
+                    x-bind:readonly="'{{ $accion }}' !== 'compra_comprador'"
                 />
                 <div class="invalid-feedback">
                     @error('fec_com') {{ $message }} @enderror
@@ -222,9 +218,9 @@
                 <x-input
                     type="date"
                     class="form-control-sm {{ $errors->has('fec_dev_cont') ? 'is-invalid' : 'is-valid' }}"
-                    name="fec_dev_cont"
-                    value="{{ old('fec_dev_cont', $solicitudUnidad->fec_dev_cont) }}"
-                    readonly
+                    wire:model.defer="fec_dev_cont"
+                    style="{{ $accion == 'contratacion_devolver' ? 'pointer-events: none' : '' }}"
+                    x-bind:readonly="'{{ $accion }}' !== 'contratacion_devolver'"
                 />
                 <div class="invalid-feedback">
                     @error('fec_dev_cont') {{ $message }} @enderror
@@ -238,9 +234,9 @@
                 <x-input
                     type="date"
                     class="form-control-sm {{ $errors->has('fec_reasig') ? 'is-invalid' : 'is-valid' }}"
-                    name="fec_reasig"
-                    value="{{ old('fec_reasig', $solicitudUnidad->fec_reasig) }}"
-                    readonly
+                    wire:model.defer="fec_reasig"
+                    style="{{ $accion == 'reasignar' || $accion == 'contratacion_reasignar' ? 'pointer-events: none' : '' }}"
+                    x-bind:readonly="'{{ $accion }}' !== 'reasignar' && '{{ $accion }}' !== 'contratacion_reasignar'"
                 />
                 <div class="invalid-feedback">
                     @error('fec_reasig') {{ $message }} @enderror
@@ -251,9 +247,9 @@
                 <x-input
                     type="date"
                     class="form-control-sm {{ $errors->has('fec_aut') ? 'is-invalid' : 'is-valid' }}"
-                    name="fec_aut"
-                    value="{{ old('fec_aut', $solicitudUnidad->fec_aut) }}"
-                    readonly
+                    wire:model.defer="fec_aut"
+                    style="{{ $accion == 'presupuesto_aprobar' ? 'pointer-events: none' : '' }}"
+                    x-bind:readonly="'{{ $accion }}' !== 'presupuesto_aprobar'"
                 />
                 <div class="invalid-feedback">
                     @error('fec_aut') {{ $message }} @enderror
@@ -265,16 +261,16 @@
             <x-field class="col-5">
                 <x-label for="gru_ram">Grupo-Ramo</x-label>
                 <x-select
-                    name="gru_ram"
-                    x-model="gru_ram"
-                    x-on:change="updateGrupoRamo"
+                    wire:model.lazy="gru_ram"
                     class="form-control-sm {{ $errors->has('gru_ram') ? 'is-invalid' : 'is-valid' }}"
-                    style="{{ $accion !== 'nuevo' && $accion !== 'editar' ? 'pointer-events: none' : '' }}"
-                    x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
+                    style="{{ $accion !== 'nuevo' ? 'pointer-events: none' : '' }}"
+                    x-bind:readonly="'{{ $accion }}' !== 'nuevo'"
                 >
                     <option value="">Seleccione...</option>
-                    @foreach ($ramos as $index => $ramo)
-                        <option value="{{ $index }}">
+                    @foreach ($this->ramos as $index => $ramo)
+                        <option
+                            value="{{ $index }}"
+                        >
                             ({{ $index }}) {{  ($ramo) }}
                         </option>
                     @endforeach
@@ -289,16 +285,16 @@
             <x-field class="col-5">
                 <x-label for="fk_cod_ger">Gerencia Solicitante</x-label>
                 <x-select
-                    name="fk_cod_ger"
+                    wire:model.lazy="fk_cod_ger"
                     class="form-control-sm {{ $errors->has('fk_cod_ger') ? 'is-invalid' : 'is-valid' }}"
-                    x-model="fk_cod_ger"
-                    x-on:change="updateGerencia"
-                    style="{{ $accion !== 'nuevo' && $accion !== 'editar' ? 'pointer-events: none' : '' }}"
-                    x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
+                    style="{{ $accion !== 'nuevo' ? 'pointer-events: none' : '' }}"
+                    x-bind:readonly="'{{ $accion }}' !== 'nuevo'"
                 >
                     <option value="">Seleccione...</option>
-                    @foreach ($gerencias as $index => $gerencia)
-                        <option value="{{ $index }}">
+                    @foreach ($this->gerencias as $index => $gerencia)
+                        <option
+                            value="{{ $index }}"
+                        >
                             ({{ $index }}) {{  ($gerencia) }}
                         </option>
                     @endforeach
@@ -313,21 +309,19 @@
             <x-field class="col-3">
                 <x-label for="cod_uni">Unidad Adscrita</x-label>
                 <x-select
-                    name="cod_uni"
+                    wire:model.defer="cod_uni"
                     class="form-control-sm {{ $errors->has('cod_uni') ? 'is-invalid' : 'is-valid' }}"
-                    x-model="cod_uni"
                     style="{{ $accion !== 'nuevo' && $accion !== 'editar' ? 'pointer-events: none' : '' }}"
                     x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                 >
                     <option value="">Seleccione</option>
-                    <template x-for="unidad in unidades">
+                    @foreach ($unidades as $index => $unidad)
                         <option
-                            :key="unidad.cod_uni"
-                            :value="unidad.cod_uni"
-                            x-text="unidad.des_uni"
-                            x-bind:selected="unidad.cod_uni == cod_uni">
+                            value="{{ $index }}"
+                        >
+                            ({{ $index }}) {{  $unidad }}
                         </option>
-                    </template>
+                    @endforeach
                 </x-select>
                 <div class="invalid-feedback">
                     @error('cod_uni') {{ $message }} @enderror
@@ -339,15 +333,16 @@
             <x-field class="col-2">
                 <x-label for="pri_sol">Prioridad</x-label>
                 <x-select
-                    name="pri_sol"
+                    wire:model.defer="pri_sol"
                     class="form-control-sm {{ $errors->has('pri_sol') ? 'is-invalid' : 'is-valid' }}"
-                    x-model="pri_sol"
                     style="{{ $accion !== 'nuevo' && $accion !== 'editar' ? 'pointer-events: none' : '' }}"
                     x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar'"
                 >
                     <option value="">Seleccione...</option>
                     @foreach (\App\Enums\Administrativo\Meru_Administrativo\Compras\PrioridadSolicitud::cases() as $prioridad)
-                        <option value="{{ $prioridad->value }}">
+                        <option
+                            value="{{ $prioridad->value }}"
+                        >
                             {{ $prioridad->name }}
                         </option>
                     @endforeach
@@ -360,16 +355,19 @@
             <x-field class="col-2">
                 <x-label for="aplica_pre">Se Precompromete</x-label>
                 <x-select
-                    name="aplica_pre"
+                    wire:model.defer="aplica_pre"
                     class="form-control-sm {{ $errors->has('aplica_pre') ? 'is-invalid' : 'is-valid' }}"
-                    x-model="aplica_pre"
                     style="pointer-events: none"
                     readonly
                     >
-                    <option value="0">
+                    <option
+                        value="0"
+                    >
                         NO
                     </option>
-                    <option value="1">
+                    <option
+                        value="1"
+                    >
                         SI
                     </option>
                 </x-select>
@@ -381,16 +379,19 @@
             <x-field class="col-2">
                 <x-label for="cierre">Posee Cierre</x-label>
                 <x-select
-                    name="cierre"
+                    wire:model.defer="cierre"
                     class="form-control-sm {{ $errors->has('cierre') ? 'is-invalid' : 'is-valid' }}"
-                    x-model="cierre"
                     style="pointer-events: none"
                     readonly
                 >
-                    <option value="0">
+                    <option
+                        value="0"
+                    >
                         SIN CIERRE
                     </option>
-                    <option value="1">
+                    <option
+                        value="1"
+                    >
                         CON CIERRE
                     </option>
                 </x-select>
@@ -404,7 +405,7 @@
             <x-field class="col-8">
                 <x-label for="anexos">Anexos/Observaciones</x-label>
                 <textarea
-                    name="anexos"
+                    wire:model.lazy="anexos"
                     class="form-control {{ $errors->has('anexos') ? 'is-invalid' : 'is-valid' }}"
                     style="text-transform: uppercase"
                     title="Indique los Anexos de la Solicitud"
@@ -412,18 +413,44 @@
                     cols="50"
                     rows="5"
                     x-bind:readonly="'{{ $accion }}' !== 'nuevo' && '{{ $accion }}' !== 'editar' && '{{ $accion }}' !== 'editar_anexos'"
-                >{{ old('anexos', $solicitudUnidad->anexos) }}</textarea>
+                ></textarea>
                 <div class="invalid-feedback">
                     @error('anexos') {{ $message }} @enderror
                 </div>
             </x-field>
         </div>
 
+        @if ($modulo == 'unidad_donante')
+            <x-field class="col-2">
+                <x-label for="donacion">Donación</x-label>
+                <x-select
+                    wire:model.defer="donacion"
+                    class="form-control-sm {{ $errors->has('donacion') ? 'is-invalid' : 'is-valid' }}"
+                    style="pointer-events: none"
+                    readonly
+                >
+                    <option
+                        value="S"
+                    >
+                        Si
+                    </option>
+                    <option
+                        value="N"
+                    >
+                        No
+                    </option>
+                </x-select>
+                <div class="invalid-feedback">
+                    @error('donacion') {{ $message }} @enderror
+                </div>
+            </x-field>
+        @endif
+
         <x-field class="col-5">
             <x-label>Estatus</x-label>
             <x-input
+                wire:model.defer="estatus"
                 class="form-control-sm"
-                value="{{ $solicitudUnidad->estado->descripcion ?? '' }}"
                 readonly
             />
         </x-field>

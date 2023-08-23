@@ -28,7 +28,7 @@ class DetSolCotizacion extends Model
                                 ->where('com_detsolcotizacion.nro_req', $nro_req)
                                 ->whereNotIn('b.sta_sol', ['4'])
                                 ->orderBy('cotizacion')
-                                ->get();
+                                ->pluck('cotizacion');
     }
 
 }

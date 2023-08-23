@@ -1,14 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Proceso\SolicitudController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Configuracion\CompradorController;
-use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Proceso\SolicitudUnidadController;
+use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Proceso\SolicitudCompraController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Configuracion\UnidadMedidaController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Configuracion\GrupoProductoController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Configuracion\CausaAnulacionController;
+use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Proceso\SolicitudPresupuestoController;
+use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Proceso\SolicitudContratacionController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Configuracion\SubGrupoProductoController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Configuracion\BienMaterialServicioController;
-
+use App\Http\Controllers\Administrativo\Meru_Administrativo\Compras\Proceso\SolicitudUnidadDonanteController;
 
 Route::middleware(['auth', 'periodo-fiscal'])
 	->prefix('compras')
@@ -96,28 +99,79 @@ Route::controller(CompradorController::class)
     Route::get('print_compradores', 'print_compradores')->name('print_compradores');
 });
 
-// Solicitudes - Unidad
-Route::controller(SolicitudUnidadController::class)
+// Solicitudes Unidad
+Route::controller(SolicitudController::class)
 ->middleware(['auth', 'periodo-fiscal'])
 ->prefix('compras/proceso')
-->name('compras.proceso.solicitud_unidad.')
+->name('compras.proceso.solicitud.unidad.')
 ->group(function () {
 
-    Route::get('solicitudunidad', 'index')->name('index');
-    Route::get('solicitudunidad/create', 'create')->name('create');
-    Route::post('solicitudunidad', 'crear_solicitud')->name('crear_solicitud');
-    Route::get('solicitudunidad/{ano_pro}/{grupo}/{nro_req}', 'show')->name('show');
-    Route::get('solicitudunidad/{ano_pro}/{grupo}/{nro_req}/anular', 'anular')->name('anular');
-    Route::post('solicitudunidad/anularsolicitud', 'anular_solicitud')->name('anular_solicitud');
-    Route::get('solicitudunidad/{ano_pro}/{grupo}/{nro_req}/activar', 'activar')->name('activar');
-    Route::get('solicitudunidad/{ano_pro}/{grupo}/{nro_req}/aprobar', 'aprobar')->name('aprobar');
-    Route::get('solicitudunidad/{ano_pro}/{grupo}/{nro_req}/reversar', 'reversar')->name('reversar');
-    Route::post('solicitudunidad/reversarsolicitud', 'reversar_solicitud')->name('reversar_solicitud');
-    Route::get('solicitudunidad/{ano_pro}/{grupo}/{nro_req}/copiar', 'copiar')->name('copiar');
-    Route::post('solicitudunidad/copiarsolicitud', 'copiar_solicitud')->name('copiar_solicitud');
-    Route::get('solicitudunidad/{ano_pro}/{grupo}/{nro_req}/precomprometer', 'precomprometer')->name('precomprometer');
-    Route::post('solicitudunidad/precomprometersolicitud', 'precomprometer_solicitud')->name('precomprometer_solicitud');
-    Route::get('solicitudunidad/{ano_pro}/{grupo}/{nro_req}/edit', 'edit')->name('edit');
-    Route::post('solicitudunidad/editarsolicitud', 'editar_solicitud')->name('editar_solicitud');
-    Route::post('solicitudunidad/editaranexos', 'editar_anexos')->name('editar_anexos');
+    Route::get('solicitud/unidad', 'index')->name('index');
+    Route::get('solicitud/unidad/create', 'create')->name('create');
+    Route::get('solicitud/unidad/{ano_pro}/{grupo}/{nro_req}', 'show')->name('show');
+    Route::get('solicitud/unidad/{ano_pro}/{grupo}/{nro_req}/anular', 'anular')->name('anular');
+    Route::get('solicitud/unidad/{ano_pro}/{grupo}/{nro_req}/activar', 'activar')->name('activar');
+    Route::get('solicitud/unidad/{ano_pro}/{grupo}/{nro_req}/aprobar', 'aprobar')->name('aprobar');
+    Route::get('solicitud/unidad/{ano_pro}/{grupo}/{nro_req}/reversar', 'reversar')->name('reversar');
+    Route::get('solicitud/unidad/{ano_pro}/{grupo}/{nro_req}/copiar', 'copiar')->name('copiar');
+    Route::get('solicitud/unidad/{ano_pro}/{grupo}/{nro_req}/precomprometer', 'precomprometer')->name('precomprometer');
+    Route::get('solicitud/unidad/{ano_pro}/{grupo}/{nro_req}/edit', 'edit')->name('edit');
+});
+
+// Solicitudes Compras - Recibir
+Route::controller(SolicitudCompraController::class)
+->middleware(['auth', 'periodo-fiscal'])
+->prefix('compras/proceso')
+->name('compras.proceso.solicitud.compra_recibir.')
+->group(function () {
+
+    Route::get('solicitud/compra', 'index')->name('index');
+    Route::get('solicitud/compra/{ano_pro}/{grupo}/{nro_req}', 'show')->name('show');
+    Route::get('solicitud/compra/{ano_pro}/{grupo}/{nro_req}/recepcionar', 'recepcionar')->name('recepcionar');
+    Route::get('solicitud/compra/{ano_pro}/{grupo}/{nro_req}/devolver', 'devolver')->name('devolver');
+    Route::get('solicitud/compra/{ano_pro}/{grupo}/{nro_req}/comprador', 'asignar_comprador')->name('comprador');
+    Route::get('solicitud/compra/{ano_pro}/{grupo}/{nro_req}/reasignar', 'reasignar')->name('reasignar');
+    Route::get('solicitud/compra/{ano_pro}/{grupo}/{nro_req}/imprimir', 'imprimir')->name('imprimir');
+});
+
+// Solicitudes Contrataciones - Recibir
+Route::controller(SolicitudContratacionController::class)
+->middleware(['auth', 'periodo-fiscal'])
+->prefix('compras/proceso')
+->name('compras.proceso.solicitud.contratacion_recibir.')
+->group(function () {
+
+    Route::get('solicitud/contratacion', 'index')->name('index');
+    Route::get('solicitud/contratacion/{ano_pro}/{grupo}/{nro_req}', 'show')->name('show');
+    Route::get('solicitud/contratacion/{ano_pro}/{grupo}/{nro_req}/recepcionar', 'recepcionar')->name('recepcionar');
+    Route::get('solicitud/contratacion/{ano_pro}/{grupo}/{nro_req}/devolver', 'devolver')->name('devolver');
+    Route::get('solicitud/contratacion/{ano_pro}/{grupo}/{nro_req}/comprador', 'asignar_comprador')->name('comprador');
+    Route::get('solicitud/contratacion/{ano_pro}/{grupo}/{nro_req}/reasignar', 'reasignar')->name('reasignar');
+    Route::get('solicitud/contratacion/{ano_pro}/{grupo}/{nro_req}/imprimir', 'imprimir')->name('imprimir');
+});
+
+// Solicitudes Presupuesto
+Route::controller(SolicitudPresupuestoController::class)
+->middleware(['auth', 'periodo-fiscal'])
+->prefix('compras/proceso')
+->name('compras.proceso.solicitud.presupuesto.')
+->group(function () {
+
+    Route::get('solicitud/presupuesto', 'index')->name('index');
+    Route::get('solicitud/presupuesto/{ano_pro}/{grupo}/{nro_req}', 'show')->name('show');
+    Route::get('solicitud/presupuesto/{ano_pro}/{grupo}/{nro_req}/aprobar', 'aprobar')->name('aprobar');
+    Route::get('solicitud/presupuesto/{ano_pro}/{grupo}/{nro_req}/reversar', 'reversar')->name('reversar');
+});
+
+// Solicitudes Unidad Donante
+Route::controller(SolicitudUnidadDonanteController::class)
+->middleware(['auth', 'periodo-fiscal'])
+->prefix('compras/proceso')
+->name('compras.proceso.solicitud.unidad_donante.')
+->group(function () {
+
+    Route::get('solicitud/unidaddonante', 'index')->name('index');
+    Route::get('solicitud/unidaddonante/{ano_pro}/{grupo}/{nro_req}', 'show')->name('show');
+    // Route::get('solicitud/presupuesto/{ano_pro}/{grupo}/{nro_req}/aprobar', 'aprobar')->name('aprobar');
+    // Route::get('solicitud/presupuesto/{ano_pro}/{grupo}/{nro_req}/reversar', 'reversar')->name('reversar');
 });
