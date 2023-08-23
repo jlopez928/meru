@@ -12,7 +12,7 @@ use  App\Http\Controllers\Administrativo\Meru_Administrativo\Configuracion\Confi
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Configuracion\Configuracion\GerenciaController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Configuracion\Configuracion\UbicacionGeograficaController;
 
-Route::middleware(['auth'])
+Route::middleware(['auth', 'periodo-fiscal'])
 	->prefix('configuracion')
 	->as('configuracion.')
 	->group(function () {
@@ -26,7 +26,7 @@ Route::middleware(['auth'])
                 Route::resource('tasacambio',  TasaCambioController ::class)->except('destroy');
                 Route::resource('unidadtributaria',  UnidadTributariaController ::class)->except('destroy');
                 Route::resource('descuento',  DescuentoController ::class)->except('destroy');
-                Route::resource('ubicacion_geografica', UbicacionGeografclearicaController::class)->except('destroy');
+                Route::resource('ubicacion_geografica', UbicacionGeograficaController::class)->except('destroy');
 				Route::controller(UbicacionGeograficaController::class)
 					->as('ubicacion_geografica.')
 					->group(function() {
@@ -47,25 +47,24 @@ Route::middleware(['auth'])
                   ->group(function() {
                       Route::get('print_descuento', [DescuentoController::class, 'print_descuento'])->name('print_descuento');
                  });
+
+
+
 			});
             Route::name('control.')
 			->group(function () {
-				Route::resource('rol',  RolController::class)->except('destroy');
                 Route::resource('modulo',  ModuloController::class)->except('destroy');
+                Route::resource('rol',  RolController::class)->except('destroy');
                 Route::resource('permiso',  PermisoController::class)->except('destroy');
                 Route::resource('userrol',  UserRolController::class)->except('destroy');
                 Route::resource('registrocontrol',  RegistroControlController::class)->except('destroy');
-                Route::resource('ubicacion_geografica', UbicacionGeograficaController::class)->except('destroy');
-				Route::controller(RegistroControlController::class)
+                Route::controller(RegistroControlController::class)
                 ->as('registrocontrol.')
                 ->group(function() {
                      Route::get('print_registrocontrol', [RegistroControlController::class, 'print_registrocontrol'])->name('print_registrocontrol');
-                 });
 
-                Route::controller(ModuloController::class)
-                ->as('modulo.')
-                ->group(function() {
-                     Route::get('print_modulo', [ModuloController::class, 'print_modulo'])->name('print_modulo');
+                     // Periodo Fiscal global
+                     Route::post('periodo_actual', [RegistroControlController::class, 'periodoActual'])->name('periodo_actual');
                  });
                  Route::controller(PermisoController::class)
                  ->as('permiso.')
@@ -87,6 +86,11 @@ Route::middleware(['auth'])
                 ->group(function() {
                     Route::get('asignarpermiso/{rol}', [RolController::class, 'asignarpermiso'])->name('asignarpermiso');
                });
+               Route::controller(ModuloController::class)
+               ->as('modulo.')
+               ->group(function() {
+                    Route::get('print_modulo', [ModuloController::class, 'print_modulo'])->name('print_modulo');
+                });
 
 
 			});

@@ -15,6 +15,7 @@ class Modulo extends Model
 
     protected $fillable = [
                             'nombre',
+                            'codigo',
                             'status'];
 
     public function permiso()

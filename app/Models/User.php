@@ -10,6 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Notifications\ResetPasswordNotification;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\Administrativo\Meru_Administrativo\Configuracion\Usuario;
 
 class User extends Authenticatable
 {
@@ -46,5 +47,13 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+
+	////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////// RELACIONES //////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////
+    public function usuario()
+    {
+        return $this->belongsTo(Usuario::class, 'cedula', 'cedula');
+    }
 
 }

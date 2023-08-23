@@ -8,7 +8,7 @@
 			<div class="col-sm-12">
 				<ol class="breadcrumb float-sm-right">
 					<li class="breadcrumb-item text-bold"><a href="{{ route('configuracion.configuracion.gerencia.index') }}">Gerencia</a></li>
-					<li class="breadcrumb-item active text-bold">Editar</li>
+					<li class="breadcrumb-item active text-bold">Editar Gerencia</li>
 				</ol>
 			</div>
 		</div>
@@ -34,7 +34,7 @@
 @endsection
 
 @section('js')
-	<script type="text/javascript"> 
+	<script type="text/javascript">
 		$(function () {
 		    $('.select2bs4').select2({
 				//theme: 'bootstrap4',

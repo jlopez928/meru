@@ -6,10 +6,10 @@
 		<div class="container-fluid">
 			<div class="row mb-2">
 				<div class="col-sm-1">
-                    <x-button class="btn-success" href="{{ route('proveedores.proceso.proveedor.create') }}" title="Nuevo">Nuevo</x-button>
+                    <x-button class="btn-success" href="{{ route('proveedores.proceso.proveedor.create') }}" title="Nuevo"><i class="fas fa-plus-circle"></i> Nuevo</x-button>
 				</div>
 				<div class="col-sm-5">
-                    {{--  <a target="_blank" href="{{ route('proveedores.proceso.proveedor.print_proveedores') }}" class="btn btn-sm  btn-primary text-bold" title="Generar PDF">Generar PDF</a>  --}}
+                    <a target="_blank" href="{{ route('proveedores.reporte.proveedores') }}" class="btn btn-sm  btn-primary text-bold" title="Generar PDF">Generar PDF</a>
 				</div>
 				<div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">

@@ -1,0 +1,103 @@
+body {
+  height:100vh !important;
+}
+
+.login-block {
+  background: #1d7ece;  /* Predeterminado para navegadores viejos */
+  background: -webkit-linear-gradient(to bottom, #acdffa, #1d7ece);  /* chrome 10-25, safari 5.1-6 */
+  background: linear-gradient(to bottom, #acdffa, #1d7ece); /* w3c, ie 10+/ edge, firefox 16+, chrome 26+, opera 12+, safari 7+ */
+  float: left;
+  width: 100%;
+  padding: 50px 0;
+}
+
+.banner-sec {
+  background: url('../img/login_carousel_2.jpg') no-repeat left bottom; 
+  background-size: cover;
+  min-height: 500px;
+  border-radius: 0 10px 10px 0;
+  padding: 0;
+}
+
+.container {
+  background: #fcfcfc;
+  border-radius: 10px;
+  box-shadow: 15px 15px 0px rgba(0,0,0,0.1);
+}
+
+.carousel-inner {
+  border-radius: 0 10px 10px 0;
+}
+
+.carousel-caption {
+  text-align: left; 
+  right: 5%;
+  left: 5%;
+}
+
+.login-sec {
+  padding: 50px 30px;
+  position: relative;
+}
+
+.login-sec h2 {
+  margin-bottom:30px;
+  font-weight:800;
+  font-size:30px;
+  color: #2b3a42;
+}
+
+.login-sec h2:after {
+  content: " ";
+  width: 100px;
+  height: 5px;
+  background: #91c6e2;
+  display: block;
+  margin-top: 20px;
+  border-radius: 3px;
+  margin-left: auto;
+  margin-right: auto
+}
+
+.btn-login {
+  color: #fff;
+  background-color: #1d7ece;
+  background-image: none;
+  border-color: #1d7ece;
+  font-weight: 600;
+}
+
+.btn-login:hover {
+  color: #2b3a42;
+  background-color: transparent;
+  border-color: #1d7ece;
+}
+
+.banner-text {
+  width: 100%;
+  position:cabsolute;
+  bottom: 40px;
+  padding-left: 20px;
+  background-color: rgba(100,100,100,0.3);
+  border-radius: 5px;
+  padding-bottom: 2px;
+}
+
+.banner-text h2 {
+  color: #fff;
+  font-weight: 600;
+}
+
+.banner-text h2:after {
+  content: " ";
+  width: 100px;
+  height: 3px;
+  background: #fff;
+  display: block;
+  margin-top: 10px;
+  border-radius: 3px;
+}
+
+.banner-text p {
+  color:#fff;
+}

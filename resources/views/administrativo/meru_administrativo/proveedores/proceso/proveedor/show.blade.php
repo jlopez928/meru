@@ -15,7 +15,13 @@
     </section>
 
     <section class="content">
-
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                        @include('administrativo/meru_administrativo/proveedores/proceso/proveedor/partials/_form')
+                </div>
+            </div>
+        </div>
     </section>
 @endsection
 

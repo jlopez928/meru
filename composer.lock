@@ -4,8 +4,68 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5a07b0936d02987b66ca7623a0cd6071",
+    "content-hash": "17a71450fa0c87c179115854dec2f929",
     "packages": [
+        {
+            "name": "awobaz/compoships",
+            "version": "2.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/topclaudy/compoships.git",
+                "reference": "ba86741d9b439d1179a6432dded92b0ecc89a63a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/topclaudy/compoships/zipball/ba86741d9b439d1179a6432dded92b0ecc89a63a",
+                "reference": "ba86741d9b439d1179a6432dded92b0ecc89a63a",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": ">=5.6 <10.0"
+            },
+            "require-dev": {
+                "ext-sqlite3": "*"
+            },
+            "suggest": {
+                "awobaz/blade-active": "Blade directives for the Laravel 'Active' package",
+                "awobaz/eloquent-auto-append": "Automatically append accessors to model serialization",
+                "awobaz/eloquent-mutators": "Reusable mutators (getters/setters) for Laravel 5's Eloquent",
+                "awobaz/syntactic": "Syntactic sugar for named and indexed parameters call."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Awobaz\\Compoships\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Claudin J. Daniel",
+                    "email": "cdaniel@awobaz.com"
+                }
+            ],
+            "description": "Laravel relationships with support for composite/multiple keys",
+            "keywords": [
+                "laravel",
+                "laravel composite keys",
+                "laravel relationships"
+            ],
+            "support": {
+                "issues": "https://github.com/topclaudy/compoships/issues",
+                "source": "https://github.com/topclaudy/compoships/tree/2.1.4"
+            },
+            "funding": [
+                {
+                    "url": "https://paypal.me/awobaz",
+                    "type": "custom"
+                }
+            ],
+            "time": "2022-06-22T11:42:37+00:00"
+        },
         {
             "name": "barryvdh/laravel-ide-helper",
             "version": "v2.12.3",
@@ -1653,6 +1713,73 @@
             "time": "2022-05-21T17:30:32+00:00"
         },
         {
+            "name": "laradumps/laradumps",
+            "version": "v1.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laradumps/laradumps.git",
+                "reference": "d0612d78cd302a7761d1a52e1e685dd6f1513277"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laradumps/laradumps/zipball/d0612d78cd302a7761d1a52e1e685dd6f1513277",
+                "reference": "d0612d78cd302a7761d1a52e1e685dd6f1513277",
+                "shasum": ""
+            },
+            "require": {
+                "nunomaduro/termwind": "^1.12",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.8",
+                "illuminate/support": "^8.18 | ^9.0",
+                "nunomaduro/larastan": "^1.0 | ^2.1",
+                "orchestra/testbench": "^6.17 | ^7.0",
+                "pestphp/pest": "^1.21",
+                "symfony/var-dumper": "^5.4 | ^6.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "LaraDumps\\LaraDumps\\LaraDumpsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/functions.php"
+                ],
+                "psr-4": {
+                    "LaraDumps\\LaraDumps\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Luan Freitas",
+                    "email": "luanfreitas10@protonmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A Dump Component for Laravel.",
+            "homepage": "https://github.com/laradumps/laradumps",
+            "support": {
+                "issues": "https://github.com/laradumps/laradumps/issues",
+                "source": "https://github.com/laradumps/laradumps/tree/v1.3.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/luanfreitasdev",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-08-19T13:53:38+00:00"
+        },
+        {
             "name": "laravel/framework",
             "version": "v9.19.0",
             "source": {
@@ -2854,6 +2981,59 @@
             "time": "2022-06-09T08:59:12+00:00"
         },
         {
+            "name": "mopo922/laravel-treats",
+            "version": "v2.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mopo922/LaravelTreats.git",
+                "reference": "f272cf1f3ac0c98b33fad43c692dc4f0a86fa58d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mopo922/LaravelTreats/zipball/f272cf1f3ac0c98b33fad43c692dc4f0a86fa58d",
+                "reference": "f272cf1f3ac0c98b33fad43c692dc4f0a86fa58d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "laravel/framework": ">=5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "LaravelTreats\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mark Potter",
+                    "homepage": "https://github.com/mopo922"
+                }
+            ],
+            "description": "A collection of goodies for Laravel 5.",
+            "homepage": "https://github.com/mopo922/LaravelTreats",
+            "keywords": [
+                "api",
+                "controllers",
+                "eloquent",
+                "l5",
+                "laravel",
+                "models",
+                "web"
+            ],
+            "support": {
+                "issues": "https://github.com/mopo922/LaravelTreats/issues",
+                "source": "https://github.com/mopo922/LaravelTreats/tree/v2"
+            },
+            "time": "2018-06-06T02:20:19+00:00"
+        },
+        {
             "name": "myclabs/php-enum",
             "version": "1.8.3",
             "source": {
@@ -3219,119 +3399,50 @@
             "time": "2022-05-31T20:59:12+00:00"
         },
         {
-            "name": "php-flasher/flasher",
-            "version": "v1.6.3",
+            "name": "nunomaduro/termwind",
+            "version": "v1.14.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/php-flasher/flasher.git",
-                "reference": "9d223ac99b6a33de4eaa16d17fab4a1490dfef28"
+                "url": "https://github.com/nunomaduro/termwind.git",
+                "reference": "10065367baccf13b6e30f5e9246fa4f63a79eb1d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-flasher/flasher/zipball/9d223ac99b6a33de4eaa16d17fab4a1490dfef28",
-                "reference": "9d223ac99b6a33de4eaa16d17fab4a1490dfef28",
+                "url": "https://api.github.com/repos/nunomaduro/termwind/zipball/10065367baccf13b6e30f5e9246fa4f63a79eb1d",
+                "reference": "10065367baccf13b6e30f5e9246fa4f63a79eb1d",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3"
+                "ext-mbstring": "*",
+                "php": "^8.0",
+                "symfony/console": "^5.3.0|^6.0.0"
             },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Flasher\\Prime\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Younes KHOUBZA",
-                    "email": "younes.khoubza@gmail.com",
-                    "homepage": "https://www.linkedin.com/in/younes-khoubza",
-                    "role": "Developer"
-                }
-            ],
-            "description": "A powerful and flexible flash notification system for PHP",
-            "homepage": "https://php-flasher.io",
-            "keywords": [
-                "Flasher",
-                "alerts",
-                "flash",
-                "laravel",
-                "lumen",
-                "messages",
-                "notifications",
-                "notify",
-                "noty",
-                "notyf",
-                "php",
-                "pnotify",
-                "sweet alert",
-                "symfony",
-                "toastr"
-            ],
-            "support": {
-                "issues": "https://github.com/php-flasher/flasher/issues",
-                "source": "https://github.com/php-flasher/flasher/tree/v1.6.3"
-            },
-            "funding": [
-                {
-                    "url": "https://www.paypal.com/paypalme/yoeunes",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://ko-fi.com/yoeunes",
-                    "type": "ko_fi"
-                },
-                {
-                    "url": "https://opencollective.com/php-flasher",
-                    "type": "open_collective"
-                },
-                {
-                    "url": "https://www.patreon.com/yoeunes",
-                    "type": "patreon"
-                }
-            ],
-            "time": "2022-06-17T01:48:40+00:00"
-        },
-        {
-            "name": "php-flasher/flasher-laravel",
-            "version": "v1.6.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-flasher/flasher-laravel.git",
-                "reference": "cd14e9ff060dcbcaeed0824fec4c59fe3fb18f8d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-flasher/flasher-laravel/zipball/cd14e9ff060dcbcaeed0824fec4c59fe3fb18f8d",
-                "reference": "cd14e9ff060dcbcaeed0824fec4c59fe3fb18f8d",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/support": "^4.0|^5.0|^6.0|^7.0|^8.0|^9.0",
-                "php": ">=5.3",
-                "php-flasher/flasher": "^1.6"
+            "require-dev": {
+                "ergebnis/phpstan-rules": "^1.0.",
+                "illuminate/console": "^8.0|^9.0",
+                "illuminate/support": "^8.0|^9.0",
+                "laravel/pint": "^1.0.0",
+                "pestphp/pest": "^1.21.0",
+                "pestphp/pest-plugin-mock": "^1.0",
+                "phpstan/phpstan": "^1.4.6",
+                "phpstan/phpstan-strict-rules": "^1.1.0",
+                "symfony/var-dumper": "^5.2.7|^6.0.0",
+                "thecodingmachine/phpstan-strict-rules": "^1.0.0"
             },
             "type": "library",
             "extra": {
                 "laravel": {
                     "providers": [
-                        "Flasher\\Laravel\\FlasherServiceProvider"
-                    ],
-                    "aliases": {
-                        "Flasher": "Flasher\\Laravel\\Facade\\Flasher"
-                    }
+                        "Termwind\\Laravel\\TermwindServiceProvider"
+                    ]
                 }
             },
             "autoload": {
                 "files": [
-                    "flasher.php"
+                    "src/Functions.php"
                 ],
                 "psr-4": {
-                    "Flasher\\Laravel\\": ""
+                    "Termwind\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3340,127 +3451,38 @@
             ],
             "authors": [
                 {
-                    "name": "Younes KHOUBZA",
-                    "email": "younes.khoubza@gmail.com",
-                    "homepage": "https://www.linkedin.com/in/younes-khoubza",
-                    "role": "Developer"
+                    "name": "Nuno Maduro",
+                    "email": "enunomaduro@gmail.com"
                 }
             ],
-            "description": "Laravel package integrating PHP Flasher into Laravel applications",
-            "homepage": "https://php-flasher.io",
+            "description": "Its like Tailwind CSS, but for the console.",
             "keywords": [
-                "Flasher",
-                "alerts",
-                "bundle",
-                "flex",
-                "laravel",
-                "lumen",
-                "messages",
-                "notifications",
-                "notify",
+                "cli",
+                "console",
+                "css",
+                "package",
                 "php",
-                "pnotify",
-                "symfony",
-                "toastr",
-                "yoeunes"
+                "style"
             ],
             "support": {
-                "issues": "https://github.com/php-flasher/flasher-laravel/issues",
-                "source": "https://github.com/php-flasher/flasher-laravel/tree/v1.6.3"
+                "issues": "https://github.com/nunomaduro/termwind/issues",
+                "source": "https://github.com/nunomaduro/termwind/tree/v1.14.0"
             },
             "funding": [
                 {
-                    "url": "https://www.paypal.com/paypalme/yoeunes",
+                    "url": "https://www.paypal.com/paypalme/enunomaduro",
                     "type": "custom"
                 },
                 {
-                    "url": "https://ko-fi.com/yoeunes",
-                    "type": "ko_fi"
+                    "url": "https://github.com/nunomaduro",
+                    "type": "github"
                 },
                 {
-                    "url": "https://opencollective.com/php-flasher",
-                    "type": "open_collective"
-                },
-                {
-                    "url": "https://www.patreon.com/yoeunes",
-                    "type": "patreon"
+                    "url": "https://github.com/xiCO2k",
+                    "type": "github"
                 }
             ],
-            "time": "2022-06-17T01:48:40+00:00"
-        },
-        {
-            "name": "php-flasher/flasher-toastr",
-            "version": "v1.6.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-flasher/flasher-toastr.git",
-                "reference": "cdaf1852ec7e21baeaf65e63518ccf08466e8062"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-flasher/flasher-toastr/zipball/cdaf1852ec7e21baeaf65e63518ccf08466e8062",
-                "reference": "cdaf1852ec7e21baeaf65e63518ccf08466e8062",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3",
-                "php-flasher/flasher": "^1.6"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Flasher\\Toastr\\Prime\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Younes KHOUBZA",
-                    "email": "younes.khoubza@gmail.com",
-                    "homepage": "https://www.linkedin.com/in/younes-khoubza",
-                    "role": "Developer"
-                }
-            ],
-            "description": "PHP Flasher adapter for Toastr",
-            "homepage": "https://php-flasher.io",
-            "keywords": [
-                "alerts",
-                "laravel",
-                "lumen",
-                "messages",
-                "notifications",
-                "notify",
-                "php",
-                "pnotify",
-                "symfony",
-                "toastr"
-            ],
-            "support": {
-                "issues": "https://github.com/php-flasher/flasher-toastr/issues",
-                "source": "https://github.com/php-flasher/flasher-toastr/tree/v1.6.3"
-            },
-            "funding": [
-                {
-                    "url": "https://www.paypal.com/paypalme/yoeunes",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://ko-fi.com/yoeunes",
-                    "type": "ko_fi"
-                },
-                {
-                    "url": "https://opencollective.com/php-flasher",
-                    "type": "open_collective"
-                },
-                {
-                    "url": "https://www.patreon.com/yoeunes",
-                    "type": "patreon"
-                }
-            ],
-            "time": "2022-06-12T14:00:21+00:00"
+            "time": "2022-08-01T11:03:24+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -4445,6 +4467,141 @@
                 }
             ],
             "time": "2022-03-27T21:42:02+00:00"
+        },
+        {
+            "name": "realrashid/sweet-alert",
+            "version": "v5.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/realrashid/sweet-alert.git",
+                "reference": "fb837beaa52568fb3106d311ff3c7a7b8e543608"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/realrashid/sweet-alert/zipball/fb837beaa52568fb3106d311ff3c7a7b8e543608",
+                "reference": "fb837beaa52568fb3106d311ff3c7a7b8e543608",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "^5.6|^6.0|^7.0|^8.0|^9.0|^9.11|9.14.*",
+                "php": "^7.2|^8.0"
+            },
+            "require-dev": {
+                "symfony/thanks": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "RealRashid\\SweetAlert\\SweetAlertServiceProvider"
+                    ],
+                    "aliases": {
+                        "Alert": "RealRashid\\SweetAlert\\Facades\\Alert"
+                    }
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/functions.php"
+                ],
+                "psr-4": {
+                    "RealRashid\\SweetAlert\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rashid Ali",
+                    "email": "realrashid05@gmail.com",
+                    "homepage": "https://realrashid.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A BEAUTIFUL, RESPONSIVE, CUSTOMIZABLE, ACCESSIBLE (WAI-ARIA) REPLACEMENT FOR JAVASCRIPT'S POPUP BOXES FOR LARAVEL BY RASHID ALI",
+            "homepage": "https://github.com/realrashid/sweet-alert",
+            "keywords": [
+                "alert",
+                "laravel",
+                "laravel-package",
+                "notifier",
+                "noty",
+                "sweet-alert",
+                "sweet-alert2",
+                "toast"
+            ],
+            "support": {
+                "docs": "https://realrashid.github.io/sweet-alert/",
+                "email": "realrashid05@gmail.com",
+                "issues": "https://github.com/realrashid/sweet-alert/issues",
+                "source": "https://github.com/realrashid/sweet-alert"
+            },
+            "funding": [
+                {
+                    "url": "https://ko-fi.com/realrashid",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://www.buymeacoffee.com/realrashid",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://issuehunt.io/r/realrashid",
+                    "type": "issuehunt"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/realrashid/sweet-alert",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2022-05-28T13:28:03+00:00"
+        },
+        {
+            "name": "robinherbots/jquery.inputmask",
+            "version": "5.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/RobinHerbots/Inputmask.git",
+                "reference": "e76b7c9dd9049e2d0f8f439b5f393fd5a5f1c84f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/RobinHerbots/Inputmask/zipball/e76b7c9dd9049e2d0f8f439b5f393fd5a5f1c84f",
+                "reference": "e76b7c9dd9049e2d0f8f439b5f393fd5a5f1c84f",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Robin Herbots"
+                }
+            ],
+            "description": "Inputmask is a javascript library which creates an input mask.  Inputmask can run against vanilla javascript, jQuery and jqlite.",
+            "homepage": "http://robinherbots.github.io/Inputmask",
+            "keywords": [
+                "form",
+                "input",
+                "inputmask",
+                "jquery",
+                "mask",
+                "plugins"
+            ],
+            "support": {
+                "issues": "https://github.com/RobinHerbots/Inputmask/issues",
+                "source": "https://github.com/RobinHerbots/Inputmask/tree/5.0.7"
+            },
+            "funding": [
+                {
+                    "type": "custom"
+                }
+            ],
+            "time": "2021-12-30T12:48:06+00:00"
         },
         {
             "name": "spatie/laravel-navigation",
@@ -7066,105 +7223,6 @@
                 "source": "https://github.com/webmozarts/assert/tree/1.11.0"
             },
             "time": "2022-06-03T18:03:27+00:00"
-        },
-        {
-            "name": "yoeunes/toastr",
-            "version": "v2.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/yoeunes/toastr.git",
-                "reference": "8627c0b149d652a90eab744348b106ecc219b6c0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/yoeunes/toastr/zipball/8627c0b149d652a90eab744348b106ecc219b6c0",
-                "reference": "8627c0b149d652a90eab744348b106ecc219b6c0",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3",
-                "php-flasher/flasher-laravel": "^1.6",
-                "php-flasher/flasher-toastr": "^1.6"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Yoeunes\\Toastr\\ToastrServiceProvider"
-                    ],
-                    "aliases": {
-                        "Toastr": "Yoeunes\\Toastr\\Facades\\Toastr"
-                    }
-                }
-            },
-            "autoload": {
-                "files": [
-                    "src/helpers.php"
-                ],
-                "psr-4": {
-                    "Yoeunes\\Toastr\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Younes Khoubza",
-                    "email": "younes.khoubza@gmail.com",
-                    "homepage": "https://github.com/yoeunes",
-                    "role": "Developer"
-                }
-            ],
-            "description": "toastr.js flush notifications for Laravel and Lumen",
-            "homepage": "https://github.com/yoeunes/toastr",
-            "keywords": [
-                "alerts",
-                "flush",
-                "flush messages",
-                "flush notifications",
-                "laravel",
-                "laravel 5",
-                "laravel 6",
-                "laravel 7",
-                "laravel flush notifications",
-                "laravel notification",
-                "laravel notify",
-                "laravel toastr",
-                "lumen",
-                "messages",
-                "notification",
-                "php",
-                "toastr",
-                "toastr js",
-                "yoeunes"
-            ],
-            "support": {
-                "docs": "https://github.com/yoeunes/toastr/README.md",
-                "email": "younes.khoubza@gmail.com",
-                "issues": "https://github.com/yoeunes/toastr/issues",
-                "source": "https://github.com/yoeunes/toastr"
-            },
-            "funding": [
-                {
-                    "url": "https://www.paypal.com/paypalme/yoeunes",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://ko-fi.com/yoeunes",
-                    "type": "ko_fi"
-                },
-                {
-                    "url": "https://opencollective.com/php-flasher",
-                    "type": "open_collective"
-                },
-                {
-                    "url": "https://www.patreon.com/yoeunes",
-                    "type": "patreon"
-                }
-            ],
-            "time": "2022-06-15T05:20:08+00:00"
         }
     ],
     "packages-dev": [

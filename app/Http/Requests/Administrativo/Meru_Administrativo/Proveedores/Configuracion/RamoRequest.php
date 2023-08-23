@@ -24,7 +24,7 @@ class RamoRequest extends FormRequest
     public function rules()
     {
         return [
-            'des_ram'   => 'required|unique:'.'pgsql_proveedores.pro_ramos,des_ram,'.$this->cod_ram.',cod_ram',
+            'des_ram'   => 'required|unique:'.'pgsql.pro_ramos,des_ram,'.$this->cod_ram.',cod_ram',
             'sta_reg'   => 'required',
         ];
     }
@@ -32,7 +32,7 @@ class RamoRequest extends FormRequest
     public function prepareForValidation()
     {
         $this->merge([
-            'des_ram' => strtoupper($this->des_ram)
+            'des_ram' => strtoupper($this->des_ram ?? '')
         ]);
     }
 }

@@ -1,20 +1,23 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Administrativo\Meru_Administrativo\Proveedores\Reporte\CronologiaProveedorController;
+use App\Http\Controllers\Administrativo\Meru_Administrativo\Proveedores\Reporte\RepProvObjetivoController;
+use App\Http\Controllers\Administrativo\Meru_Administrativo\Proveedores\Reporte\ConstanciaProveedorController;
+use App\Http\Controllers\Administrativo\Meru_Administrativo\Proveedores\Reporte\ProveedorMunicipioController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Proveedores\Proceso\ProveedorController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Proveedores\Configuracion\RamoController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Proveedores\Proceso\RamoProveedorController;
 use App\Http\Controllers\Administrativo\Meru_Administrativo\Proveedores\Reporte\ReporteProveedorController;
-use App\Http\Controllers\Administrativo\Meru_Administrativo\Proveedores\Reportes\ProveedorMunicipioController;
+
 
 /*-------------------------------------------------------------------------*/
 /*                     Rutas del Modulo Proveedores                        */
 /*-------------------------------------------------------------------------*/
 
-
 // Proveedores
 Route::controller(ProveedorController::class)
-	->middleware(['auth'])
+	->middleware(['auth', 'periodo-fiscal'])
 	->prefix('proveedores/procesos')
 	->name('proveedores.proceso.proveedor.')
 	->group(function () {
@@ -25,11 +28,16 @@ Route::controller(ProveedorController::class)
 		Route::get('proveedores/{proveedor}/edit', 'edit')->name('edit');
 		Route::get('proveedores/{proveedor}', 'show')->name('show');
 		Route::put('proveedores/{proveedor}', 'update')->name('update');
+		Route::get('proveedores/{proveedor}/suspender', 'suspender')->name('suspender');
+		Route::put('proveedores/{proveedor}/suspender', 'suspender_proveedor')->name('suspender');
+		Route::get('proveedores/{proveedor}/reactivar', 'reactivar')->name('reactivar');
+		Route::put('proveedores/{proveedor}/reactivar', 'reactivar_proveedor')->name('reactivar');
+		Route::delete('proveedores/{proveedor}', 'destroy')->name('destroy');
 	});
 
 // Ramos
 Route::controller(RamoController::class)
-	->middleware(['auth'])
+	->middleware(['auth', 'periodo-fiscal'])
 	->prefix('proveedores/configuracion')
 	->name('proveedores.configuracion.ramo.')
 	->group(function () {
@@ -38,13 +46,15 @@ Route::controller(RamoController::class)
 		Route::get('ramos/create', 'create')->name('create');
 		Route::post('ramos', 'store')->name('store');
 		Route::get('ramos/{ramo}/edit', 'edit')->name('edit');
+        Route::get('ramos/{ramo}/show', 'show')->name('show');
 		Route::put('ramos/{ramo}', 'update')->name('update');
+		Route::delete('ramos/{ramo}', 'destroy')->name('destroy');
 		Route::get('print_ramos', 'print_ramos')->name('print_ramos');
 	});
 
 // Ramos de Proveedores
 Route::controller(RamoProveedorController::class)
-	->middleware(['auth'])
+	->middleware(['auth', 'periodo-fiscal'])
 	->prefix('proveedores/procesos')
 	->name('proveedores.proceso.ramo_proveedor.')
 	->group(function () {
@@ -62,19 +72,22 @@ Route::controller(ReporteProveedorController::class)
 	->group(function () {
 
 		Route::get('proveedoressuspendidos', 'proveedoressuspendidos')->name('proveedoressuspendidos');
+        Route::get('proveedores', 'proveedores')->name('proveedores');
 	});
-  
-Route::middleware(['auth'])
-	->prefix('proveedores')
-	->as('proveedores.')
-	->group(function () {
-		Route::name('reportes.')
-			->group(function () {
-                Route::resource('proveedormunicipio',  ProveedorMunicipioController ::class)->except('destroy');
-                Route::controller(ProveedorMunicipioController::class)
-                        ->as('proveedormunicipio.')
-                        ->group(function() {
-                            Route::get('print_proveedormunicipio', [ProveedorMunicipioController::class, 'print_proveedormunicipio'])->name('print_proveedormunicipio');
-                        });
-		});
-	});
+
+Route::middleware(['auth', 'periodo-fiscal'])
+    ->prefix('proveedores')
+    ->as('proveedores.')
+    ->group(function () {
+            Route::name('reporte.')
+            ->group(function () {
+            Route::get('print_repprovobjetivo', [RepProvObjetivoController::class, 'print_repprovobjetivo'])->name('print_repprovobjetivo');
+            Route::resource('repprovobjetivo',  RepProvObjetivoController::class)->except('destroy','store', 'show', 'update','create');
+            Route::get('print_consproveedor', [ConstanciaProveedorController::class, 'print_consproveedor'])->name('print_consproveedor');
+            Route::resource('constanciaproveedores',  ConstanciaProveedorController::class)->except('destroy','store', 'show', 'update','create');
+            Route::get('print_cronologiaproveedor', [CronologiaProveedorController::class, 'print_cronologiaproveedor'])->name('print_cronologiaproveedor');
+            Route::resource('cronologiaproveedor', CronologiaProveedorController::class)->except('destroy','show','store','edit','create');
+            Route::get('print_proveedormunicipio', [ProveedorMunicipioController::class, 'print_proveedormunicipio'])->name('print_proveedormunicipio');
+            Route::resource('proveedormunicipio', ProveedorMunicipioController::class)->except('destroy','show','store','edit','create');
+        });
+    });

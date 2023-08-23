@@ -14,6 +14,8 @@ class RamoProveedorEdit extends Component
     public $selectedRamoId;
     public $ramos = [];
 
+    protected $listeners = ['deleteRamo'];
+
     protected $rules =  [
                             'selectedRamoId'    => 'required'
                         ];
@@ -30,18 +32,38 @@ class RamoProveedorEdit extends Component
         $this->ramos    = $this->proveedor->ramos;
     }
 
+    public function confirmDeleteRamo(Ramo $ramo)
+    {
+        $this->emit('swal:confirm', [
+            'tipo'      => 'warning',
+            'titulo'    => 'Ramos',
+            'mensaje'   => 'Está seguro de Eliminar el Ramo?',
+            'funcion'   => 'deleteRamo',
+            'cod_ram'  => $ramo->cod_ram
+        ]);
+    }
+
     public function deleteRamo($cod_ram)
     {
+
         try {
             $this->proveedor->ramos()->detach($cod_ram);
 
+            $this->emit('swal:alert', [
+                'tipo'      => 'success',
+                'titulo'    => 'Éxito',
+                'mensaje'   => 'Ramo desvinculado con  éxito'
+            ]);
+
         }catch (\Exception $ex) {
-            flash()->addError('Transacción Fallida: '. str($ex)->limit(250));
+            $this->emit('swal:alert', [
+                'tipo'      => 'error',
+                'titulo'    => 'Error',
+                'mensaje'   => str($ex)->limit(250)
+            ]);
 
             return redirect()->back()->withInput();
         }
-
-        flash()->addSuccess('Ramo desvinculado con  éxito');
 
         $this->ramos = Ramo::whereIn('cod_ram', RamoProveedor::where('rif_prov', $this->proveedor->rif_prov)->pluck('cod_ram'))->get(['cod_ram', 'des_ram']);
     }
@@ -53,13 +75,21 @@ class RamoProveedorEdit extends Component
         try {
             $this->proveedor->ramos()->attach($this->selectedRamoId, ['usuario' => auth()->id() ]);
 
+            $this->emit('swal:alert', [
+                'tipo'      => 'success',
+                'titulo'    => 'Éxito',
+                'mensaje'   => 'Ramo agregado con  éxito'
+            ]);
+
         }catch (\Exception $ex) {
-            flash()->addError('Transacción Fallida: '. str($ex)->limit(250));
+            $this->emit('swal:alert', [
+                'tipo'      => 'error',
+                'titulo'    => 'Error',
+                'mensaje'   => str($ex)->limit(250)
+            ]);
 
             return redirect()->back()->withInput();
         }
-
-        flash()->addSuccess('Ramo agregado con  éxito');
 
         $this->ramos = Ramo::whereIn('cod_ram', RamoProveedor::where('rif_prov', $this->proveedor->rif_prov)->pluck('cod_ram'))->get(['cod_ram', 'des_ram']);
 

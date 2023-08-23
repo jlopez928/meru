@@ -8,7 +8,7 @@
             <div class="col-sm-12">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item text-bold"><a href="{{ route('proveedores.configuracion.ramo.index') }}">Ramos</a></li>
-                    <li class="breadcrumb-item active text-bold">Nuevo</li>
+                    <li class="breadcrumb-item active text-bold">Registrar Ramos</li>
                 </ol>
             </div>
         </div>

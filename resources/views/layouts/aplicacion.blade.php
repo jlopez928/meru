@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Icono app -->
-    <link rel="icon" href="{{ asset('img/favicon.ico') }}">
+    <link rel="icon" href="{{ asset('img/favicon.png') }}">
 
     <!-- Title app -->
     <title>{{ config('app.name', 'MERÚ Administrativo') }}</title>
@@ -95,7 +95,7 @@
 </head>
 
 <body
-    class="hold-transition sidebar-mini layout-fixed"
+    class="hold-transition layout-fixed"
 >
     <div class="wrapper">
 
@@ -192,17 +192,28 @@
     <script src="{{ asset('template/plugins/select2/js/select2.min.js') }}"></script>
     <script src="{{ asset('template/plugins/select2/js/select2.full.min.js') }}"></script>
 
+    <!-- Bs-custom-file-input -->
+    <script src="{{ asset('template/plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
+
+    <!-- Sweetalert -->
+    @include('sweetalert::alert')
+
+    <!-- InputMask 5.0.7 -->
+    <script src="{{ asset('template/plugins/inputmask/inputmask.min.js') }}"></script>
+    <script src="{{ asset('template/plugins/inputmask/bindings/inputmask.binding.js') }}"></script>
+    <script src="{{ asset('template/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
+
     @livewireScripts
 
     @yield('js')
 
     @stack('scripts')
 
-    <!-- AlpineJS - Mask 3.10.2 -->
-    <script src="{{ asset('js/alpinejs-mask.min.js') }}"></script>
+    <!-- AlpineJS - Mask 3.10.3 -->
+    <script src="{{ asset('js/alpinejs/alpinejs.3.10.3.mask.min.js') }}"></script>
 
-    <!-- AlpineJS 3.8.1 -->
-    <script src="{{ asset('js/alpinejs.min.js') }}"></script>
+    <!-- AlpineJS 3.10.3 -->
+    <script src="{{ asset('js/alpinejs/alpinejs.3.10.3.min.js') }}"></script>
 
 </body>
 

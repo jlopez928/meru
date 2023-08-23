@@ -19,8 +19,13 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-                    <x-form method="put" action="{{ route('proveedores.proceso.proveedor.update', $proveedor) }}">
-                        @include('administrativo/meru_administrativo/proveedores/proceso/proveedor/partials/_form')
+                    <x-form name="formulario" method="put" action="{{ route('proveedores.proceso.proveedor.update', $proveedor) }}">
+                        @include('administrativo/meru_administrativo/proveedores/proceso/proveedor/partials/_form',
+                        [
+                            'message'  => '¿Está seguro de Modificar este Proveedor?',
+                            'btnTitle' => 'Actualizar Datos del Proveedor',
+                            'btnName'  => 'Actualizar'
+                        ])
                     </x-form>
                 </div>
             </div>

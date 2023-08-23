@@ -25,10 +25,7 @@ class DescuentoController extends Controller
     public function create()
     {
         $descuento= new Descuento();
-        $count = Descuento::get()->max('id') +1;
-        $descuento->id = $count;
-        $descuento->fecha = Carbon::now();
-
+        $descuento->fecha = Carbon::now()->format('Y-m-d');
         return view('administrativo.meru_administrativo.configuracion.configuracion.descuento.create', compact('descuento'));
     }
 
@@ -36,16 +33,17 @@ class DescuentoController extends Controller
     {
         try {
              Descuento::create($request->validated());
-             flash()->addSuccess('Registro Guardado Exitosamente');
+             alert()->success('¡Éxito!','Registro Guardado Exitosamente');
              return redirect()->route('configuracion.configuracion.descuento.index');
          } catch(\Illuminate\Database\QueryException $e){
-            flash()->addError('Transacci&oacute;n Fallida: '.Str::limit($e, 120));
+             alert()->error('Transacci&oacute;n Fallida: ',Str::limit($e->getMessage(), 120));
              return redirect()->back()->withInput();
          }
     }
-      public function show(Descuento $descuento)
+    public function show(Descuento $descuento)
     {
-        return view('administrativo.meru_administrativo.configuracion.configuracion.descuento.show',compact('descuento'));
+        $descuento->fecha = Carbon::parse($descuento->fecha)->format('Y-m-d');
+         return view('administrativo.meru_administrativo.configuracion.configuracion.descuento.show',compact('descuento'));
 
     }
 
@@ -54,6 +52,7 @@ class DescuentoController extends Controller
         $tipo_monto =  TipoMonto::query()->get();
         $retencion =  Retencion::query()->get();
         $residencia =  Residencia::query()->get();
+        $descuento->fecha = Carbon::parse($descuento->fecha)->format('Y-m-d');
         return view('administrativo.meru_administrativo.configuracion.configuracion.descuento.edit', compact('descuento','tipo_monto','retencion','residencia'));
 
     }
@@ -61,14 +60,14 @@ class DescuentoController extends Controller
     {//
         try {
             if ($descuento->status == '0' && $request->status=='0'){
-                flash()->addInfo('Registro Inactivo NO puede ser Modificado. Favor verifique.');
+                alert()->info('Registro Inactivo NO puede ser Modificado. Favor verifique.');
                 return redirect()->back()->withInput();
             }
             $descuento->update($request->validated());
-            flash()->addSuccess('Registro Modificado Exitosamente');
+            alert()->success('¡Éxito!','Registro Modificado Exitosamente');
             return redirect()->route('configuracion.configuracion.descuento.index');
         } catch(\Illuminate\Database\QueryException $e){
-            flash()->addError('Transacci&oacute;n Fallida: '.Str::limit($e, 120));
+            alert()->error('Transacci&oacute;n Fallida: ',Str::limit($e->getMessage(), 120));
             return redirect()->back()->withInput();
         }
     }

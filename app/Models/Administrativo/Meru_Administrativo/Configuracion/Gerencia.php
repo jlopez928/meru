@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Administrativo\Meru_Administrativo\Formulacion\CentroCosto;
 use App\Models\Administrativo\Meru_Administrativo\Formulacion\PartidaPresupuestaria;
+use App\Models\Administrativo\Meru_Administrativo\Modificaciones\SolicitudTraspaso;
+
 
 class Gerencia extends Model
 {
@@ -112,5 +114,10 @@ class Gerencia extends Model
 	public function partidaGastoVinternac()
 	{
 		return $this->belongsTo(PartidaPresupuestaria::class, 'part_gasto_vinternac_id', 'id')->withDefault();
+	}
+
+	public function solicitudTraspaso()
+	{
+		return $this->hasMany(SolicitudTraspaso::class, 'cod_ger', 'cod_ger');
 	}
 }

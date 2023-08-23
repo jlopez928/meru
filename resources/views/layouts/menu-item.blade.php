@@ -21,11 +21,24 @@
             @foreach ($item['submenu'] as $submenu)
                 @if ($submenu['submenu'] == [])
                     <li class="nav-item">
-                        <a href="{{ Route::has($submenu['url_destino']) ? route($submenu['url_destino']) : '#' }}" class="nav-link text-sm" style="padding-left:20px !important">
-                            <p>
-                                {{ $submenu['nombre'] }}
-                            </p>
-                        </a>
+                        @if ($submenu['emergente'])
+                            <form id="form-menu-{{ $submenu['id'] }}" action="{{ Route::has($submenu['url_destino']) ? route($submenu['url_destino']) : '#' }}" method="GET" target="_blank">
+                                @csrf
+                                <a href="#" onclick="$('#form-menu-{{ $submenu['id'] }}').submit();" class="nav-link text-sm" style="padding-left:20px !important">
+                                    <p>
+                                        {{ $submenu['nombre'] }}
+                                    </p>
+                                </a>
+                            </form>
+                        @else
+
+                            <a href="{{ Route::has($submenu['url_destino']) ? route($submenu['url_destino']) : '#' }}" class="nav-link text-sm" style="padding-left:20px !important">
+                                <p>
+                                    {{ $submenu['nombre'] }}
+                                </p>
+                            </a>
+
+                        @endif
                     </li>
                 @else
                     @include('layouts/menu-item', [ 'item' => $submenu ])

@@ -8,7 +8,7 @@
 			<div class="col-sm-12">
 				<ol class="breadcrumb float-sm-right">
 					<li class="breadcrumb-item text-bold"><a href="{{ route('configuracion.configuracion.tasacambio.index') }}">Tasa Cambio</a></li>
-					<li class="breadcrumb-item active text-bold">Editar</li>
+					<li class="breadcrumb-item active text-bold">Editar Tasa de Cambio</li>
 				</ol>
 			</div>
 		</div>
