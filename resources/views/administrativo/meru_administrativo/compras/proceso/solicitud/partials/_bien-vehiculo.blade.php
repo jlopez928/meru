@@ -1,4 +1,6 @@
 <div>
+    <p class="text-bold mt-3">Solo puede seleccionar un máximo de 16 vehiculos por solicitud.</p>
+
     @if( $accion == 'nuevo' || $accion == 'editar')
         <x-datatable :list="$vehiculosList">
 
@@ -12,7 +14,6 @@
                                 <td>{{ $vehiculo->modelo }}</td>
                                 <td>{{ $vehiculo->marca }}</td>
                                 <td class="text-center">
-                                    {{--  <button class="btn-primary btn-sm" wire:click.prevent="agregarVehiculo({{ $vehiculo->cod_corr }})" title="Agregar Vehiculo"><i class="fas fa-plus"></i></button>  --}}
                                     <a wire:click.prevent="agregarVehiculo({{ $vehiculo->cod_corr }})" type="button" class="btn-sm" aria-label="Left Align" data-toggle="tooltip" data-placement="left" title="Agregar Vehiculo">
                                         <span class="fas fa-plus" aria-hidden="true"></span>
                                     </a>
@@ -72,19 +73,3 @@
         </table>
     </div>
 </div>
-
-@push('scripts')
-    <script>
-        Livewire.on('cargarVehiculo', param => {
-			$("#vehiculos").val(JSON.stringify(param['vehiculos']));
-        });
-
-        Livewire.on('swal:alert', param => {
-            Swal.fire({
-                title: param['titulo'],
-                text: param['mensaje'],
-                icon: param['tipo'],
-            })
-        })
-    </script>
-@endpush

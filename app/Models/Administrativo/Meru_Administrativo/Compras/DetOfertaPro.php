@@ -22,13 +22,13 @@ class DetOfertaPro extends Model
                                             ->on('b.grupo', 'com_detofertaspro.grupo')
                                             ->on('b.nro_sol', 'com_detofertaspro.nro_sol');
                                 })
-                                ->selectRaw("distinct b.num_oferta||'-'||b.ano_pro as ofertas")
+                                ->selectRaw("distinct b.num_oferta||'-'||b.ano_pro as oferta")
                                 ->where('com_detofertaspro.ano_pro', $ano_pro)
                                 ->where('com_detofertaspro.grupo', $grupo)
                                 ->where('com_detofertaspro.nro_req', $nro_req)
                                 ->whereNotIn('b.status', ['2'])
-                                ->orderBy('ofertas')
-                                ->get();
+                                ->orderBy('oferta')
+                                ->pluck('oferta');
     }
 
 }

@@ -2,58 +2,25 @@
 
 namespace App\Http\Livewire\Administrativo\MeruAdministrativo\Compras\Proceso;
 
-use App\Models\Administrativo\Meru_Administrativo\Compras\SolicitudUnidad;
 use Livewire\Component;
 use App\Traits\WithSorting;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\DB;
+use App\Models\Administrativo\Meru_Administrativo\Compras\EncSolicitud;
 
-class SolicitudUnidadIndex extends Component
+class SolicitudIndex extends Component
 {
     use WithPagination, WithSorting;
 
+    public $modulo;
+    public $descripcionModulo;
     protected $paginationTheme = 'bootstrap';
     public $search = '';
     public $paginate = '10';
 
-    protected $listeners = ['activarSolicitud','aprobarSolicitud'];
-
-    public function confirmActivarSolicitud($ano_pro, $grupo, $nro_req)
-    {
-        $this->emit('swal:confirm', [
-            'tipo'      => 'warning',
-            'mensaje'   => '¿Está seguro de ACTIVAR la Solicitud?',
-            'funcion'   => 'activarSolicitud',
-            'ano_pro'   => $ano_pro,
-            'grupo'     => $grupo,
-            'nro_req'   => $nro_req
-        ]);
-    }
-
-    public function activarSolicitud($ano_pro, $grupo, $nro_req)
-    {
-        return redirect()->route('compras.proceso.solicitud_unidad.activar', [$ano_pro, $grupo, $nro_req]);
-    }
-
-    public function confirmAprobarSolicitud($ano_pro, $grupo, $nro_req)
-    {
-        $this->emit('swal:confirm', [
-            'tipo'      => 'warning',
-            'mensaje'   => '¿Está seguro de CONFORMAR EN PRESUPUESTO la Solicitud?',
-            'funcion'   => 'aprobarSolicitud',
-            'ano_pro'   => $ano_pro,
-            'grupo'     => $grupo,
-            'nro_req'   => $nro_req
-        ]);
-    }
-
-    public function aprobarSolicitud($ano_pro, $grupo, $nro_req)
-    {
-        return redirect()->route('compras.proceso.solicitud_unidad.aprobar', [$ano_pro, $grupo, $nro_req]);
-    }
-
     public function mount()
     {
-        $this->sort = 'ano_pro';
+        $this->sort = 'fec_emi';
         $this->direction = 'desc';
     }
 
@@ -69,11 +36,10 @@ class SolicitudUnidadIndex extends Component
 
     public function render()
     {
-        return view('livewire.administrativo.meru-administrativo.compras.proceso.solicitud-unidad-index', [
+        return view('livewire.administrativo.meru-administrativo.compras.proceso.solicitud-index', [
             'headers' => [
                             ['name' => 'Año', 'align' => 'center', 'sort' => 'ano_pro'],
-                            ['name' => 'Número', 'align' => 'center', 'sort' => 'nro_req'],
-                            ['name' => 'Grupo', 'align' => 'center', 'sort' => 'grupo'],
+                            ['name' => 'Solicitud', 'align' => 'center', 'sort' => 'grupo_numero'],
                             ['name' => 'Fecha Emisión', 'align' => 'center', 'sort' => 'fec_emi'],
                             ['name' => 'Gerencia', 'align' => 'left', 'sort' => 'fk_cod_ger'],
                             ['name' => 'Monto', 'align' => 'left', 'sort' => 'monto_tot'],
@@ -81,13 +47,12 @@ class SolicitudUnidadIndex extends Component
                             'Acción'
                         ],
 
-            'solicitudesUnidad' => SolicitudUnidad::query()
+            'solicitudes' =>    EncSolicitud::query()
                                                     ->with('gerencia:cod_ger,des_ger', 'estado:siglas,descripcion')
-                                                    ->select('ano_pro','nro_req','grupo','fec_emi','fk_cod_ger','monto_tot','sta_sol','fk_cod_cau')
+                                                    ->select('ano_pro','nro_req','grupo','fec_emi','fec_dev_com','fec_dev_cont','fec_dev_pre','fk_cod_ger','monto_tot','sta_sol','fk_cod_cau', DB::raw("grupo||'-'||nro_req as grupo_numero"))
                                                     ->when($this->search != '', function($query) {
                                                         $query->where('ano_pro', 'like', '%'.$this->search.'%')
-                                                            ->orWhere('nro_req', 'like', '%'.$this->search.'%')
-                                                            ->orWhere('grupo', 'like', '%'.strtoupper($this->search).'%')
+                                                            ->orWhere(DB::raw("grupo||'-'||nro_req"), 'like', '%'.strtoupper($this->search).'%')
                                                             ->orWhere('fec_emi', 'like', '%'.$this->search.'%')
                                                             ->orWhereHas('gerencia', function($query){
                                                                 $query->where('des_ger', 'like', '%'.strtoupper($this->search).'%');
